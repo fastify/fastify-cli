@@ -6,7 +6,7 @@ const minimist = require('minimist')
 const Fastify = require('fastify')
 const path = require('path')
 const fs = require('fs')
-const help = fs.readFileSync('./help.txt', 'utf8')
+const help = fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8')
 
 function start (opts) {
   if (opts.help) {
