@@ -1,0 +1,8 @@
+Usage: fastify [opts] <file>
+  -p  Port to listen on      [3000]
+  --port
+
+  --log-level Log level      [fatal]
+
+  -h  Show this help message
+  --help
