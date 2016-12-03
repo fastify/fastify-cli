@@ -74,6 +74,7 @@ function runFastify (opts) {
 if (require.main === module) {
   start(minimist(process.argv.slice(2), {
     integer: ['port'],
+    boolean: ['pretty-logs'],
     string: ['log-level'],
     alias: {
       port: 'p',
