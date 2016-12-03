@@ -31,10 +31,10 @@ Usage: fastify [opts] <file>
   -p, --port
       Port to listen on (default to 3000)
 
-  --log-level
+  -l, --log-level
       Log level (default to fatal)
 
-  --pretty-logs
+  -P, --pretty-logs
       Prints pretty logs
 
   -h, --help
