@@ -77,7 +77,9 @@ if (require.main === module) {
     string: ['log-level'],
     alias: {
       port: 'p',
-      help: 'h'
+      help: 'h',
+      'log-level': 'l',
+      'pretty-logs': 'P'
     },
     default: {
       port: 3000,
