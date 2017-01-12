@@ -37,8 +37,29 @@ Usage: fastify [opts] <file>
   -P, --pretty-logs
       Prints pretty logs
 
+  -o, --options
+      Use custom options
+
   -h, --help
       Show this help message
+```
+
+If you want to use custom options, just export an options object with your route and run the cli command with the `--options` flag.
+```js
+// plugin.js
+module.exports = function (fastify, options, next) {
+  fastify.get('/', function (req, reply) {
+    reply.send({ hello: 'world' })
+  })
+  next()
+}
+
+module.exports.options = {
+  https: {
+    key: 'key',
+    cert: 'cert'
+  }
+}
 ```
 
 ## Contributing
