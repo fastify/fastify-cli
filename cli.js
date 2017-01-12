@@ -53,7 +53,7 @@ function runFastify (opts) {
     options.logger.stream = pretty
   }
 
-  const fastify = Fastify(options)
+  const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
 
   fastify.register(file, function (err) {
     if (err) {
@@ -74,11 +74,12 @@ function runFastify (opts) {
 if (require.main === module) {
   start(minimist(process.argv.slice(2), {
     integer: ['port'],
-    boolean: ['pretty-logs'],
+    boolean: ['pretty-logs', 'options'],
     string: ['log-level'],
     alias: {
       port: 'p',
       help: 'h',
+      options: 'o',
       'log-level': 'l',
       'pretty-logs': 'P'
     },
