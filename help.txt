@@ -8,5 +8,8 @@ Usage: fastify [opts] <file>
   -P, --pretty-logs
       Prints pretty logs
 
+  -o, --options
+      Use custom options
+
   -h, --help
       Show this help message

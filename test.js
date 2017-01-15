@@ -10,7 +10,7 @@ test('should start the server', t => {
 
   cli.start({
     port: 3000,
-    _: ['./plugin.js']
+    _: ['./examples/plugin.js']
   })
 
   request({
@@ -23,4 +23,20 @@ test('should start the server', t => {
     t.deepEqual(JSON.parse(body), { hello: 'world' })
     cli.stop(0)
   })
+})
+
+test('should start fastify with custom options', t => {
+  t.plan(1)
+  // here the test should fail because of the wrong certificate
+  // or because the server is booted without the custom options
+  try {
+    cli.start({
+      port: 3000,
+      options: true,
+      _: ['./examples/plugin-with-options.js']
+    })
+    t.fail('Custom options')
+  } catch (e) {
+    t.pass('Custom options')
+  }
 })
