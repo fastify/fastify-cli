@@ -28,7 +28,7 @@
     "node": ">= 4.0"
   },
   "dependencies": {
-    "fastify": "^0.13.0",
+    "fastify": "^0.14.0",
     "minimist": "^1.2.0",
     "pino": "^4.2.3",
     "pump": "^1.0.2"
