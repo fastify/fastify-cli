@@ -2,23 +2,36 @@
 
 'use strict'
 
-const minimist = require('minimist')
-const Fastify = require('fastify')
 const path = require('path')
-const pino = require('pino')
-const pump = require('pump')
 const fs = require('fs')
+const assert = require('assert')
+
+const updateNotifier = require('update-notifier')
+const minimist = require('minimist')
+const PinoColada = require('pino-colada')
+const pump = require('pump')
+const Fastify = require('fastify')
 
 function start (opts) {
+  const notifier = updateNotifier({
+    pkg: {
+      name: 'fastify',
+      version: require('fastify/package.json').version
+    },
+    updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
+  })
+
+  notifier.notify({
+    isGlobal: false,
+    defer: false
+  })
+
   if (opts.help) {
     console.log(fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8'))
     stop(0)
   }
 
-  if (opts._.length !== 1) {
-    console.log('Missing the file parameter')
-    stop(1)
-  }
+  assert(opts._.length === 1, 'Missing the file parameter')
 
   runFastify(opts)
 }
@@ -28,11 +41,11 @@ function stop (code) {
 }
 
 function runFastify (opts) {
-  let file = null
+  var file = null
   try {
     file = require(path.resolve(process.cwd(), opts._[0]))
   } catch (e) {
-    console.log('Cannot find the specified file')
+    console.log(`Cannot find the specified file: '${opts._[0]}'`)
     stop(1)
   }
 
@@ -43,43 +56,37 @@ function runFastify (opts) {
   }
 
   if (opts['pretty-logs']) {
-    const pretty = pino.pretty()
-    pump(pretty, process.stdout, err => {
-      if (err) {
-        console.log(err)
-        stop(1)
-      }
-    })
-    options.logger.stream = pretty
+    const pinoColada = PinoColada()
+    options.logger.stream = pinoColada
+    pump(pinoColada, process.stdout, assert.ifError)
   }
 
   const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
 
-  fastify.register(file, function (err) {
-    if (err) {
-      console.log(err)
-      stop(1)
-    }
-  })
+  fastify.register(file, assert.ifError)
 
-  fastify.listen(opts.port, function (err) {
-    if (err) {
-      console.log(err)
-      stop(1)
-    }
+  if (opts.address) {
+    fastify.listen(opts.port, opts.address, listen)
+  } else {
+    fastify.listen(opts.port, listen)
+  }
+
+  function listen (err) {
+    assert.ifError(err)
     console.log(`Server listening on http://localhost:${fastify.server.address().port}`)
-  })
+  }
 }
 
 if (require.main === module) {
   start(minimist(process.argv.slice(2), {
     integer: ['port'],
     boolean: ['pretty-logs', 'options'],
-    string: ['log-level'],
+    string: ['log-level', 'address'],
     alias: {
       port: 'p',
       help: 'h',
       options: 'o',
+      address: 'a',
       'log-level': 'l',
       'pretty-logs': 'P'
     },
