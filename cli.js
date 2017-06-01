@@ -77,7 +77,7 @@ function runFastify (opts) {
   }
 }
 
-if (require.main === module) {
+function cli () {
   start(minimist(process.argv.slice(2), {
     integer: ['port'],
     boolean: ['pretty-logs', 'options'],
@@ -97,4 +97,8 @@ if (require.main === module) {
   }))
 }
 
-module.exports = { start, stop, runFastify }
+if (require.main === module) {
+  cli()
+}
+
+module.exports = { start, stop, runFastify, cli }
