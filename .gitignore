@@ -41,3 +41,6 @@ jspm_packages
 
 # vim swap files
 *.swp
+
+# remove lock file
+package-lock.json
