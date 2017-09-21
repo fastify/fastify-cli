@@ -68,7 +68,7 @@ function runFastify (opts) {
     pluginOptions.prefix = opts.prefix
   }
 
-  fastify.register(file, opts, assert.ifError)
+  fastify.register(file, pluginOptions, assert.ifError)
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, listen)
