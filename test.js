@@ -6,22 +6,27 @@ const request = require('request')
 const cli = require('./cli')
 
 test('should start the server', t => {
-  t.plan(4)
+  t.plan(5)
 
-  cli.start({
+  const fastify = cli.start({
     port: 3000,
     _: ['./examples/plugin.js']
   })
 
-  request({
-    method: 'GET',
-    uri: 'http://localhost:3000'
-  }, (err, response, body) => {
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
     t.error(err)
-    t.strictEqual(response.statusCode, 200)
-    t.strictEqual(response.headers['content-length'], '' + body.length)
-    t.deepEqual(JSON.parse(body), { hello: 'world' })
-    cli.stop(0)
+
+    request({
+      method: 'GET',
+      uri: 'http://localhost:3000'
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+    })
   })
 })
 
@@ -39,4 +44,30 @@ test('should start fastify with custom options', t => {
   } catch (e) {
     t.pass('Custom options')
   }
+})
+
+test('should start the server at the given prefix', t => {
+  t.plan(5)
+
+  const fastify = cli.start({
+    port: 3000,
+    _: ['./examples/plugin.js'],
+    prefix: '/api/hello'
+  })
+
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
+    t.error(err)
+
+    request({
+      method: 'GET',
+      uri: 'http://localhost:3000/api/hello'
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+    })
+  })
 })
