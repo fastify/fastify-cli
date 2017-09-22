@@ -33,7 +33,7 @@ function start (opts) {
 
   assert(opts._.length === 1, 'Missing the file parameter')
 
-  runFastify(opts)
+  return runFastify(opts)
 }
 
 function stop (code) {
@@ -63,7 +63,12 @@ function runFastify (opts) {
 
   const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
 
-  fastify.register(file, assert.ifError)
+  const pluginOptions = {}
+  if (opts.prefix) {
+    pluginOptions.prefix = opts.prefix
+  }
+
+  fastify.register(file, pluginOptions, assert.ifError)
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, listen)
@@ -75,6 +80,8 @@ function runFastify (opts) {
     assert.ifError(err)
     console.log(`Server listening on http://localhost:${fastify.server.address().port}`)
   }
+
+  return fastify
 }
 
 function cli () {
@@ -87,6 +94,7 @@ function cli () {
       help: 'h',
       options: 'o',
       address: 'a',
+      prefix: 'r',
       'log-level': 'l',
       'pretty-logs': 'P'
     },

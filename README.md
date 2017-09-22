@@ -41,6 +41,9 @@ Usage: fastify [opts] <file>
   -o, --options
       Use custom options
 
+  -p, --prefix
+      Set the prefix
+
   -h, --help
       Show this help message
 ```
