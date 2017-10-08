@@ -49,6 +49,11 @@ function runFastify (opts) {
     stop(1)
   }
 
+  if (file.length !== 3) {
+    throw new Error('Plugin function should contain 3 arguments. Refer to ' +
+                    'documentation for more information.')
+  }
+
   const options = {
     logger: {
       level: opts['log-level']
