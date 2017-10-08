@@ -71,3 +71,17 @@ test('should start the server at the given prefix', t => {
     })
   })
 })
+
+test('should only accept plugin functions with 3 arguments', t => {
+  t.plan(1)
+
+  try {
+    cli.start({
+      port: 3000,
+      _: ['./examples/incorrect-plugin.js']
+    })
+    t.fail('Incorrect arguments')
+  } catch (e) {
+    t.pass('Incorrect arguments')
+  }
+})
