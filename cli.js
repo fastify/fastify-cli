@@ -77,6 +77,8 @@ function runFastify (opts) {
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, listen)
+  } if (opts.socket) {
+    fastify.listen(opts.socket, listen)
   } else {
     fastify.listen(opts.port, listen)
   }
@@ -96,6 +98,7 @@ function cli () {
     string: ['log-level', 'address'],
     alias: {
       port: 'p',
+      socket: 's',
       help: 'h',
       options: 'o',
       address: 'a',

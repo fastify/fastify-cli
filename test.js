@@ -1,5 +1,8 @@
 'use strict'
 
+const fs = require('fs')
+const path = require('path')
+
 const t = require('tap')
 const test = t.test
 const request = require('request')
@@ -69,6 +72,36 @@ test('should start the server at the given prefix', t => {
       t.strictEqual(response.headers['content-length'], '' + body.length)
       t.deepEqual(JSON.parse(body), { hello: 'world' })
     })
+  })
+})
+
+test('should start fastify at given socket path', t => {
+  t.plan(2)
+
+  const sockFile = path.join(__dirname, '/test.sock')
+
+  const fastify = cli.start({
+    socket: sockFile,
+    options: true,
+    _: ['./examples/plugin.js']
+  })
+  t.tearDown(() => fastify.close())
+
+  try {
+    fs.unlinkSync(sockFile)
+  } catch (e) { }
+
+  fastify.ready(err => {
+    t.error(err)
+
+    var request = require('http').request({
+      method: 'GET',
+      path: '/',
+      socketPath: sockFile
+    }, function (response) {
+      t.deepEqual(response.statusCode, 200)
+    })
+    request.end()
   })
 })
 
