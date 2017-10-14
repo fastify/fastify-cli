@@ -78,7 +78,7 @@ test('should start the server at the given prefix', t => {
 test('should start fastify at given socket path', t => {
   t.plan(2)
 
-  const sockFile = path.join(__dirname, '/test.sock')
+  const sockFile = path.resolve('test.sock')
 
   const fastify = cli.start({
     socket: sockFile,
