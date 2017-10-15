@@ -77,13 +77,19 @@ function runFastify (opts) {
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, listen)
+  } else if (opts.socket) {
+    fastify.listen(opts.socket, listen)
   } else {
     fastify.listen(opts.port, listen)
   }
 
   function listen (err) {
     assert.ifError(err)
-    console.log(`Server listening on http://localhost:${fastify.server.address().port}`)
+    let address = fastify.server.address()
+    if (typeof address === 'object') {
+      address = `http://localhost:${fastify.server.address().port}`
+    }
+    console.log(`Server listening on ${address}`)
   }
 
   return fastify
@@ -96,6 +102,7 @@ function cli () {
     string: ['log-level', 'address'],
     alias: {
       port: 'p',
+      socket: 's',
       help: 'h',
       options: 'o',
       address: 'a',

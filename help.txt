@@ -6,6 +6,9 @@ Usage: fastify [opts] <file>
   -a, --address
       Address to listen on
 
+  -s, --socket
+      Socket to listen on
+
   -l, --log-level
       Log level (default to fatal)
 
