@@ -85,7 +85,11 @@ function runFastify (opts) {
 
   function listen (err) {
     assert.ifError(err)
-    console.log(`Server listening on http://localhost:${fastify.server.address().port}`)
+    let address = fastify.server.address()
+    if (typeof address === 'object') {
+      address = `http://localhost:${fastify.server.address().port}`
+    }
+    console.log(`Server listening on ${address}`)
   }
 
   return fastify
