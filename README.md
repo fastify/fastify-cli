@@ -29,8 +29,15 @@ $ fastify plugin.js
 CLI options:
 ```bash
 Usage: fastify [opts] <file>
+
   -p, --port
       Port to listen on (default to 3000)
+
+  -a, --address
+      Address to listen on
+
+  -s, --socket
+      Socket to listen on
 
   -l, --log-level
       Log level (default to fatal)
