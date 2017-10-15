@@ -29,15 +29,8 @@ $ fastify plugin.js
 CLI options:
 ```bash
 Usage: fastify [opts] <file>
-
   -p, --port
       Port to listen on (default to 3000)
-
-  -a, --address
-      Address to listen on
-
-  -s, --socket
-      Socket to listen on
 
   -l, --log-level
       Log level (default to fatal)
@@ -47,9 +40,6 @@ Usage: fastify [opts] <file>
 
   -o, --options
       Use custom options
-
-  -p, --prefix
-      Set the prefix
 
   -h, --help
       Show this help message
@@ -84,4 +74,4 @@ The code follows the Standard code style.
 
 *The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and non infringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.*
 
-Copyright © 2016 Tomas Della Vedova
+Copyright © 2016-2017 Tomas Della Vedova
