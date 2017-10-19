@@ -28,7 +28,7 @@ function start (opts) {
 
   if (opts.help) {
     console.log(fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8'))
-    stop(0)
+    return module.exports.stop()
   }
 
   assert(opts._.length === 1, 'Missing the file parameter')
@@ -36,8 +36,12 @@ function start (opts) {
   return runFastify(opts)
 }
 
-function stop (code) {
-  process.exit(code)
+function stop (error) {
+  if (error) {
+    console.log(error)
+    process.exit(1)
+  }
+  process.exit()
 }
 
 function runFastify (opts) {
@@ -45,13 +49,17 @@ function runFastify (opts) {
   try {
     file = require(path.resolve(process.cwd(), opts._[0]))
   } catch (e) {
-    console.log(`Cannot find the specified file: '${opts._[0]}'`)
-    stop(1)
+    if (e.code === 'MODULE_NOT_FOUND') {
+      return module.exports.stop(new Error(`Cannot find the specified file: '${opts._[0]}'`))
+    }
+    // console.log(e)
+    // console.log(`Cannot find the specified file: '${opts._[0]}'`)
+    return module.exports.stop(e)
   }
 
   if (file.length !== 3) {
-    throw new Error('Plugin function should contain 3 arguments. Refer to ' +
-                    'documentation for more information.')
+    return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +
+                    'documentation for more information.'))
   }
 
   const options = {
@@ -117,8 +125,8 @@ function cli () {
   }))
 }
 
+module.exports = { start, stop, runFastify, cli }
+
 if (require.main === module) {
   cli()
 }
-
-module.exports = { start, stop, runFastify, cli }

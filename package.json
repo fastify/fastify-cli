@@ -27,6 +27,11 @@
   "engines": {
     "node": ">= 4.0"
   },
+  "standard": {
+    "ignore": [
+      "examples/parsing-error.js"
+    ]
+  },
   "dependencies": {
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.0",
