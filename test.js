@@ -156,7 +156,7 @@ test('should throw on parsing error', t => {
   const oldStop = cli.stop
   t.tearDown(() => { cli.stop = oldStop })
   cli.stop = function (err) {
-    t.equal(err.message, 'Invalid or unexpected token')
+    t.equal(err.constructor, SyntaxError)
   }
 
   cli.start({
