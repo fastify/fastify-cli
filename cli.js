@@ -49,11 +49,6 @@ function runFastify (opts) {
   try {
     file = require(path.resolve(process.cwd(), opts._[0]))
   } catch (e) {
-    if (e.code === 'MODULE_NOT_FOUND') {
-      return module.exports.stop(new Error(`Cannot find the specified file: '${opts._[0]}'`))
-    }
-    // console.log(e)
-    // console.log(`Cannot find the specified file: '${opts._[0]}'`)
     return module.exports.stop(e)
   }
 

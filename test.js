@@ -126,7 +126,7 @@ test('should throw on file not found', t => {
   const oldStop = cli.stop
   t.tearDown(() => { cli.stop = oldStop })
   cli.stop = function (err) {
-    t.ok(/Cannot find the specified file.*not-found/.test(err.message), err.message)
+    t.ok(/Cannot find module.*not-found/.test(err.message), err.message)
   }
 
   cli.start({
@@ -141,7 +141,7 @@ test('should throw on package not found', t => {
   const oldStop = cli.stop
   t.tearDown(() => { cli.stop = oldStop })
   cli.stop = function (err) {
-    t.ok(/Cannot find the specified file.*package-not-found/.test(err.message), err.message)
+    t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
   }
 
   cli.start({
