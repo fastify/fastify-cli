@@ -108,13 +108,74 @@ test('should start fastify at given socket path', t => {
 test('should only accept plugin functions with 3 arguments', t => {
   t.plan(1)
 
-  try {
-    cli.start({
-      port: 3000,
-      _: ['./examples/incorrect-plugin.js']
-    })
-    t.fail('Incorrect arguments')
-  } catch (e) {
-    t.pass('Incorrect arguments')
+  const oldStop = cli.stop
+  t.tearDown(() => { cli.stop = oldStop })
+  cli.stop = function (err) {
+    t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
   }
+
+  cli.start({
+    port: 3000,
+    _: ['./test_data/incorrect-plugin.js']
+  })
+})
+
+test('should throw on file not found', t => {
+  t.plan(1)
+
+  const oldStop = cli.stop
+  t.tearDown(() => { cli.stop = oldStop })
+  cli.stop = function (err) {
+    t.ok(/Cannot find module.*not-found/.test(err.message), err.message)
+  }
+
+  cli.start({
+    port: 3000,
+    _: ['./test_data/not-found.js']
+  })
+})
+
+test('should throw on package not found', t => {
+  t.plan(1)
+
+  const oldStop = cli.stop
+  t.tearDown(() => { cli.stop = oldStop })
+  cli.stop = function (err) {
+    t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
+  }
+
+  cli.start({
+    port: 3000,
+    _: ['./test_data/package-not-found.js']
+  })
+})
+
+test('should throw on parsing error', t => {
+  t.plan(1)
+
+  const oldStop = cli.stop
+  t.tearDown(() => { cli.stop = oldStop })
+  cli.stop = function (err) {
+    t.equal(err.constructor, SyntaxError)
+  }
+
+  cli.start({
+    port: 3000,
+    _: ['./test_data/parsing-error.js']
+  })
+})
+
+test('should exit without error on help', t => {
+  t.plan(1)
+
+  const oldStop = cli.stop
+  t.tearDown(() => { cli.stop = oldStop })
+  cli.stop = function (err) {
+    t.equal(err, undefined)
+  }
+
+  cli.start({
+    port: 3000,
+    help: true
+  })
 })
