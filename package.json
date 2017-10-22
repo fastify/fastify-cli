@@ -29,7 +29,7 @@
   },
   "standard": {
     "ignore": [
-      "examples/parsing-error.js"
+      "test_data/parsing-error.js"
     ]
   },
   "dependencies": {

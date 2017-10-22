@@ -116,7 +116,7 @@ test('should only accept plugin functions with 3 arguments', t => {
 
   cli.start({
     port: 3000,
-    _: ['./examples/incorrect-plugin.js']
+    _: ['./test_data/incorrect-plugin.js']
   })
 })
 
@@ -131,7 +131,7 @@ test('should throw on file not found', t => {
 
   cli.start({
     port: 3000,
-    _: ['./examples/not-found.js']
+    _: ['./test_data/not-found.js']
   })
 })
 
@@ -146,7 +146,7 @@ test('should throw on package not found', t => {
 
   cli.start({
     port: 3000,
-    _: ['./examples/package-not-found.js']
+    _: ['./test_data/package-not-found.js']
   })
 })
 
@@ -161,7 +161,7 @@ test('should throw on parsing error', t => {
 
   cli.start({
     port: 3000,
-    _: ['./examples/parsing-error.js']
+    _: ['./test_data/parsing-error.js']
   })
 })
 
