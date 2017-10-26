@@ -39,7 +39,7 @@
     "update-notifier": "^2.1.0"
   },
   "devDependencies": {
-    "fastify": "^0.28.2",
+    "fastify": "^0.30.2",
     "pre-commit": "^1.2.2",
     "request": "^2.81.0",
     "standard": "^10.0.2",
