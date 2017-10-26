@@ -165,6 +165,36 @@ test('should throw on parsing error', t => {
   })
 })
 
+test('should start the server with an async/await plugin', t => {
+  if (Number(process.versions.node[0]) < 7) {
+    t.pass('Skip because Node version < 7')
+    return t.end()
+  }
+
+  t.plan(5)
+
+  const fastify = cli.start({
+    port: 3000,
+    _: ['./examples/async-await-plugin.js']
+  })
+
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
+    t.error(err)
+
+    request({
+      method: 'GET',
+      uri: 'http://localhost:3000'
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+    })
+  })
+})
+
 test('should exit without error on help', t => {
   t.plan(1)
 
