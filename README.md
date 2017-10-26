@@ -25,6 +25,15 @@ You can easily run it with:
 ```bash
 $ fastify plugin.js
 ```
+You can use `async` functions too, and make your plugin more concise: 
+```js
+// async-await-plugin.js
+module.exports = async function (fastify, options) {
+  fastify.get('/', async function (req, reply) {
+    return { hello: 'world' }
+  })
+}
+```
 
 CLI options:
 ```bash
