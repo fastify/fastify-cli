@@ -35,7 +35,7 @@
   "dependencies": {
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.0",
-    "pump": "^1.0.2",
+    "pump": "^2.0.0",
     "update-notifier": "^2.1.0"
   },
   "devDependencies": {
