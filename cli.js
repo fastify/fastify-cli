@@ -10,13 +10,42 @@ const updateNotifier = require('update-notifier')
 const minimist = require('minimist')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
-const Fastify = require('fastify')
+const resolveFrom = require('resolve-from')
+let Fastify = null
+let fastifyPackageJSON = null
+
+function loadModules (opts) {
+  try {
+    const basedir = path.resolve(process.cwd(), opts._[0])
+
+    Fastify = require(resolveFrom.silent(basedir, 'fastify') || 'fastify')
+    fastifyPackageJSON = require(resolveFrom.silent(basedir, 'fastify/package.json') || 'fastify/package.json')
+  } catch (e) {
+    module.exports.stop(e)
+  }
+}
+
+function showHelp () {
+  console.log(fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8'))
+  return module.exports.stop()
+}
 
 function start (opts) {
+  if (opts.help) {
+    return showHelp()
+  }
+
+  if (opts._.length !== 1) {
+    console.error('Error: Missing the required file parameter\n')
+    return showHelp()
+  }
+
+  loadModules(opts)
+
   const notifier = updateNotifier({
     pkg: {
       name: 'fastify',
-      version: require('fastify/package.json').version
+      version: fastifyPackageJSON.version
     },
     updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
   })
@@ -25,13 +54,6 @@ function start (opts) {
     isGlobal: false,
     defer: false
   })
-
-  if (opts.help) {
-    console.log(fs.readFileSync(path.join(__dirname, 'help.txt'), 'utf8'))
-    return module.exports.stop()
-  }
-
-  assert(opts._.length === 1, 'Missing the file parameter')
 
   return runFastify(opts)
 }
@@ -45,14 +67,14 @@ function stop (error) {
 }
 
 function runFastify (opts) {
+  loadModules(opts)
+
   var file = null
   try {
     file = require(path.resolve(process.cwd(), opts._[0]))
   } catch (e) {
     return module.exports.stop(e)
   }
-
-  console.log(file.constructor.name)
 
   if (file.length !== 3 && file.constructor.name === 'Function') {
     return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +

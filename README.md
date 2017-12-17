@@ -7,7 +7,7 @@ Write and run a route with one single command!
 
 ## Install
 ```bash
-npm install fastify-cli --save
+npm install fastify-cli --global
 ```
 
 ## Usage
@@ -25,6 +25,8 @@ You can easily run it with:
 ```bash
 $ fastify plugin.js
 ```
+If fastify has been installed local to plugin.js that copy will be used instead of the global copy included with fastify-cli.
+
 You can use `async` functions too, and make your plugin more concise: 
 ```js
 // async-await-plugin.js
