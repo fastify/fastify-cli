@@ -120,7 +120,8 @@ function runFastify (opts) {
     if (typeof address === 'object') {
       address = `http://localhost:${fastify.server.address().port}`
     }
-    console.log(`Server listening on ${address}`)
+    fastify.log.info(`Server listening on ${address}`)
+    console.log()
   }
 
   return fastify
