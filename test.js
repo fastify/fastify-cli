@@ -209,3 +209,18 @@ test('should exit without error on help', t => {
     help: true
   })
 })
+
+test('should throw the right error on require file', t => {
+  t.plan(1)
+
+  const oldStop = cli.stop
+  t.tearDown(() => { cli.stop = oldStop })
+  cli.stop = function (err) {
+    t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
+  }
+
+  cli.start({
+    port: 3000,
+    _: ['./test_data/undefinedVariable.js']
+  })
+})
