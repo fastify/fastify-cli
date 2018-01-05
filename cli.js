@@ -107,20 +107,11 @@ function runFastify (opts) {
   fastify.register(file, pluginOptions, assert.ifError)
 
   if (opts.address) {
-    fastify.listen(opts.port, opts.address, listen)
+    fastify.listen(opts.port, opts.address, assert.ifError)
   } else if (opts.socket) {
-    fastify.listen(opts.socket, listen)
+    fastify.listen(opts.socket, assert.ifError)
   } else {
-    fastify.listen(opts.port, listen)
-  }
-
-  function listen (err) {
-    assert.ifError(err)
-    let address = fastify.server.address()
-    if (typeof address === 'object') {
-      address = `http://localhost:${fastify.server.address().port}`
-    }
-    fastify.log.info(`Server listening on ${address}`)
+    fastify.listen(opts.port, assert.ifError)
   }
 
   return fastify
