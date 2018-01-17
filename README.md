@@ -64,6 +64,7 @@ Usage: fastify [opts] <file>
 
   -h, --help
       Show this help message
+
 ```
 
 If you want to use custom options, just export an options object with your route and run the cli command with the `--options` flag.
