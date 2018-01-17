@@ -9,7 +9,8 @@
   "scripts": {
     "lint": "standard",
     "unit": "tap test.js",
-    "test": "npm run lint && npm run unit"
+    "test": "npm run lint && npm run unit",
+    "generate-readme": "node -e \"fs.writeFileSync('README.md', fs.readFileSync('README.tmpl', 'utf8').replace('\\${help.txt}', fs.readFileSync('help.txt')))\""
   },
   "keywords": [
     "fastify",

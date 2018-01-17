@@ -39,32 +39,7 @@ module.exports = async function (fastify, options) {
 
 CLI options:
 ```bash
-Usage: fastify [opts] <file>
-
-  -p, --port
-      Port to listen on (default to 3000)
-
-  -a, --address
-      Address to listen on
-
-  -s, --socket
-      Socket to listen on
-
-  -l, --log-level
-      Log level (default to fatal)
-
-  -P, --pretty-logs
-      Prints pretty logs
-
-  -o, --options
-      Use custom options
-
-  -p, --prefix
-      Set the prefix
-
-  -h, --help
-      Show this help message
-
+${help.txt}
 ```
 
 If you want to use custom options, just export an options object with your route and run the cli command with the `--options` flag.
