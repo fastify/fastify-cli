@@ -37,7 +37,7 @@
     ]
   },
   "dependencies": {
-    "fastify": "^0.39.1",
+    "fastify": "^0.40.0",
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.0",
     "pump": "^2.0.0",
