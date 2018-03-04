@@ -37,7 +37,7 @@
     ]
   },
   "dependencies": {
-    "fastify": "^0.42.0",
+    "fastify": "^0.43.0",
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.0",
     "pump": "^3.0.0",
@@ -47,7 +47,7 @@
   "devDependencies": {
     "pre-commit": "^1.2.2",
     "request": "^2.81.0",
-    "standard": "^10.0.2",
+    "standard": "^11.0.0",
     "tap": "^11.0.0"
   }
 }
