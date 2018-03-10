@@ -9,8 +9,7 @@
   "scripts": {
     "lint": "standard",
     "unit": "tap test/*.js",
-    "test": "npm run lint && npm run unit",
-    "generate-readme": "node -e \"fs.writeFileSync('README.md', fs.readFileSync('README.tmpl', 'utf8').replace('\\${help.txt}', fs.readFileSync('help.txt')))\""
+    "test": "npm run lint && npm run unit"
   },
   "keywords": [
     "fastify",
@@ -37,18 +36,20 @@
     ]
   },
   "dependencies": {
-    "fastify": "^1.0.0",
+    "commist": "^1.0.0",
+    "fastify": "^1.1.1",
     "generify": "^2.1.0",
+    "help-me": "^1.1.0",
     "minimist": "^1.2.0",
-    "pino-colada": "^1.4.0",
+    "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "update-notifier": "^2.1.0"
+    "update-notifier": "^2.3.0"
   },
   "devDependencies": {
     "pre-commit": "^1.2.2",
-    "request": "^2.81.0",
+    "request": "^2.83.0",
     "standard": "^11.0.0",
-    "tap": "^11.0.0"
+    "tap": "^11.1.2"
   }
 }

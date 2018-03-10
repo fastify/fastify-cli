@@ -6,7 +6,7 @@ const path = require('path')
 const t = require('tap')
 const test = t.test
 const request = require('request')
-const cli = require('../cli')
+const start = require('../start')
 
 // FIXME
 // paths are relative to the root of the project
@@ -15,7 +15,7 @@ const cli = require('../cli')
 test('should start the server', t => {
   t.plan(5)
 
-  const fastify = cli.start({
+  const fastify = start.start({
     port: 3000,
     _: ['./examples/plugin.js']
   })
@@ -42,7 +42,7 @@ test('should start fastify with custom options', t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    cli.start({
+    start.start({
       port: 3000,
       options: true,
       _: ['./examples/plugin-with-options.js']
@@ -56,7 +56,7 @@ test('should start fastify with custom options', t => {
 test('should start the server at the given prefix', t => {
   t.plan(5)
 
-  const fastify = cli.start({
+  const fastify = start.start({
     port: 3000,
     _: ['./examples/plugin.js'],
     prefix: '/api/hello'
@@ -84,7 +84,7 @@ test('should start fastify at given socket path', t => {
 
   const sockFile = path.resolve('test.sock')
 
-  const fastify = cli.start({
+  const fastify = start.start({
     socket: sockFile,
     options: true,
     _: ['./examples/plugin.js']
@@ -112,13 +112,13 @@ test('should start fastify at given socket path', t => {
 test('should only accept plugin functions with 3 arguments', t => {
   t.plan(1)
 
-  const oldStop = cli.stop
-  t.tearDown(() => { cli.stop = oldStop })
-  cli.stop = function (err) {
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
     t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
   }
 
-  cli.start({
+  start.start({
     port: 3000,
     _: ['./test/data/incorrect-plugin.js']
   })
@@ -127,13 +127,13 @@ test('should only accept plugin functions with 3 arguments', t => {
 test('should throw on file not found', t => {
   t.plan(1)
 
-  const oldStop = cli.stop
-  t.tearDown(() => { cli.stop = oldStop })
-  cli.stop = function (err) {
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
     t.ok(/Cannot find module.*not-found/.test(err.message), err.message)
   }
 
-  cli.start({
+  start.start({
     port: 3000,
     _: ['./_data/not-found.js']
   })
@@ -142,13 +142,13 @@ test('should throw on file not found', t => {
 test('should throw on package not found', t => {
   t.plan(1)
 
-  const oldStop = cli.stop
-  t.tearDown(() => { cli.stop = oldStop })
-  cli.stop = function (err) {
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
     t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
   }
 
-  cli.start({
+  start.start({
     port: 3000,
     _: ['./test/data/package-not-found.js']
   })
@@ -157,13 +157,13 @@ test('should throw on package not found', t => {
 test('should throw on parsing error', t => {
   t.plan(1)
 
-  const oldStop = cli.stop
-  t.tearDown(() => { cli.stop = oldStop })
-  cli.stop = function (err) {
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
     t.equal(err.constructor, SyntaxError)
   }
 
-  cli.start({
+  start.start({
     port: 3000,
     _: ['./test/data/parsing-error.js']
   })
@@ -177,7 +177,7 @@ test('should start the server with an async/await plugin', t => {
 
   t.plan(5)
 
-  const fastify = cli.start({
+  const fastify = start.start({
     port: 3000,
     _: ['./examples/async-await-plugin.js']
   })
@@ -202,13 +202,13 @@ test('should start the server with an async/await plugin', t => {
 test('should exit without error on help', t => {
   t.plan(1)
 
-  const oldStop = cli.stop
-  t.tearDown(() => { cli.stop = oldStop })
-  cli.stop = function (err) {
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
     t.equal(err, undefined)
   }
 
-  cli.start({
+  start.start({
     port: 3000,
     help: true
   })
@@ -217,13 +217,13 @@ test('should exit without error on help', t => {
 test('should throw the right error on require file', t => {
   t.plan(1)
 
-  const oldStop = cli.stop
-  t.tearDown(() => { cli.stop = oldStop })
-  cli.stop = function (err) {
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
     t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
   }
 
-  cli.start({
+  start.start({
     port: 3000,
     _: ['./test/data/undefinedVariable.js']
   })

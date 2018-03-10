@@ -1,4 +1,4 @@
-Usage: fastify [opts] <file>
+Usage: fastify start [opts] <file>
 
   -p, --port
       Port to listen on (default to 3000)

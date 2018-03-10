@@ -1,0 +1,14 @@
+fastify command line interface, available commands are:
+
+  * start       start a server
+  * generate    generate a new project
+  * version     the current fastify-cli version
+  * help        help about commands
+
+Launch 'fastify help [command]' to know more about the commands.
+
+The default command is start, you can hit
+
+  fastify start plugin.js
+
+to start plugin.js.
