@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "standard",
-    "unit": "tap test.js",
+    "unit": "tap test/*.js",
     "test": "npm run lint && npm run unit",
     "generate-readme": "node -e \"fs.writeFileSync('README.md', fs.readFileSync('README.tmpl', 'utf8').replace('\\${help.txt}', fs.readFileSync('help.txt')))\""
   },
@@ -32,12 +32,13 @@
   },
   "standard": {
     "ignore": [
-      "test_data/parsing-error.js",
-      "test_data/undefinedVariable.js"
+      "test/data/parsing-error.js",
+      "test/data/undefinedVariable.js"
     ]
   },
   "dependencies": {
     "fastify": "^1.0.0",
+    "generify": "^2.1.0",
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.0",
     "pump": "^3.0.0",

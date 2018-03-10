@@ -6,7 +6,11 @@ const path = require('path')
 const t = require('tap')
 const test = t.test
 const request = require('request')
-const cli = require('./cli')
+const cli = require('../cli')
+
+// FIXME
+// paths are relative to the root of the project
+// this can be run only from there
 
 test('should start the server', t => {
   t.plan(5)
@@ -116,7 +120,7 @@ test('should only accept plugin functions with 3 arguments', t => {
 
   cli.start({
     port: 3000,
-    _: ['./test_data/incorrect-plugin.js']
+    _: ['./test/data/incorrect-plugin.js']
   })
 })
 
@@ -131,7 +135,7 @@ test('should throw on file not found', t => {
 
   cli.start({
     port: 3000,
-    _: ['./test_data/not-found.js']
+    _: ['./_data/not-found.js']
   })
 })
 
@@ -146,7 +150,7 @@ test('should throw on package not found', t => {
 
   cli.start({
     port: 3000,
-    _: ['./test_data/package-not-found.js']
+    _: ['./test/data/package-not-found.js']
   })
 })
 
@@ -161,7 +165,7 @@ test('should throw on parsing error', t => {
 
   cli.start({
     port: 3000,
-    _: ['./test_data/parsing-error.js']
+    _: ['./test/data/parsing-error.js']
   })
 })
 
@@ -221,6 +225,6 @@ test('should throw the right error on require file', t => {
 
   cli.start({
     port: 3000,
-    _: ['./test_data/undefinedVariable.js']
+    _: ['./test/data/undefinedVariable.js']
   })
 })
