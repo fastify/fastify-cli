@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "pre-commit": "^1.2.2",
-    "request": "^2.81.0",
+    "request": "2.83.0",
     "standard": "^11.0.0",
     "tap": "^11.0.0"
   }
