@@ -15,9 +15,9 @@ module.exports = function (fastify, opts, next) {
     dir: path.join(__dirname, 'plugins')
   })
 
-  // This loads all plugins defined in features
+  // This loads all plugins defined in services
   fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'features')
+    dir: path.join(__dirname, 'services')
   })
 
   // Make sure to call next when done
