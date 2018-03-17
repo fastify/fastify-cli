@@ -8,7 +8,7 @@ module.exports = function (fastify, opts, next) {
   next()
 }
 
-// It you like async/await, use the following
+// It you prefer async/await, use the following
 //
 // module.exports = async function (fastify, opts, next) {
 //   fastify.get('/example', async function (request, reply) {

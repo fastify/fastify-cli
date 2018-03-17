@@ -17,7 +17,7 @@ test('example is loaded', (t) => {
   })
 })
 
-// It you like async/await, use the following
+// It you prefer async/await, use the following
 //
 // test('example is loaded', async (t) => {
 //   const fastify = Fastify()

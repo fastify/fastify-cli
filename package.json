@@ -48,6 +48,7 @@
   },
   "devDependencies": {
     "fastify-autoload": "^0.1.0",
+    "fastify-plugin": "^0.2.2",
     "pre-commit": "^1.2.2",
     "request": "^2.83.0",
     "standard": "^11.0.0",
