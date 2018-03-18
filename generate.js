@@ -5,8 +5,9 @@ const {
   writeFile
 } = require('fs')
 const path = require('path')
-// const generify = require('generify')
+const generify = require('generify')
 const minimist = require('minimist')
+const templatedir = path.join(__dirname, 'app_template')
 
 function generate (dir, cb) {
   const pkgFile = path.join(dir, 'package.json')
@@ -31,7 +32,13 @@ function generate (dir, cb) {
         return cb(err)
       }
 
-      cb()
+      generify(templatedir, dir, {}, (err) => {
+        if (err) {
+          return cb(err)
+        }
+
+        cb()
+      })
     })
   })
 }
