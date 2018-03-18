@@ -67,6 +67,9 @@ Usage: fastify [opts] <file>
   -h, --help
       Show this help message
 
+  --body-limit
+      Defines the maximum payload, in bytes, the server is allowed to accept
+
 ```
 
 If you want to use custom options, just export an options object with your route and run the cli command with the `--options` flag.
