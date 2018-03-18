@@ -36,6 +36,7 @@
     ]
   },
   "dependencies": {
+    "chalk": "^2.3.2",
     "commist": "^1.0.0",
     "fastify": "^1.1.1",
     "generify": "^2.1.0",
