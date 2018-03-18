@@ -8,6 +8,7 @@ const path = require('path')
 const generify = require('generify')
 const minimist = require('minimist')
 const templatedir = path.join(__dirname, 'app_template')
+const cliPkg = require('./package')
 
 function generate (dir, cb) {
   const pkgFile = path.join(dir, 'package.json')
@@ -26,6 +27,19 @@ function generate (dir, cb) {
     pkg.scripts.test = 'standard | snazzy && tap test/*/*.test.js'
     pkg.scripts.start = 'fastify-cli app.js'
     pkg.scripts.colada = 'fastify-cli -l info -P app.js'
+
+    pkg.dependencies = Object.assign(pkg.dependencies || {}, {
+      'fastify': cliPkg.dependencies.fastify,
+      'fastify-plugin': cliPkg.devDependencies['fastify-plugin'],
+      'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
+      'fastify-cli': '^' + cliPkg.version
+    })
+
+    pkg.devDependencies = Object.assign(pkg.devDependencies || {}, {
+      'snazzy': cliPkg.devDependencies['snazzy'],
+      'standard': cliPkg.devDependencies['standard'],
+      'tap': cliPkg.devDependencies['tap']
+    })
 
     writeFile(pkgFile, JSON.stringify(pkg), (err) => {
       if (err) {

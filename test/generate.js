@@ -16,6 +16,7 @@ const walker = require('walker')
 const { generate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const templatedir = path.join(__dirname, '..', 'app_template')
+const cliPkg = require('../package')
 const expected = {}
 
 ;(function (cb) {
@@ -68,7 +69,7 @@ function define (t) {
   })
 
   test('finish succesfully if package.json is there', (t) => {
-    t.plan(6 + Object.keys(expected).length * 2)
+    t.plan(13 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
 
@@ -96,6 +97,13 @@ function define (t) {
         t.equal(pkg.scripts.test, 'standard | snazzy && tap test/*/*.test.js')
         t.equal(pkg.scripts.start, 'fastify-cli app.js')
         t.equal(pkg.scripts.colada, 'fastify-cli -l info -P app.js')
+        t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
+        t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
+        t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
+        t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
+        t.equal(pkg.devDependencies['standard'], cliPkg.devDependencies['standard'])
+        t.equal(pkg.devDependencies['snazzy'], cliPkg.devDependencies['snazzy'])
+        t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
       })
     }
 
