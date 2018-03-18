@@ -91,6 +91,10 @@ function runFastify (opts) {
     }
   }
 
+  if (opts['body-limit']) {
+    options.bodyLimit = opts['body-limit']
+  }
+
   if (opts['pretty-logs']) {
     const pinoColada = PinoColada()
     options.logger.stream = pinoColada
@@ -119,7 +123,7 @@ function runFastify (opts) {
 
 function cli () {
   start(minimist(process.argv.slice(2), {
-    integer: ['port'],
+    integer: ['port', 'body-limit'],
     boolean: ['pretty-logs', 'options'],
     string: ['log-level', 'address'],
     alias: {
