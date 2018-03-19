@@ -228,3 +228,42 @@ test('should throw the right error on require file', t => {
     _: ['./test/data/undefinedVariable.js']
   })
 })
+
+test('should respond 413 - Payload too large', t => {
+  t.plan(5)
+
+  const bodyTooLarge = '{1: 11}'
+  const bodySmaller = '{1: 1}'
+
+  const fastify = start.start({
+    port: 3000,
+    'body-limit': bodyTooLarge.length + 2 - 1,
+    _: ['./examples/plugin.js']
+  })
+
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
+    t.error(err)
+
+    request({
+      method: 'POST',
+      uri: 'http://localhost:3000',
+      body: bodyTooLarge,
+      json: true
+    }, (err, response) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 413)
+    })
+
+    request({
+      method: 'POST',
+      uri: 'http://localhost:3000',
+      body: bodySmaller,
+      json: true
+    }, (err, response) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+    })
+  })
+})

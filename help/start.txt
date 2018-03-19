@@ -23,3 +23,6 @@ Usage: fastify start [opts] <file>
 
   -h, --help
       Show this help message
+
+  --body-limit
+      Defines the maximum payload, in bytes, the server is allowed to accept
