@@ -111,7 +111,7 @@ The sample code offers you three npm tasks:
 * `npm run colada` - starts the application with
   [`pino-colada`](https://github.com/lrlna/pino-colada) pretty logging,
 not suitable for production
-* `npm run test` - runs the tests
+* `npm test` - runs the tests
 
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
@@ -124,4 +124,4 @@ The code follows the Standard code style.
 
 *The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and non infringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.*
 
-Copyright © 2016-2018 Tomas Della Vedova
+Copyright © 2016-2018 Fastify Team
