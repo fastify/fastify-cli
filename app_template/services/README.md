@@ -1,10 +1,10 @@
 # Services Folder
 
-A service define some routes in your application. Fastify provides an
-easy path to a microservice architecture: in the future you might want
-to indipendently deploy some of those.
+Services define routes within your application. Fastify provides an
+easy path to a microservice architecture, in the future you might want
+to independently deploy some of those.
 
-In this folder you should define all the services that defines the routes
+In this folder you should define all the services that define the routes
 of your web application.
 Each service is a [fastify
 plugin](https://www.fastify.io/docs/latest/Plugins/), it is
@@ -13,7 +13,7 @@ typically stored in a file; be carefult to group your routes logically,
 e.g. all `/users` routes in a `users.js` file. We have added
 a `root.js` file for you with a '/' root added.
 
-If a single file become too crowded, create a folder and add a `index.js` file there:
+If a single file become too large, create a folder and add a `index.js` file there:
 this file must be a fastify plugin, and it will be loaded automatically
 by the application. You can now add as many files as you want inside that folder.
 In this way you can create complex services within a single monolith,

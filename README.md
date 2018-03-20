@@ -69,7 +69,7 @@ module.exports = async function (fastify, options) {
 }
 ```
 
-See all the flags you can pass to `fastify start`, see the help: `fastify help start`.
+For a list of available flags for `fastify start` see the help: `fastify help start`.
 
 If you want to use custom options, just export an options object with your route and run the cli command with the `--options` flag.
 
@@ -92,7 +92,9 @@ module.exports.options = {
 
 #### fastify version discovery
 
-If fastify has been installed local to plugin.js that copy will be used instead of the global copy included with fastify-cli.
+If Fastify is installed as a project dependency (with `npm install --save fastify`),
+then `fastify-cli` will use that version of Fastify when running the server.
+Otherwise, `fastify-cli` will use the version of Fastify included within `fastify-cli`.
 
 ### generate
 
@@ -109,8 +111,8 @@ The sample code offers you three npm tasks:
 
 * `npm start` - starts the application
 * `npm run colada` - starts the application with
-  [`pino-colada`](https://github.com/lrlna/pino-colada) pretty logging,
-not suitable for production
+  [`pino-colada`](https://github.com/lrlna/pino-colada) pretty logging
+  (not suitable for production)
 * `npm test` - runs the tests
 
 ## Contributing
