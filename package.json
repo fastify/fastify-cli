@@ -8,9 +8,8 @@
   },
   "scripts": {
     "lint": "standard",
-    "unit": "tap test.js",
-    "test": "npm run lint && npm run unit",
-    "generate-readme": "node -e \"fs.writeFileSync('README.md', fs.readFileSync('README.tmpl', 'utf8').replace('\\${help.txt}', fs.readFileSync('help.txt')))\""
+    "unit": "tap test/*.js app_template/test/*/*.test.js",
+    "test": "npm run lint && npm run unit"
   },
   "keywords": [
     "fastify",
@@ -18,6 +17,12 @@
     "one command"
   ],
   "author": "Tomas Della Vedova - @delvedor (http://delved.org)",
+  "contributors": [
+    {
+      "name": "Matteo Collina",
+      "email": "hello@matteocollina.com"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -32,22 +37,36 @@
   },
   "standard": {
     "ignore": [
-      "test_data/parsing-error.js",
-      "test_data/undefinedVariable.js"
+      "test/data/parsing-error.js",
+      "test/data/undefinedVariable.js"
     ]
   },
   "dependencies": {
-    "fastify": "^1.0.0",
+    "chalk": "^2.3.2",
+    "commist": "^1.0.0",
+    "fastify": "^1.1.1",
+    "generify": "^2.1.0",
+    "help-me": "^1.1.0",
     "minimist": "^1.2.0",
-    "pino-colada": "^1.4.0",
+    "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "update-notifier": "^2.1.0"
+    "update-notifier": "^2.3.0"
   },
   "devDependencies": {
+    "fastify-autoload": "^0.2.0",
+    "fastify-plugin": "^0.2.2",
+    "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
     "request": "2.83.0",
+    "rimraf": "^2.6.2",
     "standard": "^11.0.0",
-    "tap": "^11.0.0"
+    "tap": "^11.1.2",
+    "walker": "^1.0.7"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "request"
+    ]
   }
 }

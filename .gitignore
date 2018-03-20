@@ -47,3 +47,6 @@ package-lock.json
 
 # created by test
 test.sock
+
+# test artifacts
+test/workdir
