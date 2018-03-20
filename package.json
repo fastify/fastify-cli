@@ -1,6 +1,6 @@
 {
   "name": "fastify-cli",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "bin": {
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/fastify/fastify-cli#readme",
   "engines": {
-    "node": ">= 4.0"
+    "node": ">= 6.0"
   },
   "standard": {
     "ignore": [
