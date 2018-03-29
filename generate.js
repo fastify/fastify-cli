@@ -30,9 +30,10 @@ function generate (dir, log, cb) {
       return cb(err)
     }
 
-    pkg.scripts.test = 'standard && tap test/*/*.test.js'
+    pkg.scripts.test = 'standard && tap test/*.test.js test/**/*.test.js test/**/**/*.test.js'
     pkg.scripts.start = 'fastify start app.js'
-    pkg.scripts.colada = 'fastify start -l info -P app.js'
+    pkg.scripts.dev = 'fastify start -l info -P app.js'
+    pkg.scripts.lint = 'standard --fix'
 
     pkg.dependencies = Object.assign(pkg.dependencies || {}, {
       'fastify': cliPkg.dependencies.fastify,

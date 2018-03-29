@@ -2,7 +2,7 @@
 
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/) [![Build Status](https://travis-ci.org/fastify/fastify-cli.svg?branch=master)](https://travis-ci.org/fastify/fastify-cli) [![Greenkeeper badge](https://badges.greenkeeper.io/fastify/fastify-cli.svg)](https://greenkeeper.io/)
 
-Command line tools for [fastify](https://github.com/mcollina/fastify).
+Command line tools for [Fastify](https://github.com/fastify/fastify).
 Generate, write and run an application with one single command!
 
 ## Install
@@ -99,7 +99,7 @@ Otherwise, `fastify-cli` will use the version of Fastify included within `fastif
 ### generate
 
 `fastify-cli` can also help with generating some project scaffolding to
-kickstart the development of your next fastify application. To use it:
+kickstart the development of your next Fastify application. To use it:
 
 1. `mkdir yourapp`
 2. `cd yourapp`
@@ -107,13 +107,22 @@ kickstart the development of your next fastify application. To use it:
 4. `fastify generate`
 5. `npm install`
 
-The sample code offers you three npm tasks:
+The sample code offers you four npm tasks:
 
 * `npm start` - starts the application
-* `npm run colada` - starts the application with
+* `npm run dev` - starts the application with
   [`pino-colada`](https://github.com/lrlna/pino-colada) pretty logging
   (not suitable for production)
 * `npm test` - runs the tests
+* `npm run lint` - runs the linter and automatically fixes the errors
+
+You will find three different folders:
+- `plugins`: the folder where you will place all your custom plugins
+- `services`: the folder where you will declare all your endpoints
+- `test`: the folder where you will declare all your test
+
+Finally there will be an `app.js` file, which is your entry point.
+It is a standard Fastify plugin and you will not need to add the `listen` method to run the server, just run it with one of the scripts above.
 
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
@@ -122,7 +131,7 @@ The code follows the Standard code style.
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ## License
-**[MIT](https://github.com/delvedor/fastify-cli/blob/master/LICENSE)**
+**[MIT](https://github.com/fastify/fastify-cli/blob/master/LICENSE)**
 
 *The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and non infringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.*
 
