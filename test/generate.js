@@ -94,7 +94,7 @@ function define (t) {
         t.error(err)
 
         const pkg = JSON.parse(data)
-        t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/**/*.test.js test/**/**/*.test.js')
+        t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
         t.equal(pkg.scripts.start, 'fastify start app.js')
         t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
         t.equal(pkg.scripts.lint, 'standard --fix')
