@@ -69,7 +69,7 @@ function define (t) {
   })
 
   test('finish succesfully if package.json is there', (t) => {
-    t.plan(12 + Object.keys(expected).length * 2)
+    t.plan(13 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
 
@@ -94,9 +94,10 @@ function define (t) {
         t.error(err)
 
         const pkg = JSON.parse(data)
-        t.equal(pkg.scripts.test, 'standard && tap test/*/*.test.js')
+        t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/**/*.test.js test/**/**/*.test.js')
         t.equal(pkg.scripts.start, 'fastify start app.js')
-        t.equal(pkg.scripts.colada, 'fastify start -l info -P app.js')
+        t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
+        t.equal(pkg.scripts.lint, 'standard --fix')
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
         t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
