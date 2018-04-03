@@ -11,6 +11,7 @@ const minimist = require('minimist')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const resolveFrom = require('resolve-from')
+const fp = require('fastify-plugin')
 let Fastify = null
 let fastifyPackageJSON = null
 
@@ -110,9 +111,10 @@ function runFastify (opts) {
   const pluginOptions = {}
   if (opts.prefix) {
     pluginOptions.prefix = opts.prefix
+    fastify._routePrefix = opts.prefix || ''
   }
 
-  fastify.register(file, pluginOptions, assert.ifError)
+  fastify.register(fp(file), pluginOptions)
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, assert.ifError)
