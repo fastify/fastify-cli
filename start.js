@@ -67,6 +67,7 @@ function stop (error) {
 }
 
 function runFastify (opts) {
+  opts = Object.assign(readEnv(), opts)
   loadModules(opts)
 
   var file = null
@@ -141,6 +142,19 @@ function cli (args) {
       'log-level': 'fatal'
     }
   }))
+}
+
+function readEnv () {
+  return {
+    port: process.env.FASTIFY_PORT,
+    socket: process.env.FASTIFY_SOCKET,
+    options: process.env.FASTIFY_OPTIONS,
+    address: process.env.FASTIFY_ADDRESS,
+    prefix: process.env.FASTIFY_PREFIX,
+    'log-level': process.env.FASTIFY_LOG_LEVEL,
+    'pretty-logs': process.env.FASTIFY_PRETTY_LOGS,
+    'body-limit': process.env.FASTIFT_BODY_LIMIT
+  }
 }
 
 module.exports = { start, stop, runFastify, cli }
