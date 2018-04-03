@@ -67,6 +67,10 @@ function stop (error) {
 }
 
 function runFastify (opts) {
+  opts = Object.assign(readEnv(), opts)
+  opts.port = opts.port || 3000
+  opts['log-level'] = opts['log-level'] || 'fatal'
+
   loadModules(opts)
 
   var file = null
@@ -135,12 +139,26 @@ function cli (args) {
       prefix: 'r',
       'log-level': 'l',
       'pretty-logs': 'P'
-    },
-    default: {
-      port: 3000,
-      'log-level': 'fatal'
     }
   }))
+}
+
+function readEnv () {
+  require('dotenv').config()
+
+  const env = process.env
+  const opts = {}
+
+  if (env.FASTIFY_PORT) opts.port = env.FASTIFY_PORT
+  if (env.FASTIFY_SOCKET) opts.socket = env.FASTIFY_SOCKET
+  if (env.FASTIFY_OPTIONS) opts.options = env.FASTIFY_OPTIONS
+  if (env.FASTIFY_ADDRESS) opts.address = env.FASTIFY_ADDRESS
+  if (env.FASTIFY_PREFIX) opts.prefix = env.FASTIFY_PREFIX
+  if (env.FASTIFY_LOG_LEVEL) opts['log-level'] = env.FASTIFY_LOG_LEVEL
+  if (env.FASTIFY_PRETTY_LOGS) opts['pretty-logs'] = env.FASTIFY_PRETTY_LOGS
+  if (env.FASTIFY_BODY_LIMIT) opts['body-limit'] = env.FASTIFY_BODY_LIMIT
+
+  return opts
 }
 
 module.exports = { start, stop, runFastify, cli }

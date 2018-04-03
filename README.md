@@ -90,6 +90,21 @@ module.exports.options = {
 }
 ```
 
+#### Options
+You can pass the following options via cli arguments, every options has the corresponding environment variable:
+
+|  Description | Short command | Full command | Environment variable |
+| ------------- | ------------- |-------------| ----- |
+| Port to listen on (default to 3000) | `-p` | `--port` | `FASTIFY_PORT` |
+| Address to listen on | `-a` | `--address` | `FASTIFY_ADDRESS` |
+| Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
+| Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
+| Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
+| Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
+| Set the prefix | `-p` | `--prefix` | `FASTIFY_PREFIX` |
+| Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
+
+
 #### fastify version discovery
 
 If Fastify is installed as a project dependency (with `npm install --save fastify`),
