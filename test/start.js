@@ -271,7 +271,7 @@ test('should respond 413 - Payload too large', t => {
 test('should start the server (using env var)', t => {
   t.plan(5)
 
-  process.env.FASTIFY_PORT = 3000
+  process.env.FASTIFY_PORT = 3030
   const fastify = start.start({
     _: ['./examples/plugin.js']
   })
@@ -283,12 +283,14 @@ test('should start the server (using env var)', t => {
 
     request({
       method: 'GET',
-      uri: 'http://localhost:3000'
+      uri: 'http://localhost:3030'
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
       t.strictEqual(response.headers['content-length'], '' + body.length)
       t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      delete process.env.FASTIFY_PORT
     })
   })
 })
@@ -296,7 +298,7 @@ test('should start the server (using env var)', t => {
 test('should start the server at the given prefix (using env var)', t => {
   t.plan(5)
 
-  process.env.FASTIFY_PORT = 3000
+  process.env.FASTIFY_PORT = 3030
   process.env.FASTIFY_PREFIX = '/api/hello'
   const fastify = start.start({
     _: ['./examples/plugin.js']
@@ -309,12 +311,30 @@ test('should start the server at the given prefix (using env var)', t => {
 
     request({
       method: 'GET',
-      uri: 'http://localhost:3000/api/hello'
+      uri: 'http://localhost:3030/api/hello'
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
       t.strictEqual(response.headers['content-length'], '' + body.length)
       t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      delete process.env.FASTIFY_PORT
+      delete process.env.FASTIFY_PREFIX
     })
+  })
+})
+
+test('should start the server at the given prefix (using env var read from .env)', t => {
+  t.plan(2)
+
+  const fastify = start.start({
+    _: ['./examples/plugin.js']
+  })
+
+  fastify.ready(err => {
+    t.error(err)
+    t.strictEqual(fastify.server.address().port, 8080)
+    delete process.env.FASTIFY_PORT
+    fastify.close()
   })
 })
