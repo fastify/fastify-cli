@@ -45,24 +45,24 @@
     "chalk": "^2.3.2",
     "commist": "^1.0.0",
     "dotenv": "^5.0.1",
-    "fastify": "^1.1.1",
+    "fastify": "^1.2.1",
+    "fastify-plugin": "^0.2.2",
     "generify": "^2.1.0",
     "help-me": "^1.1.0",
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "update-notifier": "^2.3.0"
+    "update-notifier": "^2.4.0"
   },
   "devDependencies": {
-    "fastify-autoload": "^0.2.0",
-    "fastify-plugin": "^0.2.2",
+    "fastify-autoload": "^0.2.1",
     "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
-    "request": "2.83.0",
+    "request": "2.85.0",
     "rimraf": "^2.6.2",
-    "standard": "^11.0.0",
-    "tap": "^11.1.2",
+    "standard": "^11.0.1",
+    "tap": "^11.1.3",
     "walker": "^1.0.7"
   },
   "greenkeeper": {

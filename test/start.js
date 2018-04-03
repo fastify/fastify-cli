@@ -338,3 +338,17 @@ test('should start the server at the given prefix (using env var read from .env)
     fastify.close()
   })
 })
+
+test('The plugin is registered with fastify-plugin', t => {
+  t.plan(2)
+
+  const fastify = start.start({
+    _: ['./examples/plugin.js']
+  })
+
+  fastify.ready(err => {
+    t.error(err)
+    t.strictEqual(fastify.test, true)
+    fastify.close()
+  })
+})
