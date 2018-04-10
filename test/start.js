@@ -6,6 +6,8 @@ const path = require('path')
 const t = require('tap')
 const test = t.test
 const request = require('request')
+const sinon = require('sinon')
+const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')
 
 // FIXME
@@ -350,5 +352,27 @@ test('The plugin is registered with fastify-plugin', t => {
     t.error(err)
     t.strictEqual(fastify.test, true)
     fastify.close()
+  })
+})
+
+test('should start the server listening on 0.0.0.0 when runing in docker', t => {
+  t.plan(2)
+  const isDocker = sinon.stub()
+  isDocker.returns(true)
+
+  const start = proxyquire('../start', {
+    'is-docker': isDocker
+  })
+
+  const fastify = start.start({
+    port: 3000,
+    _: ['./examples/plugin.js']
+  })
+
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
+    t.error(err)
+    t.strictEqual(fastify.server.address().address, '0.0.0.0')
   })
 })

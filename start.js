@@ -12,6 +12,8 @@ const PinoColada = require('pino-colada')
 const pump = require('pump')
 const resolveFrom = require('resolve-from')
 const fp = require('fastify-plugin')
+const isDocker = require('is-docker')
+const listenAddressDocker = '0.0.0.0'
 let Fastify = null
 let fastifyPackageJSON = null
 
@@ -120,6 +122,8 @@ function runFastify (opts) {
     fastify.listen(opts.port, opts.address, assert.ifError)
   } else if (opts.socket) {
     fastify.listen(opts.socket, assert.ifError)
+  } else if (isDocker()) {
+    fastify.listen(opts.port, listenAddressDocker, assert.ifError)
   } else {
     fastify.listen(opts.port, assert.ifError)
   }
