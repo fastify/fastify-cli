@@ -56,7 +56,7 @@
     "update-notifier": "^2.4.0"
   },
   "devDependencies": {
-    "fastify-autoload": "^0.2.1",
+    "fastify-autoload": "^0.3.0",
     "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
     "request": "2.85.0",
