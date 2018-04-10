@@ -49,6 +49,7 @@
     "fastify-plugin": "^0.2.2",
     "generify": "^2.1.0",
     "help-me": "^1.1.0",
+    "is-docker": "^1.1.0",
     "minimist": "^1.2.0",
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
@@ -57,7 +58,6 @@
   },
   "devDependencies": {
     "fastify-autoload": "^0.2.1",
-    "is-docker": "^1.1.0",
     "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
     "proxyquire": "^2.0.1",
