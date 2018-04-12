@@ -5,7 +5,7 @@ const path = require('path')
 
 const t = require('tap')
 const test = t.test
-const request = require('request')
+const sget = require('simple-get').concat
 const sinon = require('sinon')
 const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')
@@ -27,10 +27,11 @@ test('should start the server', t => {
   fastify.ready(err => {
     t.error(err)
 
-    request({
+    sget({
       method: 'GET',
-      uri: 'http://localhost:3000'
+      url: 'http://localhost:3000'
     }, (err, response, body) => {
+      console.log('-- response')
       t.error(err)
       t.strictEqual(response.statusCode, 200)
       t.strictEqual(response.headers['content-length'], '' + body.length)
@@ -69,9 +70,9 @@ test('should start the server at the given prefix', t => {
   fastify.ready(err => {
     t.error(err)
 
-    request({
+    sget({
       method: 'GET',
-      uri: 'http://localhost:3000/api/hello'
+      url: 'http://localhost:3000/api/hello'
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -189,9 +190,9 @@ test('should start the server with an async/await plugin', t => {
   fastify.ready(err => {
     t.error(err)
 
-    request({
+    sget({
       method: 'GET',
-      uri: 'http://localhost:3000'
+      url: 'http://localhost:3000'
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -248,9 +249,9 @@ test('should respond 413 - Payload too large', t => {
   fastify.ready(err => {
     t.error(err)
 
-    request({
+    sget({
       method: 'POST',
-      uri: 'http://localhost:3000',
+      url: 'http://localhost:3000',
       body: bodyTooLarge,
       json: true
     }, (err, response) => {
@@ -258,9 +259,9 @@ test('should respond 413 - Payload too large', t => {
       t.strictEqual(response.statusCode, 413)
     })
 
-    request({
+    sget({
       method: 'POST',
-      uri: 'http://localhost:3000',
+      url: 'http://localhost:3000',
       body: bodySmaller,
       json: true
     }, (err, response) => {
@@ -283,9 +284,9 @@ test('should start the server (using env var)', t => {
   fastify.ready(err => {
     t.error(err)
 
-    request({
+    sget({
       method: 'GET',
-      uri: 'http://localhost:3030'
+      url: 'http://localhost:3030'
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -311,9 +312,9 @@ test('should start the server at the given prefix (using env var)', t => {
   fastify.ready(err => {
     t.error(err)
 
-    request({
+    sget({
       method: 'GET',
-      uri: 'http://localhost:3030/api/hello'
+      url: 'http://localhost:3030/api/hello'
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
