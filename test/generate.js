@@ -117,7 +117,7 @@ function define (t) {
       t.equal(data.toString().split('"main"')[0], pkgContent.split('"main"')[0])
       const pkg = JSON.parse(data)
       t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
-      t.equal(pkg.scripts.start, 'fastify start app.js')
+      t.equal(pkg.scripts.start, 'fastify start -l info app.js')
       t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
       t.equal(pkg.scripts.lint, 'standard --fix')
       t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
