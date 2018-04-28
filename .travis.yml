@@ -3,6 +3,7 @@ node_js:
   - "9"
   - "8"
   - "6"
+  - "10"
 
 notifications:
   email:
