@@ -68,13 +68,13 @@ function define (t) {
     })
   })
 
-  test('finish succesfully if package.json is there', (t) => {
+  test('finish succesfully if package.json is there - npm', (t) => {
     t.plan(13 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
 
     writeFile(pkgFile, JSON.stringify({
-      name: 'an-app',
+      name: 'an-npm-app',
       version: '0.0.1',
       description: 'whaat',
       main: 'index.js',
@@ -84,42 +84,63 @@ function define (t) {
 
       generate(workdir, function (err) {
         t.error(err)
-        verifyPkg()
-        verifyCopy()
+        verifyPkg(t, pkgFile)
+        verifyCopy(t, pkgFile)
       })
     })
-
-    function verifyPkg () {
-      readFile(pkgFile, function (err, data) {
-        t.error(err)
-
-        const pkg = JSON.parse(data)
-        t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
-        t.equal(pkg.scripts.start, 'fastify start app.js')
-        t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
-        t.equal(pkg.scripts.lint, 'standard --fix')
-        t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
-        t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
-        t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
-        t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
-        t.equal(pkg.devDependencies['standard'], cliPkg.devDependencies['standard'])
-        t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
-      })
-    }
-
-    function verifyCopy () {
-      walker(workdir)
-        .on('file', function (file) {
-          if (file === pkgFile) {
-            return
-          }
-
-          readFile(file, function (err, data) {
-            t.notOk(err)
-            file = file.replace(workdir, '')
-            t.deepEqual(data.toString(), expected[file], file + ' matching')
-          })
-        })
-    }
   })
+
+  test('finish succesfully if package.json is there - yarn', (t) => {
+    t.plan(13 + Object.keys(expected).length * 2)
+
+    const pkgFile = path.join(workdir, 'package.json')
+
+    writeFile(pkgFile, JSON.stringify({
+      name: 'an-yarn-app',
+      version: '0.0.1',
+      description: 'whaat',
+      main: 'index.js'
+    }), function (err) {
+      t.error(err)
+
+      generate(workdir, function (err) {
+        t.error(err)
+        verifyPkg(t, pkgFile)
+        verifyCopy(t, pkgFile)
+      })
+    })
+  })
+
+  function verifyPkg (t, pkgFile) {
+    readFile(pkgFile, function (err, data) {
+      t.error(err)
+
+      const pkg = JSON.parse(data)
+      t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
+      t.equal(pkg.scripts.start, 'fastify start app.js')
+      t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
+      t.equal(pkg.scripts.lint, 'standard --fix')
+      t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
+      t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
+      t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
+      t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
+      t.equal(pkg.devDependencies['standard'], cliPkg.devDependencies['standard'])
+      t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
+    })
+  }
+
+  function verifyCopy (t, pkgFile) {
+    walker(workdir)
+      .on('file', function (file) {
+        if (file === pkgFile) {
+          return
+        }
+
+        readFile(file, function (err, data) {
+          t.notOk(err)
+          file = file.replace(workdir, '')
+          t.deepEqual(data.toString(), expected[file], file + ' matching')
+        })
+      })
+  }
 }
