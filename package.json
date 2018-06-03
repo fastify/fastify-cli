@@ -44,7 +44,7 @@
   "dependencies": {
     "chalk": "^2.3.2",
     "commist": "^1.0.0",
-    "dotenv": "^5.0.1",
+    "dotenv": "^6.0.0",
     "fastify": "^1.2.1",
     "fastify-plugin": "^1.0.0",
     "generify": "^2.1.0",
