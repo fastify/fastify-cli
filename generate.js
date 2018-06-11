@@ -39,7 +39,7 @@ function generate (dir, log, cb) {
 
     pkg.dependencies = Object.assign(pkg.dependencies || {}, {
       'fastify': cliPkg.dependencies.fastify,
-      'fastify-plugin': cliPkg.devDependencies['fastify-plugin'],
+      'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
       'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
       'fastify-cli': '^' + cliPkg.version
     })
