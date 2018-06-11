@@ -101,7 +101,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
 | Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
 | Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
-| Set the prefix | `-p` | `--prefix` | `FASTIFY_PREFIX` |
+| Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
 | Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.

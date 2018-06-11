@@ -24,7 +24,7 @@ Usage: fastify start [opts] <file>
   [env: FASTIFY_OPTIONS]
       Use custom options
 
-  -p, --prefix
+  -r, --prefix
   [env: FASTIFY_PREFIX]
       Set the prefix
 
