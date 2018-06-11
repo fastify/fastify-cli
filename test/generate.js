@@ -122,7 +122,7 @@ function define (t) {
       t.equal(pkg.scripts.lint, 'standard --fix')
       t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
       t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
-      t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
+      t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
       t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
       t.equal(pkg.devDependencies['standard'], cliPkg.devDependencies['standard'])
       t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
