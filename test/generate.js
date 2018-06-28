@@ -69,52 +69,52 @@ function define (t) {
   })
 
   test('finish succesfully if package.json is there - npm', (t) => {
-    t.plan(13 + Object.keys(expected).length * 2)
+    t.plan(14 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
-
-    writeFile(pkgFile, JSON.stringify({
+    const pkgContent = JSON.stringify({
       name: 'an-npm-app',
       version: '0.0.1',
       description: 'whaat',
       main: 'index.js',
       scripts: {}
-    }), function (err) {
-      t.error(err)
+    }, null, 2)
 
+    writeFile(pkgFile, pkgContent, function (err) {
+      t.error(err)
       generate(workdir, function (err) {
         t.error(err)
-        verifyPkg(t, pkgFile)
+        verifyPkg(t, pkgFile, pkgContent)
         verifyCopy(t, pkgFile)
       })
     })
   })
 
   test('finish succesfully if package.json is there - yarn', (t) => {
-    t.plan(13 + Object.keys(expected).length * 2)
+    t.plan(14 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
-
-    writeFile(pkgFile, JSON.stringify({
+    const pkgContent = JSON.stringify({
       name: 'an-yarn-app',
       version: '0.0.1',
       description: 'whaat',
       main: 'index.js'
-    }), function (err) {
+    }, null, 2)
+    writeFile(pkgFile, pkgContent, function (err) {
       t.error(err)
 
       generate(workdir, function (err) {
         t.error(err)
-        verifyPkg(t, pkgFile)
+        verifyPkg(t, pkgFile, pkgContent)
         verifyCopy(t, pkgFile)
       })
     })
   })
 
-  function verifyPkg (t, pkgFile) {
+  function verifyPkg (t, pkgFile, pkgContent) {
     readFile(pkgFile, function (err, data) {
       t.error(err)
-
+      t.equal(data.toString().split('"main"')[0], pkgContent.split('"main"')[0])
       const pkg = JSON.parse(data)
       t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
       t.equal(pkg.scripts.start, 'fastify start app.js')
