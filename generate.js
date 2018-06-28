@@ -51,7 +51,7 @@ function generate (dir, log, cb) {
 
     log('debug', `edited package.json, saving`)
 
-    writeFile(pkgFile, JSON.stringify(pkg), (err) => {
+    writeFile(pkgFile, JSON.stringify(pkg, null, 2), (err) => {
       if (err) {
         return cb(err)
       }
