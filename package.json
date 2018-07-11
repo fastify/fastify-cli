@@ -47,7 +47,7 @@
     "dotenv": "^6.0.0",
     "fastify": "^1.6.0",
     "fastify-plugin": "^1.1.2",
-    "generify": "^2.1.0",
+    "generify": "^3.0.0",
     "help-me": "^1.1.0",
     "is-docker": "^1.1.0",
     "minimist": "^1.2.0",
