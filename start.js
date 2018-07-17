@@ -155,7 +155,7 @@ function readEnv () {
   const env = process.env
   const opts = {}
 
-  if (env.FASTIFY_PORT) opts.port = env.FASTIFY_PORT
+  if (env.FASTIFY_PORT || env.PORT) opts.port = env.FASTIFY_PORT || env.PORT
   if (env.FASTIFY_SOCKET) opts.socket = env.FASTIFY_SOCKET
   if (env.FASTIFY_OPTIONS) opts.options = env.FASTIFY_OPTIONS
   if (env.FASTIFY_ADDRESS) opts.address = env.FASTIFY_ADDRESS

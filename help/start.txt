@@ -1,7 +1,7 @@
 Usage: fastify start [opts] <file>
 
   -p, --port
-  [env: FASTIFY_PORT]
+  [env: FASTIFY_PORT or PORT]
       Port to listen on (default to 3000)
 
   -a, --address

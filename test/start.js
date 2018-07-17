@@ -298,6 +298,62 @@ test('should start the server (using env var)', t => {
   })
 })
 
+test('should start the server (using PORT-env var)', t => {
+  t.plan(5)
+
+  process.env.PORT = 3030
+  const fastify = start.start({
+    _: ['./examples/plugin.js']
+  })
+
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: 'http://localhost:3030'
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      delete process.env.PORT
+    })
+  })
+})
+
+test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', t => {
+  t.plan(5)
+
+  process.env.FASTIFY_PORT = 3030
+  process.env.PORT = 3031
+  const fastify = start.start({
+    _: ['./examples/plugin.js']
+  })
+
+  t.tearDown(() => fastify.close())
+
+  fastify.ready(err => {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: 'http://localhost:3030'
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      delete process.env.FASTIFY_PORT
+      delete process.env.PORT
+    })
+  })
+})
+
 test('should start the server at the given prefix (using env var)', t => {
   t.plan(5)
 
