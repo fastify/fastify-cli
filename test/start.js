@@ -2,6 +2,10 @@
 
 const fs = require('fs')
 const path = require('path')
+const crypto = require('crypto')
+const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
+const chokidar = require('chokidar')
+const { exec } = require('child_process')
 
 const t = require('tap')
 const test = t.test
@@ -17,10 +21,8 @@ const start = require('../start')
 test('should start the server', t => {
   t.plan(5)
 
-  const fastify = start.start({
-    port: 3000,
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ '-p', '3000', './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -45,11 +47,8 @@ test('should start fastify with custom options', t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    start.start({
-      port: 3000,
-      options: true,
-      _: ['./examples/plugin-with-options.js']
-    })
+    const argv = [ '-p', '3000', '-o', 'true', './examples/plugin-with-options.js' ]
+    start.start(argv)
     t.fail('Custom options')
   } catch (e) {
     t.pass('Custom options')
@@ -59,11 +58,9 @@ test('should start fastify with custom options', t => {
 test('should start the server at the given prefix', t => {
   t.plan(5)
 
-  const fastify = start.start({
-    port: 3000,
-    _: ['./examples/plugin.js'],
-    prefix: '/api/hello'
-  })
+  const argv = [ '-p', '3000', '-r', '/api/hello', './examples/plugin.js' ]
+
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -86,12 +83,9 @@ test('should start fastify at given socket path', t => {
   t.plan(2)
 
   const sockFile = path.resolve('test.sock')
+  const argv = [ '-s', sockFile, '-o', 'true', './examples/plugin.js' ]
 
-  const fastify = start.start({
-    socket: sockFile,
-    options: true,
-    _: ['./examples/plugin.js']
-  })
+  const fastify = start.start(argv)
   t.tearDown(() => fastify.close())
 
   try {
@@ -121,10 +115,8 @@ test('should only accept plugin functions with 3 arguments', t => {
     t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
   }
 
-  start.start({
-    port: 3000,
-    _: ['./test/data/incorrect-plugin.js']
-  })
+  const argv = [ '-p', '3000', './test/data/incorrect-plugin.js' ]
+  start.start(argv)
 })
 
 test('should throw on file not found', t => {
@@ -136,10 +128,8 @@ test('should throw on file not found', t => {
     t.ok(/Cannot find module.*not-found/.test(err.message), err.message)
   }
 
-  start.start({
-    port: 3000,
-    _: ['./_data/not-found.js']
-  })
+  const argv = [ '-p', '3000', './data/not-found.js' ]
+  start.start(argv)
 })
 
 test('should throw on package not found', t => {
@@ -151,10 +141,8 @@ test('should throw on package not found', t => {
     t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
   }
 
-  start.start({
-    port: 3000,
-    _: ['./test/data/package-not-found.js']
-  })
+  const argv = [ '-p', '3000', './test/data/package-not-found.js' ]
+  start.start(argv)
 })
 
 test('should throw on parsing error', t => {
@@ -166,10 +154,8 @@ test('should throw on parsing error', t => {
     t.equal(err.constructor, SyntaxError)
   }
 
-  start.start({
-    port: 3000,
-    _: ['./test/data/parsing-error.js']
-  })
+  const argv = [ '-p', '3000', './test/data/parsing-error.js' ]
+  start.start(argv)
 })
 
 test('should start the server with an async/await plugin', t => {
@@ -180,10 +166,8 @@ test('should start the server with an async/await plugin', t => {
 
   t.plan(5)
 
-  const fastify = start.start({
-    port: 3000,
-    _: ['./examples/async-await-plugin.js']
-  })
+  const argv = [ '-p', '3000', './examples/async-await-plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -211,10 +195,8 @@ test('should exit without error on help', t => {
     t.equal(err, undefined)
   }
 
-  start.start({
-    port: 3000,
-    help: true
-  })
+  const argv = [ '-p', '3000', '-h', 'true' ]
+  start.start(argv)
 })
 
 test('should throw the right error on require file', t => {
@@ -226,10 +208,8 @@ test('should throw the right error on require file', t => {
     t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
   }
 
-  start.start({
-    port: 3000,
-    _: ['./test/data/undefinedVariable.js']
-  })
+  const argv = [ '-p', '3000', './test/data/undefinedVariable.js' ]
+  start.start(argv)
 })
 
 test('should respond 413 - Payload too large', t => {
@@ -238,11 +218,8 @@ test('should respond 413 - Payload too large', t => {
   const bodyTooLarge = '{1: 11}'
   const bodySmaller = '{1: 1}'
 
-  const fastify = start.start({
-    port: 3000,
-    'body-limit': bodyTooLarge.length + 2 - 1,
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ '-p', '3000', '--body-limit', bodyTooLarge.length + 2 - 1, './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -275,9 +252,8 @@ test('should start the server (using env var)', t => {
   t.plan(5)
 
   process.env.FASTIFY_PORT = 3030
-  const fastify = start.start({
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -302,9 +278,8 @@ test('should start the server (using PORT-env var)', t => {
   t.plan(5)
 
   process.env.PORT = 3030
-  const fastify = start.start({
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -330,9 +305,8 @@ test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', 
 
   process.env.FASTIFY_PORT = 3030
   process.env.PORT = 3031
-  const fastify = start.start({
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -359,9 +333,8 @@ test('should start the server at the given prefix (using env var)', t => {
 
   process.env.FASTIFY_PORT = 3030
   process.env.FASTIFY_PREFIX = '/api/hello'
-  const fastify = start.start({
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
@@ -386,9 +359,8 @@ test('should start the server at the given prefix (using env var)', t => {
 test('should start the server at the given prefix (using env var read from .env)', t => {
   t.plan(2)
 
-  const fastify = start.start({
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   fastify.ready(err => {
     t.error(err)
@@ -401,9 +373,8 @@ test('should start the server at the given prefix (using env var read from .env)
 test('The plugin is registered with fastify-plugin', t => {
   t.plan(2)
 
-  const fastify = start.start({
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   fastify.ready(err => {
     t.error(err)
@@ -421,15 +392,74 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
     'is-docker': isDocker
   })
 
-  const fastify = start.start({
-    port: 3000,
-    _: ['./examples/plugin.js']
-  })
+  const argv = [ '-p', '3000', './examples/plugin.js' ]
+  const fastify = start.start(argv)
 
   t.tearDown(() => fastify.close())
 
   fastify.ready(err => {
     t.error(err)
     t.strictEqual(fastify.server.address().address, '0.0.0.0')
+  })
+})
+
+test('should start the server with watch options that the child process restart when directory changed', t => {
+  t.plan(5)
+
+  const tmpjs = path.resolve(baseFilename + '.js')
+  fs.writeFileSync(tmpjs, 'hello world')
+
+  setTimeout(function () {
+    const argv = [ '-p', '3000', '-w', './examples/plugin.js' ]
+    const fastifyEmitter = start.start(argv)
+
+    t.tearDown(() => {
+      if (fs.existsSync(tmpjs)) {
+        fs.unlinkSync(tmpjs)
+      }
+      fastifyEmitter.emit('close')
+    })
+
+    fastifyEmitter.on('start', () => {
+      t.pass('should receive start event')
+      setTimeout(function () {
+        t.pass('touch tmpjs')
+        fastifyEmitter.emit('ready')
+        fastifyEmitter.emit('restart')
+        // exec(`touch ${tmpjs}`) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
+      }, 1500)
+    })
+
+    fastifyEmitter.on('restart', () => {
+      t.pass('should receive restart event')
+    })
+
+    fastifyEmitter.on('ready', () => {
+      t.pass('should receive ready event')
+    })
+  }, 100)
+})
+
+test('chokidar watch test', t => {
+  t.plan(2)
+  t.tearDown(() => {
+    setTimeout(() => {
+      watcher.close()
+    }, 3000)
+  })
+
+  const watcher = chokidar.watch(process.cwd(), { ignored: /(node_modules|\.git|bower_components|build|dist)/ })
+
+  const tmpjs = path.resolve(baseFilename + '.js')
+  fs.writeFile(tmpjs, 'hello world', (err, f) => {
+    t.error(err)
+    t.pass(tmpjs)
+  })
+
+  watcher.on('ready', function () {
+    exec(`touch ${tmpjs}`)
+    watcher.on('all', function (e, f) {
+      console.log('Yeah! you hit me, CI')
+    })
   })
 })

@@ -5,6 +5,9 @@
 const path = require('path')
 const fs = require('fs')
 const assert = require('assert')
+const cp = require('child_process')
+const chokidar = require('chokidar')
+const forkPath = path.join(__dirname, './fork.js')
 
 const updateNotifier = require('update-notifier')
 const minimist = require('minimist')
@@ -14,6 +17,9 @@ const resolveFrom = require('resolve-from')
 const fp = require('fastify-plugin')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
+const EventEmitter = require('events')
+
+let childs = []
 let Fastify = null
 let fastifyPackageJSON = null
 
@@ -33,7 +39,8 @@ function showHelp () {
   return module.exports.stop()
 }
 
-function start (opts) {
+function start (args) {
+  let opts = minimistArgs(args)
   if (opts.help) {
     return showHelp()
   }
@@ -58,7 +65,63 @@ function start (opts) {
     defer: false
   })
 
-  return runFastify(opts)
+  if (opts['watch']) {
+    const emitter = new EventEmitter()
+    setTimeout(function () {
+      const run = (event) => {
+        const child = cp.fork(forkPath, args, {
+          env: process.env,
+          cwd: process.cwd(),
+          encoding: 'utf8'
+        })
+
+        child.on('message', (childEvent) => {
+          const { type, err } = childEvent
+          if (err) {
+            emitter.emit('error', err)
+          }
+          emitter.emit(event)
+          setTimeout(function () {
+            emitter.emit(type)
+          }, 100)
+        })
+
+        child.on('close', (code, signal) => {
+          if (signal === 'SIGUSR2') { childs.push(run('restart')) }
+        })
+
+        return child
+      }
+
+      const watcher = chokidar.watch(process.cwd(), { ignored: /(node_modules|\.git|bower_components|build|dist)/ })
+      watcher.on('ready', function () {
+        watcher.on('all', function (e) {
+          restart(e)
+        })
+      })
+
+      childs.push(run('start'))
+
+      const restart = (e) => {
+        emitter.emit('watch:debug', `can you trigger me(${e}) in tarvis-ci? touch.sync(tmpjs)!`)
+        childs.shift().kill('SIGUSR2')
+      }
+
+      emitter.on('error', (err) => {
+        childs.shift().kill('SIGINT')
+        throw err
+      })
+
+      emitter.on('close', () => {
+        childs.shift().kill('SIGINT')
+        watcher.close()
+      })
+    }, 100)
+
+    return emitter
+  }
+
+  return runFastify(args)
 }
 
 function stop (error) {
@@ -69,7 +132,27 @@ function stop (error) {
   process.exit()
 }
 
-function runFastify (opts) {
+function minimistArgs (args) {
+  return minimist(args, {
+    integer: ['port', 'body-limit'],
+    boolean: ['pretty-logs', 'options', 'watch'],
+    string: ['log-level', 'address'],
+    alias: {
+      port: 'p',
+      socket: 's',
+      help: 'h',
+      options: 'o',
+      address: 'a',
+      watch: 'w',
+      prefix: 'r',
+      'log-level': 'l',
+      'pretty-logs': 'P'
+    }
+  })
+}
+
+function runFastify (args) {
+  let opts = minimistArgs(args)
   opts = Object.assign(readEnv(), opts)
   opts.port = opts.port || 3000
   opts['log-level'] = opts['log-level'] || 'fatal'
@@ -132,21 +215,7 @@ function runFastify (opts) {
 }
 
 function cli (args) {
-  start(minimist(args, {
-    integer: ['port', 'body-limit'],
-    boolean: ['pretty-logs', 'options'],
-    string: ['log-level', 'address'],
-    alias: {
-      port: 'p',
-      socket: 's',
-      help: 'h',
-      options: 'o',
-      address: 'a',
-      prefix: 'r',
-      'log-level': 'l',
-      'pretty-logs': 'P'
-    }
-  }))
+  start(args)
 }
 
 function readEnv () {
@@ -159,6 +228,7 @@ function readEnv () {
   if (env.FASTIFY_SOCKET) opts.socket = env.FASTIFY_SOCKET
   if (env.FASTIFY_OPTIONS) opts.options = env.FASTIFY_OPTIONS
   if (env.FASTIFY_ADDRESS) opts.address = env.FASTIFY_ADDRESS
+  if (env.FASTIFY_WATCH) opts['watch'] = env.FASTIFY_WATCH
   if (env.FASTIFY_PREFIX) opts.prefix = env.FASTIFY_PREFIX
   if (env.FASTIFY_LOG_LEVEL) opts['log-level'] = env.FASTIFY_LOG_LEVEL
   if (env.FASTIFY_PRETTY_LOGS) opts['pretty-logs'] = env.FASTIFY_PRETTY_LOGS

@@ -100,6 +100,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
 | Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
+| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
 | Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
 | Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
 | Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
