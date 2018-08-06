@@ -424,9 +424,9 @@ test('should start the server with watch options that the child process restart 
       t.pass('should receive start event')
       setTimeout(function () {
         t.pass('touch tmpjs')
-        fastifyEmitter.emit('ready')
-        fastifyEmitter.emit('restart')
-        // exec(`touch ${tmpjs}`) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
+        // fastifyEmitter.emit('ready')
+        // fastifyEmitter.emit('restart')
+        exec(`touch ${tmpjs}`) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
       }, 1500)
     })
 
@@ -437,15 +437,13 @@ test('should start the server with watch options that the child process restart 
     fastifyEmitter.on('ready', () => {
       t.pass('should receive ready event')
     })
-  }, 100)
+  }, 500)
 })
 
 test('chokidar watch test', t => {
   t.plan(2)
   t.tearDown(() => {
-    setTimeout(() => {
-      watcher.close()
-    }, 3000)
+    watcher.close()
   })
 
   const watcher = chokidar.watch(process.cwd(), { ignored: /(node_modules|\.git|bower_components|build|dist)/ })
@@ -459,7 +457,7 @@ test('chokidar watch test', t => {
   watcher.on('ready', function () {
     exec(`touch ${tmpjs}`)
     watcher.on('all', function (e, f) {
-      console.log('Yeah! you hit me, CI')
+      console.log('Yeah! you hit me, CI') // if that don't happend, then prove Travis CI can't caught file change event
     })
   })
 })

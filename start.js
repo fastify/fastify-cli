@@ -5,9 +5,6 @@
 const path = require('path')
 const fs = require('fs')
 const assert = require('assert')
-const cp = require('child_process')
-const chokidar = require('chokidar')
-const forkPath = path.join(__dirname, './fork.js')
 
 const updateNotifier = require('update-notifier')
 const minimist = require('minimist')
@@ -17,9 +14,8 @@ const resolveFrom = require('resolve-from')
 const fp = require('fastify-plugin')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
-const EventEmitter = require('events')
+const watch = require('./lib/watch')
 
-let childs = []
 let Fastify = null
 let fastifyPackageJSON = null
 
@@ -66,59 +62,7 @@ function start (args) {
   })
 
   if (opts['watch']) {
-    const emitter = new EventEmitter()
-    setTimeout(function () {
-      const run = (event) => {
-        const child = cp.fork(forkPath, args, {
-          env: process.env,
-          cwd: process.cwd(),
-          encoding: 'utf8'
-        })
-
-        child.on('message', (childEvent) => {
-          const { type, err } = childEvent
-          if (err) {
-            emitter.emit('error', err)
-          }
-          emitter.emit(event)
-          setTimeout(function () {
-            emitter.emit(type)
-          }, 100)
-        })
-
-        child.on('close', (code, signal) => {
-          if (signal === 'SIGUSR2') { childs.push(run('restart')) }
-        })
-
-        return child
-      }
-
-      const watcher = chokidar.watch(process.cwd(), { ignored: /(node_modules|\.git|bower_components|build|dist)/ })
-      watcher.on('ready', function () {
-        watcher.on('all', function (e) {
-          restart(e)
-        })
-      })
-
-      childs.push(run('start'))
-
-      const restart = (e) => {
-        emitter.emit('watch:debug', `can you trigger me(${e}) in tarvis-ci? touch.sync(tmpjs)!`)
-        childs.shift().kill('SIGUSR2')
-      }
-
-      emitter.on('error', (err) => {
-        childs.shift().kill('SIGINT')
-        throw err
-      })
-
-      emitter.on('close', () => {
-        childs.shift().kill('SIGINT')
-        watcher.close()
-      })
-    }, 100)
-
-    return emitter
+    return watch(args)
   }
 
   return runFastify(args)
