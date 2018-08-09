@@ -4,8 +4,6 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
-const chokidar = require('chokidar')
-const { exec } = require('child_process')
 
 const t = require('tap')
 const test = t.test
@@ -13,6 +11,8 @@ const sget = require('simple-get').concat
 const sinon = require('sinon')
 const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')
+
+const onTravis = !!process.env.TRAVIS
 
 // FIXME
 // paths are relative to the root of the project
@@ -403,7 +403,7 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
   })
 })
 
-test('should start the server with watch options that the child process restart when directory changed', t => {
+test('should start the server with watch options that the child process restart when directory changed', { skip: onTravis }, (t) => {
   t.plan(6)
   const tmpjs = path.resolve(baseFilename + '.js')
 
@@ -422,7 +422,7 @@ test('should start the server with watch options that the child process restart 
     fastifyEmitter.on('start', () => {
       t.pass('should receive start event')
       t.pass('change tmpjs')
-      fs.writeFileSync(tmpjs, 'hello world', { flag: 'a+' }) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
+      fs.writeFileSync(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
     })
 
     fastifyEmitter.on('restart', () => {
@@ -431,28 +431,6 @@ test('should start the server with watch options that the child process restart 
 
     fastifyEmitter.on('ready', () => {
       t.pass('should receive ready event')
-    })
-  })
-})
-
-test('chokidar watch test', t => {
-  t.plan(2)
-  t.tearDown(() => {
-    watcher.close()
-  })
-
-  const watcher = chokidar.watch(process.cwd(), { ignored: /(node_modules|\.git|bower_components|build|dist)/ })
-
-  const tmpjs = path.resolve(baseFilename + '.js')
-  fs.writeFile(tmpjs, 'hello world', (err, f) => {
-    t.error(err)
-    t.pass(tmpjs)
-  })
-
-  watcher.on('ready', function () {
-    exec(`touch ${tmpjs}`)
-    watcher.on('all', function (e, f) {
-      console.log('Yeah! you hit me, CI') // if that don't happend, then prove Travis CI can't caught file change event
     })
   })
 })
