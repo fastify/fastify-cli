@@ -404,12 +404,11 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
 })
 
 test('should start the server with watch options that the child process restart when directory changed', t => {
-  t.plan(5)
-
+  t.plan(6)
   const tmpjs = path.resolve(baseFilename + '.js')
-  fs.writeFileSync(tmpjs, 'hello world')
 
-  setTimeout(function () {
+  fs.writeFile(tmpjs, 'hello world', function (err) {
+    t.error(err)
     const argv = [ '-p', '3000', '-w', './examples/plugin.js' ]
     const fastifyEmitter = start.start(argv)
 
@@ -422,12 +421,8 @@ test('should start the server with watch options that the child process restart 
 
     fastifyEmitter.on('start', () => {
       t.pass('should receive start event')
-      setTimeout(function () {
-        t.pass('touch tmpjs')
-        // fastifyEmitter.emit('ready')
-        // fastifyEmitter.emit('restart')
-        exec(`touch ${tmpjs}`) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
-      }, 1500)
+      t.pass('change tmpjs')
+      fs.writeFileSync(tmpjs, 'hello world', { flag: 'a+' }) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
     })
 
     fastifyEmitter.on('restart', () => {
@@ -437,7 +432,7 @@ test('should start the server with watch options that the child process restart 
     fastifyEmitter.on('ready', () => {
       t.pass('should receive ready event')
     })
-  }, 500)
+  })
 })
 
 test('chokidar watch test', t => {
