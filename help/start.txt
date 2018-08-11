@@ -24,6 +24,10 @@ Usage: fastify start [opts] <file>
   [env: FASTIFY_OPTIONS]
       Use custom options
 
+  -w, --watch
+  [env: FASTIFY_WATCH]
+      Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.
+
   -r, --prefix
   [env: FASTIFY_PREFIX]
       Set the prefix

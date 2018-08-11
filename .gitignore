@@ -50,3 +50,4 @@ test.sock
 
 # test artifacts
 test/workdir
+test/fixtures/*.js
