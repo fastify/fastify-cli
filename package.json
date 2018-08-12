@@ -1,6 +1,6 @@
 {
   "name": "fastify-cli",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "bin": {
@@ -43,10 +43,11 @@
   },
   "dependencies": {
     "chalk": "^2.4.1",
+    "chokidar": "^2.0.4",
     "commist": "^1.0.0",
     "dotenv": "^6.0.0",
-    "fastify": "^1.6.0",
-    "fastify-plugin": "^1.1.2",
+    "fastify": "^1.9.0",
+    "fastify-plugin": "^1.2.0",
     "generify": "^3.0.0",
     "help-me": "^1.1.0",
     "is-docker": "^1.1.0",
@@ -54,8 +55,7 @@
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "update-notifier": "^2.4.0",
-    "chokidar": "^2.0.4"
+    "update-notifier": "^2.4.0"
   },
   "devDependencies": {
     "fastify-autoload": "^0.4.0",
@@ -63,8 +63,8 @@
     "pre-commit": "^1.2.2",
     "proxyquire": "^2.0.1",
     "rimraf": "^2.6.2",
-    "simple-get": "^3.0.1",
-    "sinon": "^6.0.0",
+    "simple-get": "^3.0.3",
+    "sinon": "^6.1.5",
     "standard": "^11.0.1",
     "tap": "^12.0.0",
     "walker": "^1.0.7"
