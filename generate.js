@@ -32,7 +32,7 @@ function generate (dir, log, cb) {
 
     pkg.scripts = Object.assign(pkg.scripts || {}, {
       'test': 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js',
-      'start': 'fastify start app.js',
+      'start': 'fastify start -l info app.js',
       'dev': 'fastify start -l info -P app.js',
       'lint': 'standard --fix'
     })
