@@ -69,7 +69,7 @@ function define (t) {
   })
 
   test('finish succesfully if package.json is there - npm', (t) => {
-    t.plan(14 + Object.keys(expected).length * 2)
+    t.plan(12 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
     const pkgContent = JSON.stringify({
@@ -91,7 +91,7 @@ function define (t) {
   })
 
   test('finish succesfully if package.json is there - yarn', (t) => {
-    t.plan(14 + Object.keys(expected).length * 2)
+    t.plan(12 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
     const pkgContent = JSON.stringify({
@@ -116,15 +116,13 @@ function define (t) {
       t.error(err)
       t.equal(data.toString().split('"main"')[0], pkgContent.split('"main"')[0])
       const pkg = JSON.parse(data)
-      t.equal(pkg.scripts.test, 'standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
+      t.equal(pkg.scripts.test, 'tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
       t.equal(pkg.scripts.start, 'fastify start -l info app.js')
       t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
-      t.equal(pkg.scripts.lint, 'standard --fix')
       t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
       t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
       t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
       t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
-      t.equal(pkg.devDependencies['standard'], cliPkg.devDependencies['standard'])
       t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
     })
   }
