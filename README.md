@@ -132,7 +132,6 @@ The sample code offers you four npm tasks:
   [`pino-colada`](https://github.com/lrlna/pino-colada) pretty logging
   (not suitable for production)
 * `npm test` - runs the tests
-* `npm run lint` - runs the linter and automatically fixes the errors
 
 You will find three different folders:
 - `plugins`: the folder where you will place all your custom plugins
@@ -141,6 +140,24 @@ You will find three different folders:
 
 Finally there will be an `app.js` file, which is your entry point.
 It is a standard Fastify plugin and you will not need to add the `listen` method to run the server, just run it with one of the scripts above.
+
+### linting
+
+`fastify-cli` is unopinionated on the choice of linter. We recommend you to add a linter, like so:
+
+```diff
+"devDependencies": {
++ "standard": "^11.0.1",
+}
+
+"scripts": {
+- "test": "tap test/*.test.js test/*/*.test.js test/*/*/*.test.js",
++ "test": "standard && tap test/*.test.js test/*/*.test.js test/*/*/*.test.js",
+  "start": "fastify start -l info app.js",
+  "dev": "fastify start -l info -P app.js",
++ "lint": "standard --fix"
+},
+```
 
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
