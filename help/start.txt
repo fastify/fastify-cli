@@ -36,5 +36,8 @@ Usage: fastify start [opts] <file>
   [env: FASTIFY_BODY_LIMIT]
       Defines the maximum payload, in bytes, the server is allowed to accept
 
+  -T, --plugin-timeout
+      The maximum amount of time that a plugin can take to load (default to 10 seconds).
+
   -h, --help
       Show this help message
