@@ -35,7 +35,7 @@ function showHelp () {
   return module.exports.stop()
 }
 
-function start (args) {
+function start (args, cb) {
   let opts = minimistArgs(args)
   if (opts.help) {
     return showHelp()
@@ -65,7 +65,7 @@ function start (args) {
     return watch(args)
   }
 
-  return runFastify(args)
+  return runFastify(args, cb)
 }
 
 function stop (error) {
@@ -95,11 +95,12 @@ function minimistArgs (args) {
   })
 }
 
-function runFastify (args) {
+function runFastify (args, cb) {
   let opts = minimistArgs(args)
   opts = Object.assign(readEnv(), opts)
   opts.port = opts.port || 3000
   opts['log-level'] = opts['log-level'] || 'fatal'
+  cb = cb || assert.ifError
 
   loadModules(opts)
 
@@ -146,13 +147,17 @@ function runFastify (args) {
   fastify.register(fp(file), pluginOptions)
 
   if (opts.address) {
-    fastify.listen(opts.port, opts.address, assert.ifError)
+    fastify.listen(opts.port, opts.address, wrap)
   } else if (opts.socket) {
-    fastify.listen(opts.socket, assert.ifError)
+    fastify.listen(opts.socket, wrap)
   } else if (isDocker()) {
-    fastify.listen(opts.port, listenAddressDocker, assert.ifError)
+    fastify.listen(opts.port, listenAddressDocker, wrap)
   } else {
-    fastify.listen(opts.port, assert.ifError)
+    fastify.listen(opts.port, wrap)
+  }
+
+  function wrap (err) {
+    cb(err, fastify)
   }
 
   return fastify

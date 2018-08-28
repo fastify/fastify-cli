@@ -14,30 +14,34 @@ const start = require('../start')
 
 const onTravis = !!process.env.TRAVIS
 
+let _port = 3001
+
+function getPort () {
+  return '' + _port++
+}
+
 // FIXME
 // paths are relative to the root of the project
 // this can be run only from there
 
 test('should start the server', t => {
-  t.plan(5)
+  t.plan(6)
 
-  const argv = [ '-p', '3000', './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  const argv = [ '-p', getPort(), './examples/plugin.js' ]
+  start.start(argv, function (err, fastify) {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3000'
+      url: `http://localhost:${fastify.server.address().port}`
     }, (err, response, body) => {
-      console.log('-- response')
       t.error(err)
       t.strictEqual(response.statusCode, 200)
       t.strictEqual(response.headers['content-length'], '' + body.length)
       t.deepEqual(JSON.parse(body), { hello: 'world' })
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
@@ -47,7 +51,7 @@ test('should start fastify with custom options', t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    const argv = [ '-p', '3000', '-o', 'true', './examples/plugin-with-options.js' ]
+    const argv = [ '-p', getPort(), '-o', 'true', './examples/plugin-with-options.js' ]
     start.start(argv)
     t.fail('Custom options')
   } catch (e) {
@@ -56,37 +60,36 @@ test('should start fastify with custom options', t => {
 })
 
 test('should start the server at the given prefix', t => {
-  t.plan(5)
+  t.plan(6)
 
-  const argv = [ '-p', '3000', '-r', '/api/hello', './examples/plugin.js' ]
+  const argv = [ '-p', getPort(), '-r', '/api/hello', './examples/plugin.js' ]
 
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3000/api/hello'
+      url: `http://localhost:${fastify.server.address().port}/api/hello`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
       t.strictEqual(response.headers['content-length'], '' + body.length)
       t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
 
 test('should start fastify at given socket path', t => {
-  t.plan(2)
+  t.plan(3)
 
   const sockFile = path.resolve('test.sock')
   const argv = [ '-s', sockFile, '-o', 'true', './examples/plugin.js' ]
 
   const fastify = start.start(argv)
-  t.tearDown(() => fastify.close())
 
   try {
     fs.unlinkSync(sockFile)
@@ -101,6 +104,10 @@ test('should start fastify at given socket path', t => {
       socketPath: sockFile
     }, function (response) {
       t.deepEqual(response.statusCode, 200)
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
     request.end()
   })
@@ -115,7 +122,7 @@ test('should only accept plugin functions with 3 arguments', t => {
     t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
   }
 
-  const argv = [ '-p', '3000', './test/data/incorrect-plugin.js' ]
+  const argv = [ '-p', getPort(), './test/data/incorrect-plugin.js' ]
   start.start(argv)
 })
 
@@ -128,7 +135,7 @@ test('should throw on file not found', t => {
     t.ok(/Cannot find module.*not-found/.test(err.message), err.message)
   }
 
-  const argv = [ '-p', '3000', './data/not-found.js' ]
+  const argv = [ '-p', getPort(), './data/not-found.js' ]
   start.start(argv)
 })
 
@@ -141,7 +148,7 @@ test('should throw on package not found', t => {
     t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
   }
 
-  const argv = [ '-p', '3000', './test/data/package-not-found.js' ]
+  const argv = [ '-p', getPort(), './test/data/package-not-found.js' ]
   start.start(argv)
 })
 
@@ -154,7 +161,7 @@ test('should throw on parsing error', t => {
     t.equal(err.constructor, SyntaxError)
   }
 
-  const argv = [ '-p', '3000', './test/data/parsing-error.js' ]
+  const argv = [ '-p', getPort(), './test/data/parsing-error.js' ]
   start.start(argv)
 })
 
@@ -164,24 +171,24 @@ test('should start the server with an async/await plugin', t => {
     return t.end()
   }
 
-  t.plan(5)
+  t.plan(6)
 
-  const argv = [ '-p', '3000', './examples/async-await-plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  const argv = [ '-p', getPort(), './examples/async-await-plugin.js' ]
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3000'
+      url: `http://localhost:${fastify.server.address().port}`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
       t.strictEqual(response.headers['content-length'], '' + body.length)
       t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
@@ -195,7 +202,7 @@ test('should exit without error on help', t => {
     t.equal(err, undefined)
   }
 
-  const argv = [ '-p', '3000', '-h', 'true' ]
+  const argv = [ '-p', getPort(), '-h', 'true' ]
   start.start(argv)
 })
 
@@ -208,61 +215,57 @@ test('should throw the right error on require file', t => {
     t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
   }
 
-  const argv = [ '-p', '3000', './test/data/undefinedVariable.js' ]
+  const argv = [ '-p', getPort(), './test/data/undefinedVariable.js' ]
   start.start(argv)
 })
 
 test('should respond 413 - Payload too large', t => {
-  t.plan(5)
+  t.plan(6)
 
   const bodyTooLarge = '{1: 11}'
   const bodySmaller = '{1: 1}'
 
-  const argv = [ '-p', '3000', '--body-limit', bodyTooLarge.length + 2 - 1, './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  const argv = [ '-p', getPort(), '--body-limit', bodyTooLarge.length + 2 - 1, './examples/plugin.js' ]
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'POST',
-      url: 'http://localhost:3000',
+      url: `http://localhost:${fastify.server.address().port}`,
       body: bodyTooLarge,
       json: true
     }, (err, response) => {
       t.error(err)
       t.strictEqual(response.statusCode, 413)
-    })
 
-    sget({
-      method: 'POST',
-      url: 'http://localhost:3000',
-      body: bodySmaller,
-      json: true
-    }, (err, response) => {
-      t.error(err)
-      t.strictEqual(response.statusCode, 200)
+      sget({
+        method: 'POST',
+        url: `http://localhost:${fastify.server.address().port}`,
+        body: bodySmaller,
+        json: true
+      }, (err, response) => {
+        t.error(err)
+        t.strictEqual(response.statusCode, 200)
+
+        fastify.close(() => {
+          t.pass('server closed')
+        })
+      })
     })
   })
 })
 
 test('should start the server (using env var)', t => {
-  t.plan(5)
+  t.plan(6)
 
-  process.env.FASTIFY_PORT = 3030
+  process.env.FASTIFY_PORT = getPort()
   const argv = [ './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3030'
+      url: `http://localhost:${fastify.server.address().port}`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -270,25 +273,25 @@ test('should start the server (using env var)', t => {
       t.deepEqual(JSON.parse(body), { hello: 'world' })
 
       delete process.env.FASTIFY_PORT
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
 
 test('should start the server (using PORT-env var)', t => {
-  t.plan(5)
+  t.plan(6)
 
-  process.env.PORT = 3030
+  process.env.PORT = getPort()
   const argv = [ './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3030'
+      url: `http://localhost:${fastify.server.address().port}`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -296,26 +299,26 @@ test('should start the server (using PORT-env var)', t => {
       t.deepEqual(JSON.parse(body), { hello: 'world' })
 
       delete process.env.PORT
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
 
 test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', t => {
-  t.plan(5)
+  t.plan(6)
 
-  process.env.FASTIFY_PORT = 3030
-  process.env.PORT = 3031
+  process.env.FASTIFY_PORT = getPort()
+  process.env.PORT = getPort()
   const argv = [ './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3030'
+      url: `http://localhost:${process.env.FASTIFY_PORT}`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -324,26 +327,26 @@ test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', 
 
       delete process.env.FASTIFY_PORT
       delete process.env.PORT
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
 
 test('should start the server at the given prefix (using env var)', t => {
-  t.plan(5)
+  t.plan(6)
 
-  process.env.FASTIFY_PORT = 3030
+  process.env.FASTIFY_PORT = getPort()
   process.env.FASTIFY_PREFIX = '/api/hello'
   const argv = [ './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  start.start(argv, (err, fastify) => {
     t.error(err)
 
     sget({
       method: 'GET',
-      url: 'http://localhost:3030/api/hello'
+      url: `http://localhost:${process.env.FASTIFY_PORT}/api/hello`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -352,39 +355,52 @@ test('should start the server at the given prefix (using env var)', t => {
 
       delete process.env.FASTIFY_PORT
       delete process.env.FASTIFY_PREFIX
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
 })
 
-test('should start the server at the given prefix (using env var read from .env)', t => {
-  t.plan(2)
+test('should start the server at the given prefix (using env var read from dotenv)', t => {
+  t.plan(4)
 
+  const start = proxyquire('../start', {
+    dotenv: {
+      config () {
+        t.pass('config called')
+        process.env.FASTIFY_PORT = 8080
+      }
+    }
+  })
   const argv = [ './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  fastify.ready(err => {
+  start.start(argv, (err, fastify) => {
     t.error(err)
     t.strictEqual(fastify.server.address().port, 8080)
     delete process.env.FASTIFY_PORT
-    fastify.close()
+
+    fastify.close(() => {
+      t.pass('server closed')
+    })
   })
 })
 
 test('The plugin is registered with fastify-plugin', t => {
-  t.plan(2)
+  t.plan(3)
 
   const argv = [ './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  fastify.ready(err => {
+  start.start(argv, function (err, fastify) {
     t.error(err)
     t.strictEqual(fastify.test, true)
-    fastify.close()
+    fastify.close(function () {
+      t.pass('close called')
+    })
   })
 })
 
 test('should start the server listening on 0.0.0.0 when runing in docker', t => {
-  t.plan(2)
+  t.plan(3)
   const isDocker = sinon.stub()
   isDocker.returns(true)
 
@@ -392,14 +408,14 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
     'is-docker': isDocker
   })
 
-  const argv = [ '-p', '3000', './examples/plugin.js' ]
-  const fastify = start.start(argv)
-
-  t.tearDown(() => fastify.close())
-
-  fastify.ready(err => {
+  const argv = [ '-p', getPort(), './examples/plugin.js' ]
+  start.start(argv, (err, fastify) => {
     t.error(err)
     t.strictEqual(fastify.server.address().address, '0.0.0.0')
+
+    fastify.close(function () {
+      t.pass('close called')
+    })
   })
 })
 
@@ -409,7 +425,7 @@ test('should start the server with watch options that the child process restart 
 
   fs.writeFile(tmpjs, 'hello world', function (err) {
     t.error(err)
-    const argv = [ '-p', '3000', '-w', './examples/plugin.js' ]
+    const argv = [ '-p', '3042', '-w', './examples/plugin.js' ]
     const fastifyEmitter = start.start(argv)
 
     t.tearDown(() => {
