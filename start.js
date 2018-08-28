@@ -90,7 +90,8 @@ function minimistArgs (args) {
       watch: 'w',
       prefix: 'r',
       'log-level': 'l',
-      'pretty-logs': 'P'
+      'pretty-logs': 'P',
+      'plugin-timeout': 'T'
     }
   })
 }
@@ -123,7 +124,10 @@ function runFastify (args, cb) {
   const options = {
     logger: {
       level: opts['log-level']
-    }
+    },
+
+    // everything should load in 10 seconds
+    pluginTimeout: opts['plugin-timeout'] || 10 * 1000
   }
 
   if (opts['body-limit']) {

@@ -52,7 +52,7 @@ test('should start fastify with custom options', t => {
   // or because the server is booted without the custom options
   try {
     const argv = [ '-p', getPort(), '-o', 'true', './examples/plugin-with-options.js' ]
-    start.start(argv)
+    start.start(argv).close()
     t.fail('Custom options')
   } catch (e) {
     t.pass('Custom options')
@@ -123,6 +123,21 @@ test('should only accept plugin functions with 3 arguments', t => {
   }
 
   const argv = [ '-p', getPort(), './test/data/incorrect-plugin.js' ]
+  start.start(argv)
+})
+
+test('should error with a good timeout value', t => {
+  t.plan(1)
+
+  const start = proxyquire('../start', {
+    'assert': {
+      ifError (err) {
+        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${__dirname}/data/timeout-plugin.js`)
+      }
+    }
+  })
+
+  const argv = [ '-p', '3040', '-T', '100', './test/data/timeout-plugin.js' ]
   start.start(argv)
 })
 
