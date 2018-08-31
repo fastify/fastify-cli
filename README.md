@@ -116,6 +116,11 @@ If Fastify is installed as a project dependency (with `npm install --save fastif
 then `fastify-cli` will use that version of Fastify when running the server.
 Otherwise, `fastify-cli` will use the version of Fastify included within `fastify-cli`.
 
+#### Unhandled rejections
+
+fastify-cli uses [make-promises-safe](https://github.com/mcollina/make-promises-safe) to avoid memory leaks
+in case of a `'unhandledRejection'`.
+
 ### generate
 
 `fastify-cli` can also help with generating some project scaffolding to
