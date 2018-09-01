@@ -1,15 +1,13 @@
 'use strict'
 
 const { test } = require('tap')
-const Fastify = require('fastify')
-const App = require('../../app')
+const { build } = require('../helper')
 
 test('example is loaded', (t) => {
   t.plan(2)
-  const fastify = Fastify()
-  fastify.register(App)
+  const app = build(t)
 
-  fastify.inject({
+  app.inject({
     url: '/example'
   }, (err, res) => {
     t.error(err)
@@ -20,10 +18,9 @@ test('example is loaded', (t) => {
 // It you prefer async/await, use the following
 //
 // test('example is loaded', async (t) => {
-//   const fastify = Fastify()
-//   fastify.register(App)
+//   const app = build(t)
 //
-//   const res = await fastify.inject({
+//   const res = await app.inject({
 //     url: '/example'
 //   })
 //   t.equal(res.payload, 'this is an example')
