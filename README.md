@@ -110,11 +110,43 @@ By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), 
 
 The default value for `--plugin-timeout` is 10 seconds.
 
-#### fastify version discovery
+#### Fastify version discovery
 
 If Fastify is installed as a project dependency (with `npm install --save fastify`),
 then `fastify-cli` will use that version of Fastify when running the server.
 Otherwise, `fastify-cli` will use the version of Fastify included within `fastify-cli`.
+
+#### Migrating out of fastify-cli start
+
+If you would like to turn your application into a standalone executable,
+just add the following `server.js`:
+
+```js
+'use strict'
+
+// Read the .env file.
+require('dotenv').config()
+
+// Require the framework
+const Fastify = require('fastify')
+
+// Instantiate fastify with some config
+const app = Fastify({
+  logger: true,
+  pluginTimeout: 10000
+})
+
+// Register your application as a normal plugin.
+fastify.register(require('./app.js'))
+
+// Start listening.
+fastify.listen(process.env.PORT || 3000, (err) => {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+})
+```
 
 #### Unhandled rejections
 
