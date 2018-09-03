@@ -42,8 +42,9 @@ jspm_packages
 # vim swap files
 *.swp
 
-# remove lock file
+# remove lock files
 package-lock.json
+yarn.lock
 
 # created by test
 test.sock
