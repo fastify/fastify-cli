@@ -4,6 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
+const { fork } = require('child_process')
 
 const t = require('tap')
 const test = t.test
@@ -463,5 +464,15 @@ test('should start the server with watch options that the child process restart 
     fastifyEmitter.on('ready', () => {
       t.pass('should receive ready event')
     })
+  })
+})
+
+test('crash on unhandled rejection', t => {
+  t.plan(1)
+
+  const argv = [ '-p', getPort(), './test/data/rejection.js' ]
+  const child = fork(path.join(__dirname, '..', 'start.js'), argv, { silent: true })
+  child.on('close', function (code) {
+    t.strictEqual(code, 1)
   })
 })

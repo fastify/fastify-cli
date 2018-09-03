@@ -148,6 +148,11 @@ fastify.listen(process.env.PORT || 3000, (err) => {
 })
 ```
 
+#### Unhandled rejections
+
+fastify-cli uses [make-promises-safe](https://github.com/mcollina/make-promises-safe) to avoid memory leaks
+in case of a `'unhandledRejection'`.
+
 ### generate
 
 `fastify-cli` can also help with generating some project scaffolding to
