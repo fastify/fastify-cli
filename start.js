@@ -46,6 +46,9 @@ function start (args, cb) {
     return showHelp()
   }
 
+  // we start crashing on unhandledRejection
+  require('make-promises-safe')
+
   loadModules(opts)
 
   const notifier = updateNotifier({
