@@ -137,12 +137,12 @@ const app = Fastify({
 })
 
 // Register your application as a normal plugin.
-fastify.register(require('./app.js'))
+app.register(require('./app.js'))
 
 // Start listening.
-fastify.listen(process.env.PORT || 3000, (err) => {
+app.listen(process.env.PORT || 3000, (err) => {
   if (err) {
-    fastify.log.error(err)
+    app.log.error(err)
     process.exit(1)
   }
 })
