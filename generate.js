@@ -7,7 +7,7 @@ const {
 const chalk = require('chalk')
 const path = require('path')
 const generify = require('generify')
-const minimist = require('minimist')
+const argv = require('yargs-parser')
 const templatedir = path.join(__dirname, 'app_template')
 const cliPkg = require('./package')
 
@@ -87,7 +87,7 @@ const colors = [
 ]
 
 function cli (args) {
-  const opts = minimist(args)
+  const opts = argv(args)
   generate(opts._[0] || process.cwd(), log, function (err) {
     if (err) {
       log('error', err.message)

@@ -7,7 +7,7 @@ const fs = require('fs')
 const assert = require('assert')
 
 const updateNotifier = require('update-notifier')
-const minimist = require('minimist')
+const argv = require('yargs-parser')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const resolveFrom = require('resolve-from')
@@ -36,7 +36,7 @@ function showHelp () {
 }
 
 function start (args, cb) {
-  let opts = minimistArgs(args)
+  let opts = parsedArgs(args)
   if (opts.help) {
     return showHelp()
   }
@@ -79,30 +79,36 @@ function stop (error) {
   process.exit()
 }
 
-function minimistArgs (args) {
-  return minimist(args, {
+function parsedArgs (args) {
+  return argv(args, {
     integer: ['port', 'body-limit'],
     boolean: ['pretty-logs', 'options', 'watch'],
     string: ['log-level', 'address'],
+    envPrefix: 'FASTIFY_',
     alias: {
-      port: 'p',
-      socket: 's',
-      help: 'h',
-      options: 'o',
-      address: 'a',
-      watch: 'w',
-      prefix: 'r',
-      'log-level': 'l',
-      'pretty-logs': 'P',
-      'plugin-timeout': 'T'
+      port: ['p'],
+      socket: ['s'],
+      help: ['h'],
+      options: ['o'],
+      address: ['a'],
+      watch: ['w'],
+      prefix: ['r'],
+      'log-level': ['l'],
+      'pretty-logs': ['P'],
+      'plugin-timeout': ['T']
+    },
+    default: {
+      'pretty-logs': false,
+      'watch': false,
+      'options': false
     }
   })
 }
 
 function runFastify (args, cb) {
-  let opts = minimistArgs(args)
-  opts = Object.assign(readEnv(), opts)
-  opts.port = opts.port || 3000
+  require('dotenv').config()
+  let opts = parsedArgs(args)
+  opts.port = opts.port || process.env.PORT || 3000
   opts['log-level'] = opts['log-level'] || 'fatal'
   cb = cb || assert.ifError
 
@@ -172,25 +178,6 @@ function runFastify (args, cb) {
 
 function cli (args) {
   start(args)
-}
-
-function readEnv () {
-  require('dotenv').config()
-
-  const env = process.env
-  const opts = {}
-
-  if (env.FASTIFY_PORT || env.PORT) opts.port = env.FASTIFY_PORT || env.PORT
-  if (env.FASTIFY_SOCKET) opts.socket = env.FASTIFY_SOCKET
-  if (env.FASTIFY_OPTIONS) opts.options = env.FASTIFY_OPTIONS
-  if (env.FASTIFY_ADDRESS) opts.address = env.FASTIFY_ADDRESS
-  if (env.FASTIFY_WATCH) opts['watch'] = env.FASTIFY_WATCH
-  if (env.FASTIFY_PREFIX) opts.prefix = env.FASTIFY_PREFIX
-  if (env.FASTIFY_LOG_LEVEL) opts['log-level'] = env.FASTIFY_LOG_LEVEL
-  if (env.FASTIFY_PRETTY_LOGS) opts['pretty-logs'] = env.FASTIFY_PRETTY_LOGS
-  if (env.FASTIFY_BODY_LIMIT) opts['body-limit'] = env.FASTIFY_BODY_LIMIT
-
-  return opts
 }
 
 module.exports = { start, stop, runFastify, cli }

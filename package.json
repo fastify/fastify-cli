@@ -52,11 +52,11 @@
     "help-me": "^1.1.0",
     "is-docker": "^1.1.0",
     "make-promises-safe": "^1.1.0",
-    "minimist": "^1.2.0",
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "update-notifier": "^2.4.0"
+    "update-notifier": "^2.4.0",
+    "yargs-parser": "^10.1.0"
   },
   "devDependencies": {
     "fastify-autoload": "^0.5.0",

@@ -241,7 +241,8 @@ test('should respond 413 - Payload too large', t => {
   const bodyTooLarge = '{1: 11}'
   const bodySmaller = '{1: 1}'
 
-  const argv = [ '-p', getPort(), '--body-limit', bodyTooLarge.length + 2 - 1, './examples/plugin.js' ]
+  const bodyLimitValue = '' + (bodyTooLarge.length + 2 - 1)
+  const argv = [ '-p', getPort(), '--body-limit', bodyLimitValue, './examples/plugin.js' ]
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -281,7 +282,7 @@ test('should start the server (using env var)', t => {
 
     sget({
       method: 'GET',
-      url: `http://localhost:${fastify.server.address().port}`
+      url: `http://localhost:${process.env.FASTIFY_PORT}`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -307,7 +308,7 @@ test('should start the server (using PORT-env var)', t => {
 
     sget({
       method: 'GET',
-      url: `http://localhost:${fastify.server.address().port}`
+      url: `http://localhost:${process.env.PORT}`
     }, (err, response, body) => {
       t.error(err)
       t.strictEqual(response.statusCode, 200)
@@ -343,6 +344,33 @@ test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', 
 
       delete process.env.FASTIFY_PORT
       delete process.env.PORT
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+})
+
+test('should start the server (using -p preceding FASTIFY_PORT-env var)', t => {
+  t.plan(6)
+
+  const port = getPort()
+  process.env.FASTIFY_PORT = getPort()
+  const argv = [ '-p', port, './examples/plugin.js' ]
+  start.start(argv, (err, fastify) => {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: `http://localhost:${port}`
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+      delete process.env.FASTIFY_PORT
 
       fastify.close(() => {
         t.pass('server closed')
@@ -475,4 +503,20 @@ test('crash on unhandled rejection', t => {
   child.on('close', function (code) {
     t.strictEqual(code, 1)
   })
+})
+
+test('boolean env are not overridden if no arguments are passed', t => {
+  t.plan(1)
+
+  process.env.FASTIFY_OPTIONS = 'true'
+
+  // here the test should fail because of the wrong certificate
+  // or because the server is booted without the custom options
+  try {
+    const argv = [ './examples/plugin-with-options.js' ]
+    start.start(argv).close()
+    t.fail('Custom options')
+  } catch (e) {
+    t.pass('Custom options')
+  }
 })
