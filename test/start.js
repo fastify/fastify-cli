@@ -84,7 +84,7 @@ test('should start the server at the given prefix', t => {
   })
 })
 
-test('should start fastify at given socket path', t => {
+test('should start fastify at given socket path', { skip: process.platform === 'win32' }, t => {
   t.plan(3)
 
   const sockFile = path.resolve('test.sock')
@@ -133,7 +133,7 @@ test('should error with a good timeout value', t => {
   const start = proxyquire('../start', {
     'assert': {
       ifError (err) {
-        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${__dirname}/data/timeout-plugin.js`)
+        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}`)
       }
     }
   })
