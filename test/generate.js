@@ -6,7 +6,6 @@ process.env.TAP_BAIL = true
 
 const t = require('tap')
 const {
-  writeFile,
   readFile
 } = require('fs')
 const path = require('path')
@@ -17,6 +16,7 @@ const { generate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const templatedir = path.join(__dirname, '..', 'app_template')
 const cliPkg = require('../package')
+const { exec } = require('child_process')
 const expected = {}
 
 ;(function (cb) {
@@ -59,63 +59,50 @@ function define (t) {
     })
   })
 
-  test('errors if package.json is not there', (t) => {
+  test('errors if directory exists', (t) => {
     t.plan(2)
+    exec('node generate.js ./test/workdir', (err, stdout) => {
+      t.is('directory ./test/workdir already exists', stdout.toString().trim())
+      t.is(1, err.code)
+    })
+  })
 
-    generate(workdir, function (err) {
-      t.ok(err)
-      t.equal(err.code, 'ENOENT')
+  test('errors if pkgfile exists', (t) => {
+    t.plan(2)
+    exec('node generate.js', (err, stdout) => {
+      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is(1, err.code)
     })
   })
 
   test('finish succesfully if package.json is there - npm', (t) => {
-    t.plan(12 + Object.keys(expected).length * 2)
+    t.plan(13 + Object.keys(expected).length * 2)
 
     const pkgFile = path.join(workdir, 'package.json')
-    const pkgContent = JSON.stringify({
-      name: 'an-npm-app',
+    const bindings = {
+      name: 'an-app',
       version: '0.0.1',
       description: 'whaat',
-      main: 'index.js',
-      scripts: {}
-    }, null, 2)
+      author: 'fastify',
+      license: 'MIT'
+    }
 
-    writeFile(pkgFile, pkgContent, function (err) {
+    generate(workdir, bindings, function (err) {
       t.error(err)
-      generate(workdir, function (err) {
-        t.error(err)
-        verifyPkg(t, pkgFile, pkgContent)
-        verifyCopy(t, pkgFile)
-      })
+      verifyPkg(t, pkgFile)
+      verifyCopy(t, pkgFile)
     })
   })
 
-  test('finish succesfully if package.json is there - yarn', (t) => {
-    t.plan(12 + Object.keys(expected).length * 2)
-
-    const pkgFile = path.join(workdir, 'package.json')
-    const pkgContent = JSON.stringify({
-      name: 'an-yarn-app',
-      version: '0.0.1',
-      description: 'whaat',
-      main: 'index.js'
-    }, null, 2)
-    writeFile(pkgFile, pkgContent, function (err) {
-      t.error(err)
-
-      generate(workdir, function (err) {
-        t.error(err)
-        verifyPkg(t, pkgFile, pkgContent)
-        verifyCopy(t, pkgFile)
-      })
-    })
-  })
-
-  function verifyPkg (t, pkgFile, pkgContent) {
+  function verifyPkg (t, pkgFile) {
     readFile(pkgFile, function (err, data) {
       t.error(err)
-      t.equal(data.toString().split('"main"')[0], pkgContent.split('"main"')[0])
       const pkg = JSON.parse(data)
+      t.equal(pkg.name, 'an-app')
+      t.equal(pkg.version, '0.0.1')
+      t.equal(pkg.description, 'whaat')
+      t.equal(pkg.author, 'fastify')
+      t.equal(pkg.license, 'MIT')
       t.equal(pkg.scripts.test, 'tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
       t.equal(pkg.scripts.start, 'fastify start -l info app.js')
       t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')

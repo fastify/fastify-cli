@@ -10,11 +10,12 @@ const chalk = require('chalk')
 const path = require('path')
 const generify = require('generify')
 const argv = require('yargs-parser')
+const assert = require('assert')
 const templatedir = path.join(__dirname, 'app_template')
 const cliPkg = require('./package')
 const question = require('./question')
 
-function generate (dir, log, cb, bindings) {
+function generate (dir, bindings, log, cb) {
   if (!cb) {
     cb = log
     log = () => {}
@@ -45,6 +46,8 @@ function generate (dir, log, cb, bindings) {
         return cb(err)
       }
 
+      pkg.main = 'app.js'
+
       pkg.scripts = Object.assign(pkg.scripts || {}, {
         'test': 'tap test/*.test.js test/*/*.test.js test/*/*/*.test.js',
         'start': 'fastify start -l info app.js',
@@ -72,6 +75,7 @@ function generate (dir, log, cb, bindings) {
         log('info', `project ${pkg.name} generated successfully`)
         log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
         log('debug', `run '${chalk.bold('npm start')}' to start the application`)
+        log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
         log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
         cb()
       })
@@ -100,22 +104,23 @@ function cli (args) {
       process.exit(1)
     } else {
       mkdirSync(opts._[0])
+      assert(existsSync(opts._[0]))
     }
   }
 
-  if (existsSync(path.join(opts._[0] || process.cwd(), 'package.json'))) {
+  const dir = opts._[0] || process.cwd()
+
+  if (existsSync(path.join(dir, 'package.json'))) {
     log('error', 'a package.json file already exists in target directory')
     process.exit(1)
   }
 
-  question().then(bindings => {
-    generate(opts._[0] || process.cwd(), log, function (err) {
-      if (err) {
-        log('error', err.message)
-        process.exit(1)
-      }
-    }, bindings)
-  })
+  question(dir).then(bindings => generate(dir, bindings, log, function (err) {
+    if (err) {
+      log('error', err.message)
+      process.exit(1)
+    }
+  }))
 
   function log (severity, line) {
     const level = levels[severity] || 0
