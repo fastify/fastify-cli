@@ -3,38 +3,33 @@
 const {
   readFile,
   writeFile,
-  existsSync,
-  mkdirSync
+  existsSync
 } = require('fs')
 const chalk = require('chalk')
 const path = require('path')
 const generify = require('generify')
 const argv = require('yargs-parser')
-const assert = require('assert')
-const templatedir = path.join(__dirname, 'app_template')
 const cliPkg = require('./package')
-const question = require('./question')
+const { execSync } = require('child_process')
 
-function generate (dir, bindings, log, cb) {
+function generate (dir, log, cb) {
   if (!cb) {
     cb = log
     log = () => {}
   }
 
-  if (!bindings) {
-    bindings = {}
-  }
-
-  generify(templatedir, dir, bindings, function (file) {
+  generify(path.join(__dirname, 'app_template'), dir, {}, function (file) {
     log('debug', `generated ${file}`)
   }, function (err) {
     if (err) {
       return cb(err)
     }
 
-    const pkgFile = path.join(dir, 'package.json')
+    process.chdir(dir)
+    execSync('npm init -y')
+
     log('info', `reading package.json in ${dir}`)
-    readFile(pkgFile, (err, data) => {
+    readFile('package.json', (err, data) => {
       if (err) {
         return cb(err)
       }
@@ -66,7 +61,7 @@ function generate (dir, bindings, log, cb) {
       })
 
       log('debug', `edited package.json, saving`)
-      writeFile(pkgFile, JSON.stringify(pkg, null, 2), (err) => {
+      writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
         if (err) {
           return cb(err)
         }
@@ -98,14 +93,9 @@ const colors = [
 function cli (args) {
   const opts = argv(args)
 
-  if (opts._[0]) {
-    if (existsSync(opts._[0])) {
-      log('error', 'directory ' + opts._[0] + ' already exists')
-      process.exit(1)
-    } else {
-      mkdirSync(opts._[0])
-      assert(existsSync(opts._[0]))
-    }
+  if (opts._[0] && existsSync(opts._[0])) {
+    log('error', 'directory ' + opts._[0] + ' already exists')
+    process.exit(1)
   }
 
   const dir = opts._[0] || process.cwd()
@@ -115,12 +105,12 @@ function cli (args) {
     process.exit(1)
   }
 
-  question(dir).then(bindings => generate(dir, bindings, log, function (err) {
+  generate(dir, log, function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
     }
-  }))
+  })
 
   function log (severity, line) {
     const level = levels[severity] || 0

@@ -75,34 +75,29 @@ function define (t) {
     })
   })
 
-  test('finish succesfully if package.json is there - npm', (t) => {
-    t.plan(13 + Object.keys(expected).length * 2)
+  test('should finish succesfully', (t) => {
+    t.plan(15 + Object.keys(expected).length * 2)
 
-    const pkgFile = path.join(workdir, 'package.json')
-    const bindings = {
-      name: 'an-app',
-      version: '0.0.1',
-      description: 'whaat',
-      author: 'fastify',
-      license: 'MIT'
-    }
-
-    generate(workdir, bindings, function (err) {
+    generate(workdir, function (err) {
       t.error(err)
-      verifyPkg(t, pkgFile)
-      verifyCopy(t, pkgFile)
+      verifyPkg(t)
+      verifyCopy(t)
     })
   })
 
-  function verifyPkg (t, pkgFile) {
+  function verifyPkg (t) {
+    const pkgFile = path.join(workdir, 'package.json')
+
     readFile(pkgFile, function (err, data) {
       t.error(err)
       const pkg = JSON.parse(data)
-      t.equal(pkg.name, 'an-app')
-      t.equal(pkg.version, '0.0.1')
-      t.equal(pkg.description, 'whaat')
-      t.equal(pkg.author, 'fastify')
-      t.equal(pkg.license, 'MIT')
+      t.equal(pkg.name, 'workdir')
+      t.equal(pkg.version, '1.0.0')
+      t.equal(pkg.description, '')
+      t.equal(pkg.author, '')
+      // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
+      // so for local tests we need to accept MIT as well
+      t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
       t.equal(pkg.scripts.test, 'tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
       t.equal(pkg.scripts.start, 'fastify start -l info app.js')
       t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
@@ -114,7 +109,9 @@ function define (t) {
     })
   }
 
-  function verifyCopy (t, pkgFile) {
+  function verifyCopy (t) {
+    const pkgFile = path.join(workdir, 'package.json')
+
     walker(workdir)
       .on('file', function (file) {
         if (file === pkgFile) {

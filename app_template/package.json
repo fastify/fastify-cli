@@ -1,8 +1,0 @@
-{
-  "name": "__name__",
-  "version": "__version__",
-  "description": "__description__",
-  "main": "app.js",
-  "author": "__author__",
-  "license": "__license__"
-}
