@@ -12,7 +12,7 @@ module.exports = fp(function (fastify, opts, next) {
   next()
 })
 
-// It you prefer async/await, use the following
+// If you prefer async/await, use the following
 //
 // module.exports = fp(async function (fastify, opts) {
 //   fastify.decorate('someSupport', function () {

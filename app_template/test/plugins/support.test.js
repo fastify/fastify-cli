@@ -15,7 +15,7 @@ test('support works standalone', (t) => {
   })
 })
 
-// It you prefer async/await, use the following
+// If you prefer async/await, use the following
 //
 // test('support works standalone', async (t) => {
 //   const fastify = Fastify()

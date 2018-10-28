@@ -15,7 +15,7 @@ test('example is loaded', (t) => {
   })
 })
 
-// It you prefer async/await, use the following
+// If you prefer async/await, use the following
 //
 // test('example is loaded', async (t) => {
 //   const app = build(t)
