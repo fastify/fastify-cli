@@ -15,7 +15,7 @@ test('default root route', (t) => {
   })
 })
 
-// It you prefer async/await, use the following
+// If you prefer async/await, use the following
 //
 // test('default root route', async (t) => {
 //   const app = build(t)
