@@ -100,7 +100,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
 | Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
-| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
+| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. more detail for [fastify-cli.config.js](#fastify-cliconfigjs)| `-w` | `--watch` | `FASTIFY_WATCH` |
 | Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
 | Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
 | Set the plugin timeout | `-T` | `--plugin-timeout` |  |
@@ -196,6 +196,16 @@ It is a standard Fastify plugin and you will not need to add the `listen` method
   "dev": "fastify start -l info -P app.js",
 + "lint": "standard --fix"
 },
+```
+
+### fastify-cli.config.js
+If you want to use custom config file, just set process.env.FASTIFY_CLI_CONFIG = path/to/file.
+(The default is fastify-cli.config.js in the process.cwd() directory.)
+
+```js
+module.exports = {
+  ignore: /(node_modules|\.git|bower_components|build|dist|pages|\.next)/
+}
 ```
 
 ## Contributing

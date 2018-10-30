@@ -1,0 +1,3 @@
+module.exports = {
+  ignore: /(node_modules|\.git|bower_components|build|dist|pages|\.next)/
+}
