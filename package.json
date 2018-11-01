@@ -51,7 +51,7 @@
     "generify": "^3.0.2",
     "help-me": "^1.1.0",
     "is-docker": "^1.1.0",
-    "make-promises-safe": "^2.0.0",
+    "make-promises-safe": "^3.0.0",
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
