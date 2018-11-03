@@ -6,7 +6,6 @@ process.env.TAP_BAIL = true
 
 const t = require('tap')
 const {
-  writeFile,
   readFile
 } = require('fs')
 const path = require('path')
@@ -17,6 +16,7 @@ const { generate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const templatedir = path.join(__dirname, '..', 'app_template')
 const cliPkg = require('../package')
+const { exec } = require('child_process')
 const expected = {}
 
 ;(function (cb) {
@@ -59,63 +59,45 @@ function define (t) {
     })
   })
 
-  test('errors if package.json is not there', (t) => {
+  test('errors if directory exists', (t) => {
     t.plan(2)
+    exec('node generate.js ./test/workdir', (err, stdout) => {
+      t.is('directory ./test/workdir already exists', stdout.toString().trim())
+      t.is(1, err.code)
+    })
+  })
+
+  test('errors if pkgfile exists', (t) => {
+    t.plan(2)
+    exec('node generate.js', (err, stdout) => {
+      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is(1, err.code)
+    })
+  })
+
+  test('should finish succesfully', (t) => {
+    t.plan(15 + Object.keys(expected).length * 2)
 
     generate(workdir, function (err) {
-      t.ok(err)
-      t.equal(err.code, 'ENOENT')
-    })
-  })
-
-  test('finish succesfully if package.json is there - npm', (t) => {
-    t.plan(12 + Object.keys(expected).length * 2)
-
-    const pkgFile = path.join(workdir, 'package.json')
-    const pkgContent = JSON.stringify({
-      name: 'an-npm-app',
-      version: '0.0.1',
-      description: 'whaat',
-      main: 'index.js',
-      scripts: {}
-    }, null, 2)
-
-    writeFile(pkgFile, pkgContent, function (err) {
       t.error(err)
-      generate(workdir, function (err) {
-        t.error(err)
-        verifyPkg(t, pkgFile, pkgContent)
-        verifyCopy(t, pkgFile)
-      })
+      verifyPkg(t)
+      verifyCopy(t)
     })
   })
 
-  test('finish succesfully if package.json is there - yarn', (t) => {
-    t.plan(12 + Object.keys(expected).length * 2)
-
+  function verifyPkg (t) {
     const pkgFile = path.join(workdir, 'package.json')
-    const pkgContent = JSON.stringify({
-      name: 'an-yarn-app',
-      version: '0.0.1',
-      description: 'whaat',
-      main: 'index.js'
-    }, null, 2)
-    writeFile(pkgFile, pkgContent, function (err) {
-      t.error(err)
 
-      generate(workdir, function (err) {
-        t.error(err)
-        verifyPkg(t, pkgFile, pkgContent)
-        verifyCopy(t, pkgFile)
-      })
-    })
-  })
-
-  function verifyPkg (t, pkgFile, pkgContent) {
     readFile(pkgFile, function (err, data) {
       t.error(err)
-      t.equal(data.toString().split('"main"')[0], pkgContent.split('"main"')[0])
       const pkg = JSON.parse(data)
+      t.equal(pkg.name, 'workdir')
+      t.equal(pkg.version, '1.0.0')
+      t.equal(pkg.description, '')
+      t.equal(pkg.author, '')
+      // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
+      // so for local tests we need to accept MIT as well
+      t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
       t.equal(pkg.scripts.test, 'tap test/*.test.js test/*/*.test.js test/*/*/*.test.js')
       t.equal(pkg.scripts.start, 'fastify start -l info app.js')
       t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
@@ -127,7 +109,9 @@ function define (t) {
     })
   }
 
-  function verifyCopy (t, pkgFile) {
+  function verifyCopy (t) {
+    const pkgFile = path.join(workdir, 'package.json')
+
     walker(workdir)
       .on('file', function (file) {
         if (file === pkgFile) {

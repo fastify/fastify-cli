@@ -158,11 +158,9 @@ in case of a `'unhandledRejection'`.
 `fastify-cli` can also help with generating some project scaffolding to
 kickstart the development of your next Fastify application. To use it:
 
-1. `mkdir yourapp`
+1. `fastify generate <yourapp>`
 2. `cd yourapp`
-3. `npm init`
-4. `fastify generate`
-5. `npm install`
+3. `npm install`
 
 The sample code offers you four npm tasks:
 
