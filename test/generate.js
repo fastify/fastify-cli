@@ -33,7 +33,7 @@ const expected = {}
             return cb(err)
           }
 
-          expected[file.replace(templatedir, '')] = data.toString()
+          expected[file.replace(templatedir, '').replace(/__/, '.')] = data.toString()
 
           count++
           if (count === files.length) {
