@@ -22,7 +22,7 @@ $ fastify
 Will print an help:
 
 ```
-fastify command line interface, available commands are:
+Fastify command line interface, available commands are:
 
   * start       start a server
   * generate    generate a new project
@@ -40,7 +40,7 @@ to start plugin.js.
 
 ### start
 
-You can start any fastify plugin with:
+You can start any Fastify plugin with:
 
 ```bash
 $ fastify start plugin.js
@@ -130,7 +130,7 @@ require('dotenv').config()
 // Require the framework
 const Fastify = require('fastify')
 
-// Instantiate fastify with some config
+// Instantiate Fastify with some config
 const app = Fastify({
   logger: true,
   pluginTimeout: 10000
