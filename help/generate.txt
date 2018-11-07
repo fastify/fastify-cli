@@ -1,5 +1,5 @@
 Usage: fastify generate <FOLDER>
 
-Generates a sample fastify project in folder or in the current
-working directory.
-Requires a package.json already present. Create one with npm init.
+Sets up project with `npm init -y` and
+generates a sample Fastify project
+in the <FOLDER> or in the current working directory.
