@@ -101,7 +101,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
 | Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
-| Ignore changes to the specified file or directory under the process.cwd() directory when that watch enabled. (e.g. `--ignore-watch='node_module .git logs/error.log'` )|  | `--ignore-watch` | `FASTIFY_IGNORE_WATCH` |
+| Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_module .git logs/error.log'` )|  | `--ignore-watch` | `FASTIFY_IGNORE_WATCH` |
 | Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
 | Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
 | Set the plugin timeout | `-T` | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
