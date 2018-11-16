@@ -81,7 +81,7 @@ function stop (error) {
 
 function parsedArgs (args) {
   return argv(args, {
-    integer: ['port', 'body-limit'],
+    number: ['port', 'body-limit'],
     boolean: ['pretty-logs', 'options', 'watch'],
     string: ['log-level', 'address'],
     envPrefix: 'FASTIFY_',
