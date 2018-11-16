@@ -63,7 +63,7 @@ function start (args, cb) {
     defer: false
   })
 
-  if (opts['watch']) {
+  if (opts.watch) {
     return watch(args)
   }
 
@@ -82,7 +82,6 @@ function runFastify (args, cb) {
   require('dotenv').config()
   let opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
-  opts['log-level'] = opts['log-level'] || 'fatal'
   cb = cb || assert.ifError
 
   loadModules(opts)
@@ -105,18 +104,17 @@ function runFastify (args, cb) {
 
   const options = {
     logger: {
-      level: opts['log-level']
+      level: opts.logLevel
     },
 
-    // everything should load in 10 seconds
-    pluginTimeout: opts['plugin-timeout'] || 10 * 1000
+    pluginTimeout: opts.pluginTimeout
   }
 
-  if (opts['body-limit']) {
-    options.bodyLimit = opts['body-limit']
+  if (opts.bodyLimit) {
+    options.bodyLimit = opts.bodyLimit
   }
 
-  if (opts['pretty-logs']) {
+  if (opts.prettyLogs) {
     const pinoColada = PinoColada()
     options.logger.stream = pinoColada
     pump(pinoColada, process.stdout, assert.ifError)

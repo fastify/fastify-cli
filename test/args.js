@@ -13,35 +13,24 @@ test('should parse args correctly', t => {
     '--pretty-logs', 'true',
     '--watch', 'true',
     '--options', 'true',
-    '--prefix', 'YFITSAF_',
+    '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
-    '--body-limit', '5242880'
+    '--body-limit', '5242880',
+    'app.js'
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictDeepEqual(parsedArgs, { _: [],
-    'pretty-logs': true,
-    P: true,
+  t.strictDeepEqual(parsedArgs, {
+    _: ['app.js'],
     prettyLogs: true,
     options: true,
-    o: true,
     watch: true,
-    w: true,
     port: 7777,
-    p: 7777,
     address: 'fastify.io:9999',
-    a: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
-    s: 'fastify.io.socket:9999',
-    'log-level': 'info',
-    l: 'info',
     logLevel: 'info',
-    prefix: 'YFITSAF_',
-    r: 'YFITSAF_',
-    'plugin-timeout': 500,
-    T: 500,
+    prefix: 'FASTIFY_',
     pluginTimeout: 500,
-    'body-limit': 5242880,
     bodyLimit: 5242880
   })
 })
@@ -57,35 +46,24 @@ test('should parse args with = assignment correctly', t => {
     '--pretty-logs=true',
     '--watch=true',
     '--options=true',
-    '--prefix=YFITSAF_',
+    '--prefix=FASTIFY_',
     '--plugin-timeout=500',
-    '--body-limit=5242880'
+    '--body-limit=5242880',
+    'app.js'
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictDeepEqual(parsedArgs, { _: [],
-    'pretty-logs': true,
-    P: true,
+  t.strictDeepEqual(parsedArgs, {
+    _: ['app.js'],
     prettyLogs: true,
     options: true,
-    o: true,
     watch: true,
-    w: true,
     port: 7777,
-    p: 7777,
     address: 'fastify.io:9999',
-    a: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
-    s: 'fastify.io.socket:9999',
-    'log-level': 'info',
-    l: 'info',
     logLevel: 'info',
-    prefix: 'YFITSAF_',
-    r: 'YFITSAF_',
-    'plugin-timeout': 500,
-    T: 500,
+    prefix: 'FASTIFY_',
     pluginTimeout: 500,
-    'body-limit': 5242880,
     bodyLimit: 5242880
   })
 })
@@ -100,30 +78,53 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
   process.env.FASTIFY_OPTIONS = 'true'
-  process.env.FASTIFY_PREFIX = 'YFITSAF_'
+  process.env.FASTIFY_PREFIX = 'FASTIFY_'
   process.env.FASTIFY_BODY_LIMIT = '5242880'
+  process.env.FASTIFY_PLUGIN_TIMEOUT = '500'
+
+  t.teardown(function () {
+    delete process.env.FASTIFY_PORT
+    delete process.env.FASTIFY_ADDRESS
+    delete process.env.FASTIFY_SOCKET
+    delete process.env.FASTIFY_LOG_LEVEL
+    delete process.env.FASTIFY_PRETTY_LOGS
+    delete process.env.FASTIFY_WATCH
+    delete process.env.FASTIFY_OPTIONS
+    delete process.env.FASTIFY_PREFIX
+    delete process.env.FASTIFY_BODY_LIMIT
+    delete process.env.FASTIFY_PLUGIN_TIMEOUT
+  })
 
   const parsedArgs = parseArgs([])
 
-  t.strictDeepEqual(parsedArgs, { _: [],
-    'pretty-logs': true,
-    P: true,
+  t.strictDeepEqual(parsedArgs, {
+    _: [],
     prettyLogs: true,
     options: true,
-    o: true,
     watch: true,
-    w: true,
     address: 'fastify.io:9999',
-    a: 'fastify.io:9999',
     bodyLimit: 5242880,
     logLevel: 'info',
-    'log-level': 'info',
-    l: 'info',
     port: 7777,
-    p: 7777,
-    prefix: 'YFITSAF_',
-    r: 'YFITSAF_',
+    prefix: 'FASTIFY_',
     socket: 'fastify.io.socket:9999',
-    s: 'fastify.io.socket:9999'
+    pluginTimeout: 500
   })
+})
+
+test('should respect default values', t => {
+  t.plan(6)
+
+  const argv = [
+    'app.js'
+  ]
+
+  const parsedArgs = parseArgs(argv)
+
+  t.is(parsedArgs._[0], 'app.js')
+  t.is(parsedArgs.options, false)
+  t.is(parsedArgs.prettyLogs, false)
+  t.is(parsedArgs.watch, false)
+  t.is(parsedArgs.logLevel, 'fatal')
+  t.is(parsedArgs.pluginTimeout, 10000)
 })

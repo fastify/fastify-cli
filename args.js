@@ -3,7 +3,7 @@
 const argv = require('yargs-parser')
 
 module.exports = function parseArgs (args) {
-  return argv(args, {
+  const parsedArgs = argv(args, {
     number: ['port', 'body-limit', 'plugin-timeout'],
     boolean: ['pretty-logs', 'options', 'watch'],
     string: ['log-level', 'address', 'socket', 'prefix'],
@@ -21,9 +21,25 @@ module.exports = function parseArgs (args) {
       'plugin-timeout': ['T']
     },
     default: {
+      'log-level': 'fatal',
       'pretty-logs': false,
       'watch': false,
-      'options': false
+      'options': false,
+      'plugin-timeout': 10 * 1000 // everything should load in 10 seconds
     }
+  })
+
+  return Object.assign({}, {
+    _: parsedArgs._,
+    port: parsedArgs.port,
+    bodyLimit: parsedArgs.bodyLimit,
+    pluginTimeout: parsedArgs.pluginTimeout,
+    prettyLogs: parsedArgs.prettyLogs,
+    options: parsedArgs.options,
+    watch: parsedArgs.watch,
+    logLevel: parsedArgs.logLevel,
+    address: parsedArgs.address,
+    socket: parsedArgs.socket,
+    prefix: parsedArgs.prefix
   })
 }
