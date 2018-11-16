@@ -95,7 +95,7 @@ You can pass the following options via cli arguments, every options has the corr
 
 |  Description | Short command | Full command | Environment variable |
 | ------------- | ------------- |-------------| ----- |
-| Port to listen on (default to 3000) | `-p` | `--port` | `FASTIFY_PORT or PORT` |
+| Port to listen on (default to 3000) | `-p` | `--port` | `FASTIFY_PORT` |
 | Address to listen on | `-a` | `--address` | `FASTIFY_ADDRESS` |
 | Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
@@ -103,7 +103,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
 | Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
 | Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
-| Set the plugin timeout | `-T` | `--plugin-timeout` |  |
+| Set the plugin timeout | `-T` | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
 | Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.

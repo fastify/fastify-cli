@@ -5,9 +5,7 @@
 const path = require('path')
 const fs = require('fs')
 const assert = require('assert')
-
 const updateNotifier = require('update-notifier')
-const argv = require('yargs-parser')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const resolveFrom = require('resolve-from')
@@ -15,6 +13,7 @@ const fp = require('fastify-plugin')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
+const parseArgs = require('./args')
 
 let Fastify = null
 let fastifyPackageJSON = null
@@ -36,7 +35,7 @@ function showHelp () {
 }
 
 function start (args, cb) {
-  let opts = parsedArgs(args)
+  let opts = parseArgs(args)
   if (opts.help) {
     return showHelp()
   }
@@ -79,35 +78,9 @@ function stop (error) {
   process.exit()
 }
 
-function parsedArgs (args) {
-  return argv(args, {
-    number: ['port', 'body-limit'],
-    boolean: ['pretty-logs', 'options', 'watch'],
-    string: ['log-level', 'address'],
-    envPrefix: 'FASTIFY_',
-    alias: {
-      port: ['p'],
-      socket: ['s'],
-      help: ['h'],
-      options: ['o'],
-      address: ['a'],
-      watch: ['w'],
-      prefix: ['r'],
-      'log-level': ['l'],
-      'pretty-logs': ['P'],
-      'plugin-timeout': ['T']
-    },
-    default: {
-      'pretty-logs': false,
-      'watch': false,
-      'options': false
-    }
-  })
-}
-
 function runFastify (args, cb) {
   require('dotenv').config()
-  let opts = parsedArgs(args)
+  let opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   opts['log-level'] = opts['log-level'] || 'fatal'
   cb = cb || assert.ifError
