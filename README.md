@@ -103,7 +103,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
 | Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
 | Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
-| Set the plugin timeout | `-T` | `--plugin-timeout` |  |
+| Set the plugin timeout | `-T` | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
 | Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
