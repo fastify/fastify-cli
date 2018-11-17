@@ -95,7 +95,7 @@ You can pass the following options via cli arguments, every options has the corr
 
 |  Description | Short command | Full command | Environment variable |
 | ------------- | ------------- |-------------| ----- |
-| Port to listen on (default to 3000) | `-p` | `--port` | `FASTIFY_PORT` |
+| Port to listen on (default to 3000) | `-p` | `--port` | `FASTIFY_PORT or PORT` |
 | Address to listen on | `-a` | `--address` | `FASTIFY_ADDRESS` |
 | Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
