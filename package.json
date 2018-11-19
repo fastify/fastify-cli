@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "standard",
-    "unit": "tap test/*.js app_template/test/*/*.test.js",
+    "unit": "tap test/*.test.js app_template/test/*/*.test.js",
     "test": "npm run lint && npm run unit"
   },
   "keywords": [
