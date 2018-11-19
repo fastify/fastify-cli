@@ -1,3 +1,5 @@
+'use strict'
+
 const { arrayToRegExp } = require('../lib/watch/utils')
 const { IGNORE_WATCH } = require('../lib/watch/constants')
 
