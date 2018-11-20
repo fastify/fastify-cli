@@ -64,7 +64,7 @@ function start (args, cb) {
   })
 
   if (opts.watch) {
-    return watch(args)
+    return watch(args, opts.ignoreWatch)
   }
 
   return runFastify(args, cb)
