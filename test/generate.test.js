@@ -17,6 +17,7 @@ const workdir = path.join(__dirname, 'workdir')
 const templatedir = path.join(__dirname, '..', 'app_template')
 const cliPkg = require('../package')
 const { exec } = require('child_process')
+const minimatch = require('minimatch')
 const expected = {}
 
 ;(function (cb) {
@@ -76,7 +77,7 @@ function define (t) {
   })
 
   test('should finish succesfully', (t) => {
-    t.plan(15 + Object.keys(expected).length * 2)
+    t.plan(16 + Object.keys(expected).length * 2)
 
     generate(workdir, function (err) {
       t.error(err)
@@ -106,6 +107,9 @@ function define (t) {
       t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
       t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
       t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
+
+      const testGlob = pkg.scripts.test.split(' ')[1]
+      t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)
     })
   }
 
