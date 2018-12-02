@@ -9,11 +9,11 @@ const rimraf = require('rimraf')
 const workdir = path.join(__dirname, 'workdir')
 const target = path.join(workdir, 'cli.test')
 
-rimraf(workdir, () => {
-  mkdirp.sync(workdir)
-  t.plan(1)
+t.plan(1)
 
-  execSync(`node cli.js generate ${target}`)
+rimraf.sync(workdir)
+mkdirp.sync(workdir)
 
-  t.pass()
-})
+execSync(`node cli.js generate ${target}`)
+
+t.pass()
