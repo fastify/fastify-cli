@@ -125,7 +125,7 @@ function define (t) {
         readFile(file, function (err, data) {
           t.notOk(err)
           file = file.replace(workdir, '')
-          t.deepEqual(data.toString(), expected[file], file + ' matching')
+          t.deepEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
         })
       })
   }
