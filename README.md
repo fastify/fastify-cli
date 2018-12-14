@@ -190,7 +190,7 @@ It is a standard Fastify plugin and you will not need to add the `listen` method
 
 "scripts": {
 + "pretest": "standard",
-  "test": "tap test/*.test.js test/*/*.test.js test/*/*/*.test.js",
+  "test": "tap test/**/*.test.js",
   "start": "fastify start -l info app.js",
   "dev": "fastify start -l info -P app.js",
 + "lint": "standard --fix"
