@@ -34,12 +34,12 @@ __accessibilityTemplate__
 <!-- A list of all exposed decorators in your plugin -->
 
 #### Fastify
-<!-- Should be defined in typescript because it's well known and easy to write -->
+<!-- Please define the method signature in typescript because it's well known and easy to write -->
 
 __fastifyDecorators__
 
 #### Reply
-<!-- Should be defined in typescript because it's well known and easy to write -->
+<!-- Please define the method signature in typescript because it's well known and easy to write -->
 
 __replyDecorators__
 
