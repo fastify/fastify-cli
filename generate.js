@@ -18,7 +18,7 @@ function generate (dir, log, cb) {
     log = () => {}
   }
 
-  generify(path.join(__dirname, 'app_template'), dir, {}, function (file) {
+  generify(path.join(__dirname, 'templates', 'app'), dir, {}, function (file) {
     log('debug', `generated ${file}`)
   }, function (err) {
     if (err) {

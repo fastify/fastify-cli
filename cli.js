@@ -10,9 +10,11 @@ const help = require('help-me')({
 })
 const start = require('./start')
 const generate = require('./generate')
+const generatePlugin = require('./generate-plugin')
 
 commist.register('start', start.cli)
 commist.register('generate', generate.cli)
+commist.register('generate-plugin', generatePlugin.cli)
 commist.register('help', help.toStdout)
 commist.register('version', function () {
   console.log(require('./package.json').version)

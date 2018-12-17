@@ -14,7 +14,7 @@ const mkdirp = require('mkdirp')
 const walker = require('walker')
 const { generate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
-const templatedir = path.join(__dirname, '..', 'app_template')
+const appTemplateDir = path.join(__dirname, '..', 'templates', 'app')
 const cliPkg = require('../package')
 const { exec } = require('child_process')
 const minimatch = require('minimatch')
@@ -22,7 +22,7 @@ const expected = {}
 
 ;(function (cb) {
   var files = []
-  walker(templatedir)
+  walker(appTemplateDir)
     .on('file', function (file) {
       files.push(file)
     })
@@ -34,7 +34,7 @@ const expected = {}
             return cb(err)
           }
 
-          expected[file.replace(templatedir, '').replace(/__/, '.')] = data.toString()
+          expected[file.replace(appTemplateDir, '').replace(/__/, '.')] = data.toString()
 
           count++
           if (count === files.length) {
