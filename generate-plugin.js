@@ -113,11 +113,17 @@ function cli (args) {
   try {
     plugin = require(pluginPath)
   } catch (err) {
-    log('error', 'plugin metadata could not be loaded', err)
+    log('error', 'plugin could not be loaded', err)
     process.exit(1)
   }
 
   const pluginMeta = plugin[Symbol.for('plugin-meta')]
+
+  if (!pluginMeta) {
+    log('error', 'no plugin metadata could be found. Are you sure that you use https://github.com/fastify/fastify-plugin ?')
+    process.exit(1)
+  }
+
   let encapsulated = !plugin[Symbol.for('skip-override')]
   const pluginFileName = path.basename(opts._[0])
 
