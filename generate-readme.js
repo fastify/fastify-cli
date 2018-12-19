@@ -74,15 +74,13 @@ function stop (error) {
 
 function showHelp () {
   console.log(
-    readFileSync(path.join(__dirname, 'help', 'gen-readme.txt'), 'utf8')
+    readFileSync(path.join(__dirname, 'help', 'readme.txt'), 'utf8')
   )
   return stop()
 }
 
 function cli (args) {
   const opts = argv(args)
-
-  log('info', 'Execute command: gen-readme')
 
   const dir = process.cwd()
 

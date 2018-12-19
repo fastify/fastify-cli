@@ -24,11 +24,11 @@ Will print an help:
 ```
 Fastify command line interface, available commands are:
 
-  * start           start a server
-  * gen-app         generate a new project
-  * gen-readme      generate a README.md for the plugin
-  * version         the current fastify-cli version
-  * help            help about commands
+  * start         start a server
+  * generate      generate a new project
+  * readme        generate a README.md for the plugin
+  * version       the current fastify-cli version
+  * help          help about commands
 
 Launch 'fastify help [command]' to know more about the commands.
 
@@ -179,6 +179,22 @@ You will find three different folders:
 
 Finally there will be an `app.js` file, which is your entry point.
 It is a standard Fastify plugin and you will not need to add the `listen` method to run the server, just run it with one of the scripts above.
+
+### readme
+
+`fastify-cli` can also help with generating a concise and informative readme for your plugin. If no `package.json` was provided a new one is generated automatically.
+To use it:
+
+1. `cd yourplugin`
+2. `fastify readme <path-to-your-plugin-file>`
+
+Finally there will be a new `README.md` file, which provides internal informations about your plugin e.g:
+
+* Install instructions
+* Example usage
+* Plugin dependencies
+* Exposed decorators
+* Encapsulation semantic
 
 ### linting
 

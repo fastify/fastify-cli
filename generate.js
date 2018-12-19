@@ -77,8 +77,6 @@ function generate (dir, cb) {
 function cli (args) {
   const opts = argv(args)
 
-  log('info', 'Execute command: gen-app')
-
   if (opts._[0] && existsSync(opts._[0])) {
     log('error', 'directory ' + opts._[0] + ' already exists')
     process.exit(1)
