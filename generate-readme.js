@@ -1,21 +1,16 @@
 'use strict'
 
 const { readFileSync, existsSync } = require('fs')
-const chalk = require('chalk')
 const path = require('path')
 const generify = require('generify')
 const argv = require('yargs-parser')
 const { execSync } = require('child_process')
+const log = require('./log')
 
 function toMarkdownList (a) {
   return a.map(d => `- ${d}`).join('\n')
 }
-function generate (dir, { pluginMeta, encapsulated, pluginFileName }, log, cb) {
-  if (!cb) {
-    cb = log
-    log = () => {}
-  }
-
+function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
   process.chdir(dir)
 
   if (!existsSync(path.join(dir, 'package.json'))) {
@@ -79,26 +74,20 @@ function stop (error) {
 
 function showHelp () {
   console.log(
-    readFileSync(path.join(__dirname, 'help', 'generate-plugin.txt'), 'utf8')
+    readFileSync(path.join(__dirname, 'help', 'gen-readme.txt'), 'utf8')
   )
   return stop()
 }
 
-const levels = {
-  debug: 0,
-  info: 1,
-  error: 2
-}
-
-const colors = [l => l, chalk.green, chalk.red]
-
 function cli (args) {
   const opts = argv(args)
+
+  log('info', 'Execute command: gen-readme')
 
   const dir = process.cwd()
 
   if (opts._.length !== 1) {
-    log('error', 'Error: Missing the required file parameter\n')
+    log('error', 'Missing the required file parameter\n')
     return showHelp()
   }
 
@@ -127,7 +116,7 @@ function cli (args) {
   let encapsulated = !plugin[Symbol.for('skip-override')]
   const pluginFileName = path.basename(opts._[0])
 
-  generate(dir, { pluginMeta, encapsulated, pluginFileName }, log, function (
+  generate(dir, { pluginMeta, encapsulated, pluginFileName }, function (
     err
   ) {
     if (err) {
@@ -135,14 +124,6 @@ function cli (args) {
       process.exit(1)
     }
   })
-
-  function log (severity, line) {
-    const level = levels[severity] || 0
-    if (level === 1) {
-      line = '--> ' + line
-    }
-    console.log(colors[level](line))
-  }
 }
 
 module.exports = {

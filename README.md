@@ -24,10 +24,11 @@ Will print an help:
 ```
 Fastify command line interface, available commands are:
 
-  * start       start a server
-  * generate    generate a new project
-  * version     the current fastify-cli version
-  * help        help about commands
+  * start           start a server
+  * gen-app         generate a new project
+  * gen-readme      generate a README.md for the plugin
+  * version         the current fastify-cli version
+  * help            help about commands
 
 Launch 'fastify help [command]' to know more about the commands.
 

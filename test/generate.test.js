@@ -63,7 +63,7 @@ function define (t) {
   test('errors if directory exists', (t) => {
     t.plan(2)
     exec('node generate.js ./test/workdir', (err, stdout) => {
-      t.is('directory ./test/workdir already exists', stdout.toString().trim())
+      t.is('--> Execute command: gen-app\ndirectory ./test/workdir already exists', stdout.toString().trim())
       t.is(1, err.code)
     })
   })
@@ -71,7 +71,7 @@ function define (t) {
   test('errors if pkgfile exists', (t) => {
     t.plan(2)
     exec('node generate.js', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is('--> Execute command: gen-app\na package.json file already exists in target directory', stdout.toString().trim())
       t.is(1, err.code)
     })
   })

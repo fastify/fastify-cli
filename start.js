@@ -41,7 +41,7 @@ function start (args, cb) {
   }
 
   if (opts._.length !== 1) {
-    console.error('Error: Missing the required file parameter\n')
+    console.error('Missing the required file parameter\n')
     return showHelp()
   }
 
