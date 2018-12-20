@@ -195,6 +195,7 @@ Finally there will be a new `README.md` file, which provides internal informatio
 * Plugin dependencies
 * Exposed decorators
 * Encapsulation semantic
+* Compatible Fastify version
 
 ### linting
 
