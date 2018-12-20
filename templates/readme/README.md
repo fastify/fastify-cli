@@ -46,3 +46,7 @@ __replyDecorators__
 ## Dependencies
 
 __pluginDeps__
+
+## Compatible Fastify version
+
+__minFastify__

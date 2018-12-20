@@ -29,6 +29,10 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
   pluginMeta.decorators = pluginMeta.decorators ? pluginMeta.decorators : { fastify: [], reply: [] }
   pluginMeta.dependencies = pluginMeta.dependencies ? pluginMeta.dependencies : []
 
+  const peerDepFastify = pkg.peerDependencies ? pkg.peerDependencies.fastify : ''
+  const depFastify = pkg.dependencies ? pkg.dependencies.fastify : ''
+  const minFastify = pluginMeta.fastify || peerDepFastify || depFastify
+
   let accessibilityTemplate = ''
   if (!encapsulated) {
     accessibilityTemplate = `- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n`
@@ -49,7 +53,8 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
       replyDecorators,
       pluginDeps,
       packageName: pkg.name,
-      pluginFileName
+      pluginFileName,
+      minFastify
     },
     function (file) {
       log('debug', `generated ${file}`)
