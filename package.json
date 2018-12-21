@@ -8,8 +8,8 @@
   },
   "scripts": {
     "lint": "standard",
-    "test": "tap test/*.test.js app_template/test/*/*.test.js",
-    "pretest": "standard"
+    "unit": "tap test/*.test.js templates/app/test/*/*.test.js",
+    "test": "npm run lint && npm run unit"
   },
   "keywords": [
     "fastify",

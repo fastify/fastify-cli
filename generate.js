@@ -5,20 +5,16 @@ const {
   writeFile,
   existsSync
 } = require('fs')
-const chalk = require('chalk')
 const path = require('path')
+const chalk = require('chalk')
 const generify = require('generify')
 const argv = require('yargs-parser')
 const cliPkg = require('./package')
 const { execSync } = require('child_process')
+const log = require('./log')
 
-function generate (dir, log, cb) {
-  if (!cb) {
-    cb = log
-    log = () => {}
-  }
-
-  generify(path.join(__dirname, 'app_template'), dir, {}, function (file) {
+function generate (dir, cb) {
+  generify(path.join(__dirname, 'templates', 'app'), dir, {}, function (file) {
     log('debug', `generated ${file}`)
   }, function (err) {
     if (err) {
@@ -78,18 +74,6 @@ function generate (dir, log, cb) {
   })
 }
 
-const levels = {
-  'debug': 0,
-  'info': 1,
-  'error': 2
-}
-
-const colors = [
-  (l) => l,
-  chalk.green,
-  chalk.red
-]
-
 function cli (args) {
   const opts = argv(args)
 
@@ -105,20 +89,12 @@ function cli (args) {
     process.exit(1)
   }
 
-  generate(dir, log, function (err) {
+  generate(dir, function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
     }
   })
-
-  function log (severity, line) {
-    const level = levels[severity] || 0
-    if (level === 1) {
-      line = '--> ' + line
-    }
-    console.log(colors[level](line))
-  }
 }
 
 module.exports = {
