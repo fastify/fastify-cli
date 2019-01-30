@@ -2,6 +2,8 @@
 
 'use strict'
 
+require('dotenv').config()
+
 const path = require('path')
 const fs = require('fs')
 const assert = require('assert')
@@ -79,7 +81,6 @@ function stop (error) {
 }
 
 function runFastify (args, cb) {
-  require('dotenv').config()
   let opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   cb = cb || assert.ifError
