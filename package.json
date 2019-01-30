@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "standard",
     "unit": "tap test/*.test.js templates/app/test/*/*.test.js",
-    "test": "npm run lint && npm run unit --require dotenv/config"
+    "test": "npm run lint && npm run unit"
   },
   "keywords": [
     "fastify",
