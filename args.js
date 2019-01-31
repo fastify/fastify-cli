@@ -30,7 +30,7 @@ module.exports = function parseArgs (args) {
     }
   })
 
-  return Object.assign({}, {
+  return {
     _: parsedArgs._,
     port: parsedArgs.port,
     bodyLimit: parsedArgs.bodyLimit,
@@ -43,5 +43,5 @@ module.exports = function parseArgs (args) {
     address: parsedArgs.address,
     socket: parsedArgs.socket,
     prefix: parsedArgs.prefix
-  })
+  }
 }
