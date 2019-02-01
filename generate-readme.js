@@ -7,12 +7,12 @@ const argv = require('yargs-parser')
 const { execSync } = require('child_process')
 const log = require('./log')
 
+const dir = process.cwd()
+
 function toMarkdownList (a) {
   return a.map(d => `- ${d}`).join('\n')
 }
-function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
-  process.chdir(dir)
-
+function generate ({ pluginMeta, encapsulated, pluginFileName }, cb) {
   if (!existsSync(path.join(dir, 'package.json'))) {
     execSync('npm init -y')
     log('info', `generated package.json in ${dir}`)
@@ -87,8 +87,6 @@ function showHelp () {
 function cli (args) {
   const opts = argv(args)
 
-  const dir = process.cwd()
-
   if (opts._.length !== 1) {
     log('error', 'Missing the required file parameter\n')
     return showHelp()
@@ -119,7 +117,7 @@ function cli (args) {
   let encapsulated = !plugin[Symbol.for('skip-override')]
   const pluginFileName = path.basename(opts._[0])
 
-  generate(dir, { pluginMeta, encapsulated, pluginFileName }, function (
+  generate({ pluginMeta, encapsulated, pluginFileName }, function (
     err
   ) {
     if (err) {
