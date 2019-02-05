@@ -1,0 +1,14 @@
+{
+  "name": "plugindir",
+  "version": "1.0.0",
+  "description": "test for generator-readme",
+  "main": "plugin.js",
+  "scripts": {
+    "test": ""
+  },
+  "dependencies": {
+    "fastify-plugin": "^1.4.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

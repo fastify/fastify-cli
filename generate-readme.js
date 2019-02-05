@@ -63,8 +63,8 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
       if (err) {
         return cb(err)
       }
-
       log('info', `README for plugin ${pkg.name} generated successfully`)
+      cb()
     }
   )
 }
