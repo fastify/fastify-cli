@@ -42,13 +42,13 @@
     ]
   },
   "dependencies": {
-    "chalk": "^2.4.1",
-    "chokidar": "^2.0.4",
+    "chalk": "^2.4.2",
+    "chokidar": "^2.1.2",
     "commist": "^1.0.0",
-    "dotenv": "^6.0.0",
-    "fastify": "^1.11.0",
-    "fastify-plugin": "^1.2.0",
-    "generify": "^3.0.2",
+    "dotenv": "^6.2.0",
+    "fastify": "^1.14.2",
+    "fastify-plugin": "^1.5.0",
+    "generify": "^3.0.3",
     "help-me": "^1.1.0",
     "is-docker": "^1.1.0",
     "make-promises-safe": "^4.0.0",
@@ -64,11 +64,11 @@
     "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
     "proxyquire": "^2.0.1",
-    "rimraf": "^2.6.2",
+    "rimraf": "^2.6.3",
     "simple-get": "^3.0.3",
     "sinon": "^7.2.3",
     "standard": "^12.0.0",
-    "tap": "^12.0.0",
+    "tap": "^12.5.3",
     "walker": "^1.0.7"
   },
   "greenkeeper": {
