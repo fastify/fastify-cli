@@ -11,7 +11,6 @@ const updateNotifier = require('update-notifier')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const resolveFrom = require('resolve-from')
-const fp = require('fastify-plugin')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
@@ -126,10 +125,9 @@ function runFastify (args, cb) {
   const pluginOptions = {}
   if (opts.prefix) {
     pluginOptions.prefix = opts.prefix
-    fastify._routePrefix = opts.prefix || ''
   }
 
-  fastify.register(fp(file), pluginOptions)
+  fastify.register(file, pluginOptions)
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, wrap)
