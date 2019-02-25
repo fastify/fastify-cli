@@ -93,7 +93,7 @@ function define (t) {
       t.error(err)
       const pkg = JSON.parse(data)
       t.equal(pkg.name, 'workdir')
-      // we are not checking author because it depends on global nnpm configs
+      // we are not checking author because it depends on global npm configs
       t.equal(pkg.version, '1.0.0')
       t.equal(pkg.description, '')
       // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
