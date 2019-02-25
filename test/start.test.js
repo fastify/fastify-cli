@@ -430,19 +430,6 @@ test('should start the server at the given prefix (using env var read from doten
   })
 })
 
-test('The plugin is registered with fastify-plugin', t => {
-  t.plan(3)
-
-  const argv = [ './examples/plugin.js' ]
-  start.start(argv, function (err, fastify) {
-    t.error(err)
-    t.strictEqual(fastify.test, true)
-    fastify.close(function () {
-      t.pass('close called')
-    })
-  })
-})
-
 test('should start the server listening on 0.0.0.0 when runing in docker', t => {
   t.plan(3)
   const isDocker = sinon.stub()
