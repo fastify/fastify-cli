@@ -45,7 +45,7 @@
     "chalk": "^2.4.2",
     "chokidar": "^2.1.2",
     "commist": "^1.0.0",
-    "dotenv": "^6.2.0",
+    "dotenv": "^7.0.0",
     "fastify": "^2.0.0",
     "fastify-plugin": "^1.5.0",
     "generify": "^3.0.3",
