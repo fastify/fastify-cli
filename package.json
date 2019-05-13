@@ -75,6 +75,7 @@
     "ignore": [
       "request",
       "chokidar",
+      "dotenv",
       "tap"
     ]
   }
