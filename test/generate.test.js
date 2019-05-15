@@ -76,6 +76,22 @@ function define (t) {
     })
   })
 
+  test('errors if package.json exists when use generate .', (t) => {
+    t.plan(2)
+    exec('node generate.js .', (err, stdout) => {
+      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is(1, err.code)
+    })
+  })
+
+  test('errors if package.json exists when use generate ./', (t) => {
+    t.plan(2)
+    exec('node generate.js ./', (err, stdout) => {
+      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is(1, err.code)
+    })
+  })
+
   test('errors if folder exists', (t) => {
     t.plan(2)
     exec('node generate.js test', (err, stdout) => {
