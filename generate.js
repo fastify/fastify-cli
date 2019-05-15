@@ -78,8 +78,10 @@ function cli (args) {
   const opts = argv(args)
 
   if (opts._[0] && existsSync(opts._[0])) {
-    log('error', 'directory ' + opts._[0] + ' already exists')
-    process.exit(1)
+    if (opts._[0] !== '.' && opts._[0] !== './') {
+      log('error', 'directory ' + opts._[0] + ' already exists')
+      process.exit(1)
+    }
   }
   if (opts._[0] === undefined) {
     log('error', 'must specify a directory to \'fastify generate\'')
