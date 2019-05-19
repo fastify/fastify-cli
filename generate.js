@@ -78,11 +78,17 @@ function cli (args) {
   const opts = argv(args)
 
   if (opts._[0] && existsSync(opts._[0])) {
-    log('error', 'directory ' + opts._[0] + ' already exists')
+    if (opts._[0] !== '.' && opts._[0] !== './') {
+      log('error', 'directory ' + opts._[0] + ' already exists')
+      process.exit(1)
+    }
+  }
+  if (opts._[0] === undefined) {
+    log('error', 'must specify a directory to \'fastify generate\'')
     process.exit(1)
   }
 
-  const dir = opts._[0] || process.cwd()
+  const dir = opts._[0]
 
   if (existsSync(path.join(dir, 'package.json'))) {
     log('error', 'a package.json file already exists in target directory')
