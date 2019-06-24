@@ -87,8 +87,7 @@ function runFastify (args, cb) {
   loadModules(opts)
 
   if (!fs.existsSync(path.resolve(process.cwd(), opts._[0]))) {
-    console.log(`${opts._[0]} doesn't exist within ${process.cwd()}`)
-    return
+    return module.exports.stop(`${opts._[0]} doesn't exist within ${process.cwd()}`)
   }
 
   let file = require(path.resolve(process.cwd(), opts._[0]))
