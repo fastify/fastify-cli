@@ -10,7 +10,7 @@ const plugindir = path.join(__dirname, 'plugindir')
 let plugin = require(plugindir)
 const { test } = t
 
-test('should create readme', async t => {
+test('should create readme', async (t) => {
   t.plan(1)
   const pluginMeta = plugin[Symbol.for('plugin-meta')]
   let encapsulated = !plugin[Symbol.for('skip-override')]
