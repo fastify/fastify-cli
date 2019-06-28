@@ -86,11 +86,13 @@ function runFastify (args, cb) {
 
   loadModules(opts)
 
-  if (!fs.existsSync(path.resolve(process.cwd(), opts._[0]))) {
-    return module.exports.stop(`${opts._[0]} doesn't exist within ${process.cwd()}`)
+  const filePath = path.resolve(process.cwd(), opts._[0])
+
+  if (!fs.existsSync(filePath)) {
+    return module.exports.stop(new Error(`${opts._[0]} doesn't exist within ${process.cwd()}`))
   }
 
-  let file = require(path.resolve(process.cwd(), opts._[0]))
+  const file = require(filePath)
 
   if (file.length !== 3 && file.constructor.name === 'Function') {
     return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +
