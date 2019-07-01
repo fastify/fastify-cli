@@ -77,7 +77,7 @@ function stop (error, warn) {
     process.exit(1)
   }
   if (warn) {
-   console.log(warn)
+    console.log(warn)
   }
   process.exit()
 }
@@ -95,7 +95,13 @@ function runFastify (args, cb) {
     return module.exports.stop('', `${opts._[0]} doesn't exist within ${process.cwd()}`)
   }
 
-  const file = require(filePath)
+  let file = null
+
+  try {
+    file = require(filePath)
+  } catch (e) {
+    return module.exports.stop(e)
+  }
 
   if (file.length !== 3 && file.constructor.name === 'Function') {
     return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +

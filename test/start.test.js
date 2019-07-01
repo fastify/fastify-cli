@@ -147,9 +147,9 @@ test('should throw on file not found', t => {
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err, warn) {
-   // test case changes
-    t.ok(/.*not-found doesn't exist within/.test(warn), warn)
+  start.stop = function (err, warn) { // eslint-disable-line
+    // test case changes
+    t.ok(/.*not-found.js doesn't exist within/.test(warn), warn)
   }
 
   const argv = [ '-p', getPort(), './data/not-found.js' ]
@@ -161,8 +161,8 @@ test('should throw on package not found', t => {
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
+  start.stop = function (err, warn) { // eslint-disable-line
+    t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
   }
 
   const argv = [ '-p', getPort(), './test/data/package-not-found.js' ]
@@ -174,7 +174,7 @@ test('should throw on parsing error', t => {
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
+  start.stop = function (err, warn) { // eslint-disable-line
     t.equal(err.constructor, SyntaxError)
   }
 
