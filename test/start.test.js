@@ -161,7 +161,7 @@ test('should throw on package not found', t => {
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err, warn) { // eslint-disable-line
+  start.stop = function (err, warn) {
     t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
   }
 
