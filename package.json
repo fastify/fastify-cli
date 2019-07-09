@@ -1,6 +1,6 @@
 {
   "name": "fastify-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "bin": {
