@@ -78,6 +78,7 @@ function stop (error, warn) {
   }
   if (warn) {
     console.log(warn)
+    process.exit(1)
   }
   process.exit()
 }
