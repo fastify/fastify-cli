@@ -40,20 +40,20 @@ function generate (dir, cb) {
       pkg.main = 'app.js'
 
       pkg.scripts = Object.assign(pkg.scripts || {}, {
-        'test': 'tap test/**/*.test.js',
-        'start': 'fastify start -l info app.js',
-        'dev': 'fastify start -l info -P app.js'
+        test: 'tap test/**/*.test.js',
+        start: 'fastify start -l info app.js',
+        dev: 'fastify start -l info -P app.js'
       })
 
       pkg.dependencies = Object.assign(pkg.dependencies || {}, {
-        'fastify': cliPkg.dependencies.fastify,
+        fastify: cliPkg.dependencies.fastify,
         'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
         'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
         'fastify-cli': '^' + cliPkg.version
       })
 
       pkg.devDependencies = Object.assign(pkg.devDependencies || {}, {
-        'tap': cliPkg.devDependencies['tap']
+        tap: cliPkg.devDependencies['tap']
       })
 
       log('debug', `edited package.json, saving`)

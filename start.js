@@ -36,7 +36,7 @@ function showHelp () {
 }
 
 function start (args, cb) {
-  let opts = parseArgs(args)
+  const opts = parseArgs(args)
   if (opts.help) {
     return showHelp()
   }
@@ -84,7 +84,7 @@ function stop (error, warn) {
 }
 
 function runFastify (args, cb) {
-  let opts = parseArgs(args)
+  const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   cb = cb || assert.ifError
 
