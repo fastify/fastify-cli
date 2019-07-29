@@ -71,13 +71,11 @@ function start (args, cb) {
   return runFastify(args, cb)
 }
 
-function stop (error, warn) {
-  if (error) {
-    console.log(error)
-    process.exit(1)
-  }
-  if (warn) {
-    console.log(warn)
+function stop (message) {
+  if (message instanceof Error) {
+    throw message
+  } else if (message) {
+    console.log(message)
     process.exit(1)
   }
   process.exit()
@@ -93,7 +91,7 @@ function runFastify (args, cb) {
   const filePath = path.resolve(process.cwd(), opts._[0])
 
   if (!fs.existsSync(filePath)) {
-    return module.exports.stop(null, `${opts._[0]} doesn't exist within ${process.cwd()}`)
+    return module.exports.stop(`${opts._[0]} doesn't exist within ${process.cwd()}`)
   }
 
   let file = null

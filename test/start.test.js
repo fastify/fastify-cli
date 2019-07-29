@@ -143,14 +143,12 @@ test('should error with a good timeout value', t => {
 })
 
 test('should warn on file not found', t => {
-  t.plan(2)
+  t.plan(1)
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err, warn) { // eslint-disable-line
-    // test case changes
-    t.equal(err, null)
-    t.ok(/.*not-found.js doesn't exist within/.test(warn), warn)
+  start.stop = function (message) {
+    t.ok(/.*not-found.js doesn't exist within/.test(message), message)
   }
 
   const argv = ['-p', getPort(), './data/not-found.js']
@@ -158,12 +156,11 @@ test('should warn on file not found', t => {
 })
 
 test('should throw on package not found', t => {
-  t.plan(2)
+  t.plan(1)
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err, warn) {
-    t.equal(warn, undefined)
+  start.stop = function (err) {
     t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
   }
 
@@ -172,12 +169,11 @@ test('should throw on package not found', t => {
 })
 
 test('should throw on parsing error', t => {
-  t.plan(2)
+  t.plan(1)
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err, warn) { // eslint-disable-line
-    t.equal(warn, undefined)
+  start.stop = function (err) {
     t.equal(err.constructor, SyntaxError)
   }
 
