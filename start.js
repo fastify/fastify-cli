@@ -73,9 +73,10 @@ function start (args, cb) {
 
 function stop (message) {
   if (message instanceof Error) {
-    throw message
-  } else if (message) {
     console.log(message)
+    process.exit(1)
+  } else if (message) {
+    console.log(`Warn: ${message}`)
     process.exit(1)
   }
   process.exit()
@@ -104,7 +105,7 @@ function runFastify (args, cb) {
 
   if (file.length !== 3 && file.constructor.name === 'Function') {
     return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +
-                    'documentation for more information.'))
+    'documentation for more information.'))
   }
   if (file.length !== 2 && file.constructor.name === 'AsyncFunction') {
     return module.exports.stop(new Error('Async/Await plugin function should contain 2 arguments.' +
