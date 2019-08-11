@@ -78,13 +78,13 @@ test('should throw on parsing error', t => {
 })
 
 test('should print routes of server with an async/await plugin', t => {
-  t.plan(2)
-
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   if (nodeMajorVersion < 7) {
     t.pass('Skip because Node version < 7')
     return t.end()
   }
+
+  t.plan(2)
 
   const spy = sinon.spy()
   const command = proxyquire('../print-routes', {
