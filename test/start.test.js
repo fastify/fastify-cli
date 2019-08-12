@@ -209,17 +209,21 @@ test('should start the server with an async/await plugin', t => {
   })
 })
 
-test('should exit without error on help', t => {
-  t.plan(1)
+t.only('should exit without error on help', t => {
+  const exit = process.exit
+  process.exit = sinon.spy()
 
-  const oldStop = start.stop
-  t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.equal(err, undefined)
-  }
+  t.tearDown(() => {
+    process.exit = exit
+  })
 
   const argv = ['-p', getPort(), '-h', 'true']
   start.start(argv)
+
+  t.ok(process.exit.called)
+  t.equal(process.exit.lastCall.args[0], undefined)
+
+  t.end()
 })
 
 test('should throw the right error on require file', t => {

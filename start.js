@@ -28,21 +28,15 @@ function loadModules (opts) {
   }
 }
 
-function showHelp () {
-  showHelpForCommand('start')
-
-  return module.exports.stop()
-}
-
 function start (args, cb) {
   const opts = parseArgs(args)
   if (opts.help) {
-    return showHelp()
+    return showHelpForCommand('start')
   }
 
   if (opts._.length !== 1) {
     console.error('Missing the required file parameter\n')
-    return showHelp()
+    return showHelpForCommand('start')
   }
 
   // we start crashing on unhandledRejection

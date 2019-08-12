@@ -19,21 +19,15 @@ function loadModules (opts) {
   }
 }
 
-function showHelp () {
-  showHelpForCommand('print-routes')
-
-  return module.exports.stop()
-}
-
 function printRoutes (args, cb) {
   const opts = parseArgs(args)
   if (opts.help) {
-    return showHelp()
+    return showHelpForCommand('print-routes')
   }
 
   if (opts._.length !== 1) {
     console.error('Missing the required file parameter\n')
-    return showHelp()
+    return showHelpForCommand('print-routes')
   }
 
   // we start crashing on unhandledRejection

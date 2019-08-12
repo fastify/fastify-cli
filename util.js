@@ -23,8 +23,8 @@ function requireFastifyForModule (modulePath) {
 
     return { module, pkg }
   } catch (e) {
-    console.log('Warn: unable to load fastify module')
-    throw e
+    console.log('unable to load fastify module')
+    exit()
   }
 }
 
@@ -63,8 +63,9 @@ function showHelpForCommand (commandName) {
 
   try {
     console.log(fs.readFileSync(helpFilePath, 'utf8'))
+    exit()
   } catch (e) {
-    console.log(`Warn: unable to get help for command "${commandName}"`)
+    console.log(`unable to get help for command "${commandName}"`)
     throw e
   }
 }

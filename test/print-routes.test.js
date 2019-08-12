@@ -77,6 +77,23 @@ test('should throw on parsing error', t => {
   printRoutes.printRoutes(argv)
 })
 
+test('should exit without error on help', t => {
+  const exit = process.exit
+  process.exit = sinon.spy()
+
+  t.tearDown(() => {
+    process.exit = exit
+  })
+
+  const argv = ['-h', 'true']
+  printRoutes.printRoutes(argv)
+
+  t.ok(process.exit.called)
+  t.equal(process.exit.lastCall.args[0], undefined)
+
+  t.end()
+})
+
 test('should print routes of server with an async/await plugin', t => {
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   if (nodeMajorVersion < 7) {
