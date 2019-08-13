@@ -23,8 +23,7 @@ function requireFastifyForModule (modulePath) {
 
     return { module, pkg }
   } catch (e) {
-    console.log('unable to load fastify module')
-    exit()
+    exit('unable to load fastify module')
   }
 }
 
@@ -66,7 +65,7 @@ function showHelpForCommand (commandName) {
     exit()
   } catch (e) {
     console.log(`unable to get help for command "${commandName}"`)
-    throw e
+    exit(e)
   }
 }
 
