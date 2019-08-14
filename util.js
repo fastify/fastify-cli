@@ -64,8 +64,7 @@ function showHelpForCommand (commandName) {
     console.log(fs.readFileSync(helpFilePath, 'utf8'))
     exit()
   } catch (e) {
-    console.log(`unable to get help for command "${commandName}"`)
-    exit(e)
+    exit(`unable to get help for command "${commandName}"`)
   }
 }
 
