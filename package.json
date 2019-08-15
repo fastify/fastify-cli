@@ -64,7 +64,7 @@
     "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
     "proxyquire": "^2.0.1",
-    "rimraf": "^2.6.3",
+    "rimraf": "^3.0.0",
     "simple-get": "^3.0.3",
     "sinon": "^7.3.2",
     "standard": "^13.0.1",
