@@ -35,7 +35,7 @@ function generate (dir) {
         try {
           pkg = JSON.parse(data)
         } catch (err) {
-          reject(err)
+          return reject(err)
         }
 
         pkg.main = 'app.js'
