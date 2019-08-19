@@ -23,7 +23,7 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }) {
     try {
       pkg = JSON.parse(pkg)
     } catch (err) {
-      reject(err)
+      return reject(err)
     }
 
     pluginMeta.decorators = pluginMeta.decorators ? pluginMeta.decorators : { fastify: [], reply: [] }
@@ -61,7 +61,7 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }) {
       },
       function (err) {
         if (err) {
-          reject(err)
+          return reject(err)
         }
         log('info', `README for plugin ${pkg.name} generated successfully`)
         resolve()

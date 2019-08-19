@@ -19,7 +19,7 @@ function generate (dir) {
       log('debug', `generated ${file}`)
     }, function (err) {
       if (err) {
-        reject(err)
+        return reject(err)
       }
 
       process.chdir(dir)
@@ -35,7 +35,7 @@ function generate (dir) {
         try {
           pkg = JSON.parse(data)
         } catch (err) {
-          reject(err)
+          return reject(err)
         }
 
         pkg.main = 'app.js'
@@ -60,7 +60,7 @@ function generate (dir) {
         log('debug', `edited package.json, saving`)
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
           if (err) {
-            reject(err)
+            return reject(err)
           }
 
           log('debug', `saved package.json`)
