@@ -57,10 +57,6 @@ profile*
 *clinic*
 *flamegraph*
 
-# lock files
-yarn.lock
-package-lock.json
-
 # generated code
 examples/typescript-server.js
 test/types/index.js

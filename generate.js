@@ -41,20 +41,20 @@ function generate (dir) {
         pkg.main = 'app.js'
 
         pkg.scripts = Object.assign(pkg.scripts || {}, {
-          'test': 'tap test/**/*.test.js',
-          'start': 'fastify start -l info app.js',
-          'dev': 'fastify start -l info -P app.js'
+          test: 'tap test/**/*.test.js',
+          start: 'fastify start -l info app.js',
+          dev: 'fastify start -l info -P app.js'
         })
 
         pkg.dependencies = Object.assign(pkg.dependencies || {}, {
-          'fastify': cliPkg.dependencies.fastify,
+          fastify: cliPkg.dependencies.fastify,
           'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
           'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
           'fastify-cli': '^' + cliPkg.version
         })
 
         pkg.devDependencies = Object.assign(pkg.devDependencies || {}, {
-          'tap': cliPkg.devDependencies['tap']
+          tap: cliPkg.devDependencies['tap']
         })
 
         log('debug', `edited package.json, saving`)
@@ -78,19 +78,18 @@ function generate (dir) {
 
 function cli (args) {
   const opts = argv(args)
+  const dir = opts._[0]
 
-  if (opts._[0] && existsSync(opts._[0])) {
-    if (opts._[0] !== '.' && opts._[0] !== './') {
+  if (dir && existsSync(dir)) {
+    if (dir !== '.' && dir !== './') {
       log('error', 'directory ' + opts._[0] + ' already exists')
       process.exit(1)
     }
   }
-  if (opts._[0] === undefined) {
+  if (dir === undefined) {
     log('error', 'must specify a directory to \'fastify generate\'')
     process.exit(1)
   }
-
-  const dir = opts._[0]
 
   if (existsSync(path.join(dir, 'package.json'))) {
     log('error', 'a package.json file already exists in target directory')

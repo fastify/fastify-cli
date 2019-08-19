@@ -36,7 +36,7 @@ function showHelp () {
 }
 
 function start (args, cb) {
-  let opts = parseArgs(args)
+  const opts = parseArgs(args)
   if (opts.help) {
     return showHelp()
   }
@@ -71,31 +71,41 @@ function start (args, cb) {
   return runFastify(args, cb)
 }
 
-function stop (error) {
-  if (error) {
-    console.log(error)
+function stop (message) {
+  if (message instanceof Error) {
+    console.log(message)
+    process.exit(1)
+  } else if (message) {
+    console.log(`Warn: ${message}`)
     process.exit(1)
   }
   process.exit()
 }
 
 function runFastify (args, cb) {
-  let opts = parseArgs(args)
+  const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   cb = cb || assert.ifError
 
   loadModules(opts)
 
-  var file = null
+  const filePath = path.resolve(process.cwd(), opts._[0])
+
+  if (!fs.existsSync(filePath)) {
+    return module.exports.stop(`${opts._[0]} doesn't exist within ${process.cwd()}`)
+  }
+
+  let file = null
+
   try {
-    file = require(path.resolve(process.cwd(), opts._[0]))
+    file = require(filePath)
   } catch (e) {
     return module.exports.stop(e)
   }
 
   if (file.length !== 3 && file.constructor.name === 'Function') {
     return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +
-                    'documentation for more information.'))
+    'documentation for more information.'))
   }
   if (file.length !== 2 && file.constructor.name === 'AsyncFunction') {
     return module.exports.stop(new Error('Async/Await plugin function should contain 2 arguments.' +

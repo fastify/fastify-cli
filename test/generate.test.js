@@ -151,7 +151,7 @@ function define (t) {
             return
           }
           try {
-            let data = readFileSync(file)
+            const data = readFileSync(file)
             file = file.replace(workdir, '')
             t.deepEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
           } catch (err) {

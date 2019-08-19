@@ -28,7 +28,7 @@ function getPort () {
 test('should start the server', t => {
   t.plan(6)
 
-  const argv = [ '-p', getPort(), './examples/plugin.js' ]
+  const argv = ['-p', getPort(), './examples/plugin.js']
   start.start(argv, function (err, fastify) {
     t.error(err)
 
@@ -52,7 +52,7 @@ test('should start fastify with custom options', t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    const argv = [ '-p', getPort(), '-o', 'true', './examples/plugin-with-options.js' ]
+    const argv = ['-p', getPort(), '-o', 'true', './examples/plugin-with-options.js']
     start.start(argv).close()
     t.fail('Custom options')
   } catch (e) {
@@ -63,7 +63,7 @@ test('should start fastify with custom options', t => {
 test('should start the server at the given prefix', t => {
   t.plan(6)
 
-  const argv = [ '-p', getPort(), '-r', '/api/hello', './examples/plugin.js' ]
+  const argv = ['-p', getPort(), '-r', '/api/hello', './examples/plugin.js']
 
   start.start(argv, (err, fastify) => {
     t.error(err)
@@ -88,7 +88,7 @@ test('should start fastify at given socket path', { skip: process.platform === '
   t.plan(3)
 
   const sockFile = path.resolve('test.sock')
-  const argv = [ '-s', sockFile, '-o', 'true', './examples/plugin.js' ]
+  const argv = ['-s', sockFile, '-o', 'true', './examples/plugin.js']
 
   const fastify = start.start(argv)
 
@@ -123,7 +123,7 @@ test('should only accept plugin functions with 3 arguments', t => {
     t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
   }
 
-  const argv = [ '-p', getPort(), './test/data/incorrect-plugin.js' ]
+  const argv = ['-p', getPort(), './test/data/incorrect-plugin.js']
   start.start(argv)
 })
 
@@ -131,27 +131,27 @@ test('should error with a good timeout value', t => {
   t.plan(1)
 
   const start = proxyquire('../start', {
-    'assert': {
+    assert: {
       ifError (err) {
         t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}`)
       }
     }
   })
 
-  const argv = [ '-p', '3040', '-T', '100', './test/data/timeout-plugin.js' ]
+  const argv = ['-p', '3040', '-T', '100', './test/data/timeout-plugin.js']
   start.start(argv)
 })
 
-test('should throw on file not found', t => {
+test('should warn on file not found', t => {
   t.plan(1)
 
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.ok(/Cannot find module.*not-found/.test(err.message), err.message)
+  start.stop = function (message) {
+    t.ok(/.*not-found.js doesn't exist within/.test(message), message)
   }
 
-  const argv = [ '-p', getPort(), './data/not-found.js' ]
+  const argv = ['-p', getPort(), './data/not-found.js']
   start.start(argv)
 })
 
@@ -161,10 +161,10 @@ test('should throw on package not found', t => {
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
   start.stop = function (err) {
-    t.ok(/Cannot find module.*unknown-package/.test(err.message), err.message)
+    t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
   }
 
-  const argv = [ '-p', getPort(), './test/data/package-not-found.js' ]
+  const argv = ['-p', getPort(), './test/data/package-not-found.js']
   start.start(argv)
 })
 
@@ -177,7 +177,7 @@ test('should throw on parsing error', t => {
     t.equal(err.constructor, SyntaxError)
   }
 
-  const argv = [ '-p', getPort(), './test/data/parsing-error.js' ]
+  const argv = ['-p', getPort(), './test/data/parsing-error.js']
   start.start(argv)
 })
 
@@ -189,7 +189,7 @@ test('should start the server with an async/await plugin', t => {
 
   t.plan(6)
 
-  const argv = [ '-p', getPort(), './examples/async-await-plugin.js' ]
+  const argv = ['-p', getPort(), './examples/async-await-plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -218,7 +218,7 @@ test('should exit without error on help', t => {
     t.equal(err, undefined)
   }
 
-  const argv = [ '-p', getPort(), '-h', 'true' ]
+  const argv = ['-p', getPort(), '-h', 'true']
   start.start(argv)
 })
 
@@ -231,7 +231,7 @@ test('should throw the right error on require file', t => {
     t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
   }
 
-  const argv = [ '-p', getPort(), './test/data/undefinedVariable.js' ]
+  const argv = ['-p', getPort(), './test/data/undefinedVariable.js']
   start.start(argv)
 })
 
@@ -242,7 +242,7 @@ test('should respond 413 - Payload too large', t => {
   const bodySmaller = '{1: 1}'
 
   const bodyLimitValue = '' + (bodyTooLarge.length + 2 - 1)
-  const argv = [ '-p', getPort(), '--body-limit', bodyLimitValue, './examples/plugin.js' ]
+  const argv = ['-p', getPort(), '--body-limit', bodyLimitValue, './examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -276,7 +276,7 @@ test('should start the server (using env var)', t => {
   t.plan(6)
 
   process.env.FASTIFY_PORT = getPort()
-  const argv = [ './examples/plugin.js' ]
+  const argv = ['./examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -302,7 +302,7 @@ test('should start the server (using PORT-env var)', t => {
   t.plan(6)
 
   process.env.PORT = getPort()
-  const argv = [ './examples/plugin.js' ]
+  const argv = ['./examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -329,7 +329,7 @@ test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', 
 
   process.env.FASTIFY_PORT = getPort()
   process.env.PORT = getPort()
-  const argv = [ './examples/plugin.js' ]
+  const argv = ['./examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -357,7 +357,7 @@ test('should start the server (using -p preceding FASTIFY_PORT-env var)', t => {
 
   const port = getPort()
   process.env.FASTIFY_PORT = getPort()
-  const argv = [ '-p', port, './examples/plugin.js' ]
+  const argv = ['-p', port, './examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -384,7 +384,7 @@ test('should start the server at the given prefix (using env var)', t => {
 
   process.env.FASTIFY_PORT = getPort()
   process.env.FASTIFY_PREFIX = '/api/hello'
-  const argv = [ './examples/plugin.js' ]
+  const argv = ['./examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
 
@@ -418,7 +418,7 @@ test('should start the server at the given prefix (using env var read from doten
       }
     }
   })
-  const argv = [ './examples/plugin.js' ]
+  const argv = ['./examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
     t.strictEqual(fastify.server.address().port, 8080)
@@ -439,7 +439,7 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
     'is-docker': isDocker
   })
 
-  const argv = [ '-p', getPort(), './examples/plugin.js' ]
+  const argv = ['-p', getPort(), './examples/plugin.js']
   start.start(argv, (err, fastify) => {
     t.error(err)
     t.strictEqual(fastify.server.address().address, '0.0.0.0')
@@ -456,7 +456,7 @@ test('should start the server with watch options that the child process restart 
 
   fs.writeFile(tmpjs, 'hello world', function (err) {
     t.error(err)
-    const argv = [ '-p', '3042', '-w', './examples/plugin.js' ]
+    const argv = ['-p', '3042', '-w', './examples/plugin.js']
     const fastifyEmitter = start.start(argv)
 
     t.tearDown(() => {
@@ -485,7 +485,7 @@ test('should start the server with watch options that the child process restart 
 test('crash on unhandled rejection', t => {
   t.plan(1)
 
-  const argv = [ '-p', getPort(), './test/data/rejection.js' ]
+  const argv = ['-p', getPort(), './test/data/rejection.js']
   const child = fork(path.join(__dirname, '..', 'start.js'), argv, { silent: true })
   child.on('close', function (code) {
     t.strictEqual(code, 1)
@@ -500,7 +500,7 @@ test('boolean env are not overridden if no arguments are passed', t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    const argv = [ './examples/plugin-with-options.js' ]
+    const argv = ['./examples/plugin-with-options.js']
     start.start(argv).close()
     t.fail('Custom options')
   } catch (e) {
