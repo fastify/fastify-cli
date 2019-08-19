@@ -60,7 +60,7 @@ function generate (dir) {
         log('debug', `edited package.json, saving`)
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
           if (err) {
-            reject(err)
+            return reject(err)
           }
 
           log('debug', `saved package.json`)
