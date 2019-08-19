@@ -19,7 +19,7 @@ function generate (dir) {
       log('debug', `generated ${file}`)
     }, function (err) {
       if (err) {
-        reject(err)
+        return reject(err)
       }
 
       process.chdir(dir)
