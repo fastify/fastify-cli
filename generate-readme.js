@@ -23,7 +23,7 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }) {
     try {
       pkg = JSON.parse(pkg)
     } catch (err) {
-      reject(err)
+      return reject(err)
     }
 
     pluginMeta.decorators = pluginMeta.decorators ? pluginMeta.decorators : { fastify: [], reply: [] }
