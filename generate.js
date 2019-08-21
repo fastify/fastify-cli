@@ -53,16 +53,16 @@ function generate (dir, cb) {
       })
 
       pkg.devDependencies = Object.assign(pkg.devDependencies || {}, {
-        tap: cliPkg.devDependencies['tap']
+        tap: cliPkg.devDependencies.tap
       })
 
-      log('debug', `edited package.json, saving`)
+      log('debug', 'edited package.json, saving')
       writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
         if (err) {
           return cb(err)
         }
 
-        log('debug', `saved package.json`)
+        log('debug', 'saved package.json')
         log('info', `project ${pkg.name} generated successfully`)
         log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
         log('debug', `run '${chalk.bold('npm start')}' to start the application`)
