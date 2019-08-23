@@ -209,7 +209,7 @@ test('should start the server with an async/await plugin', t => {
   })
 })
 
-t.only('should exit without error on help', t => {
+test('should exit without error on help', t => {
   const exit = process.exit
   process.exit = sinon.spy()
 
