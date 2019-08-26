@@ -3,6 +3,7 @@ Fastify command line interface available commands are:
   * start         start a server
   * generate      generate a new project
   * readme        generate a README.md for the plugin
+  * print-routes  prints the representation of the internal radix tree used by the router, useful for debugging.
   * version       the current fastify-cli version
   * help          help about commands
 
