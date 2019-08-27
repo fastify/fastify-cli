@@ -39,18 +39,6 @@ test('should warn on file not found', t => {
   printRoutes.printRoutes(argv)
 })
 
-test('should only accept plugin functions with 3 arguments', t => {
-  t.plan(1)
-
-  const oldStop = printRoutes.stop
-  t.tearDown(() => { printRoutes.stop = oldStop })
-  printRoutes.stop = function (err) {
-    t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
-  }
-
-  printRoutes.printRoutes(['./test/data/incorrect-plugin.js'])
-})
-
 test('should throw on package not found', t => {
   t.plan(1)
 
