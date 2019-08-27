@@ -4,46 +4,39 @@
 
 require('dotenv').config()
 
-const path = require('path')
-const fs = require('fs')
 const assert = require('assert')
 const updateNotifier = require('update-notifier')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
-const resolveFrom = require('resolve-from')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
+const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
 
 let Fastify = null
 let fastifyPackageJSON = null
 
 function loadModules (opts) {
   try {
-    const basedir = path.resolve(process.cwd(), opts._[0])
+    const { module: fastifyModule, pkg: fastifyPkg } = requireFastifyForModule(opts._[0])
 
-    Fastify = require(resolveFrom.silent(basedir, 'fastify') || 'fastify')
-    fastifyPackageJSON = require(resolveFrom.silent(basedir, 'fastify/package.json') || 'fastify/package.json')
+    Fastify = fastifyModule
+    fastifyPackageJSON = fastifyPkg
   } catch (e) {
     module.exports.stop(e)
   }
 }
 
-function showHelp () {
-  console.log(fs.readFileSync(path.join(__dirname, 'help', 'start.txt'), 'utf8'))
-  return module.exports.stop()
-}
-
 function start (args, cb) {
   const opts = parseArgs(args)
   if (opts.help) {
-    return showHelp()
+    return showHelpForCommand('start')
   }
 
   if (opts._.length !== 1) {
     console.error('Missing the required file parameter\n')
-    return showHelp()
+    return showHelpForCommand('start')
   }
 
   // we start crashing on unhandledRejection
@@ -72,14 +65,7 @@ function start (args, cb) {
 }
 
 function stop (message) {
-  if (message instanceof Error) {
-    console.log(message)
-    process.exit(1)
-  } else if (message) {
-    console.log(`Warn: ${message}`)
-    process.exit(1)
-  }
-  process.exit()
+  exit(message)
 }
 
 function runFastify (args, cb) {
@@ -89,23 +75,12 @@ function runFastify (args, cb) {
 
   loadModules(opts)
 
-  const filePath = path.resolve(process.cwd(), opts._[0])
-
-  if (!fs.existsSync(filePath)) {
-    return module.exports.stop(`${opts._[0]} doesn't exist within ${process.cwd()}`)
-  }
-
   let file = null
 
   try {
-    file = require(filePath)
+    file = requireServerPluginFromPath(opts._[0])
   } catch (e) {
     return module.exports.stop(e)
-  }
-
-  if (file.length !== 2 && file.constructor.name === 'AsyncFunction') {
-    return module.exports.stop(new Error('Async/Await plugin function should contain 2 arguments.' +
-    'Refer to documentation for more information.'))
   }
 
   const options = {
