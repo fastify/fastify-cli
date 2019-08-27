@@ -114,19 +114,6 @@ test('should start fastify at given socket path', { skip: process.platform === '
   })
 })
 
-test('should only accept plugin functions with 3 arguments', t => {
-  t.plan(1)
-
-  const oldStop = start.stop
-  t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
-  }
-
-  const argv = ['-p', getPort(), './test/data/incorrect-plugin.js']
-  start.start(argv)
-})
-
 test('should error with a good timeout value', t => {
   t.plan(1)
 

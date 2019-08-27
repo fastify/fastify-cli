@@ -103,10 +103,6 @@ function runFastify (args, cb) {
     return module.exports.stop(e)
   }
 
-  if (file.length !== 3 && file.constructor.name === 'Function') {
-    return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +
-    'documentation for more information.'))
-  }
   if (file.length !== 2 && file.constructor.name === 'AsyncFunction') {
     return module.exports.stop(new Error('Async/Await plugin function should contain 2 arguments.' +
     'Refer to documentation for more information.'))
