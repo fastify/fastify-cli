@@ -59,7 +59,7 @@ module.exports = function (fastify, options, next) {
 }
 ```
 
-If you are using Node 8+, you can use `async` functions too:
+If you are using Node 8+, you can use `Promises` or `async` functions too:
 
 ```js
 // async-await-plugin.js

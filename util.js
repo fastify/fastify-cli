@@ -27,10 +27,6 @@ function requireFastifyForModule (modulePath) {
   }
 }
 
-function isInvalidCallbackPlugin (plugin) {
-  return plugin.length !== 3 && plugin.constructor.name === 'Function'
-}
-
 function isInvalidAsyncPlugin (plugin) {
   return plugin.length !== 2 && plugin.constructor.name === 'AsyncFunction'
 }
@@ -43,11 +39,6 @@ function requireServerPluginFromPath (modulePath) {
   }
 
   const serverPlugin = require(resolvedModulePath)
-
-  if (isInvalidCallbackPlugin(serverPlugin)) {
-    throw new Error('Plugin function should contain 3 arguments. Refer to ' +
-      'documentation for more information.')
-  }
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     return new Error('Async/Await plugin function should contain 2 arguments.' +
