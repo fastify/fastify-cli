@@ -27,7 +27,7 @@ module.exports = function parseArgs (args) {
       'pretty-logs': false,
       watch: false,
       debug: false,
-      debugPort: 9230,
+      debugPort: 9320,
       'ignore-watch': 'node_modules build dist .git bower_components logs',
       options: false,
       'plugin-timeout': 10 * 1000 // everything should load in 10 seconds
