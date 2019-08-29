@@ -13,6 +13,7 @@ const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
 const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
+const inspector = require('inspector')
 
 let Fastify = null
 let fastifyPackageJSON = null
@@ -58,7 +59,7 @@ function start (args, cb) {
   })
 
   if (opts.watch) {
-    return watch(args, opts.ignoreWatch, opts.debug, opts.debugPort)
+    return watch(args, opts.ignoreWatch)
   }
 
   return runFastify(args, cb)
@@ -99,6 +100,10 @@ function runFastify (args, cb) {
     const pinoColada = PinoColada()
     options.logger.stream = pinoColada
     pump(pinoColada, process.stdout, assert.ifError)
+  }
+
+  if (opts.debug) {
+    inspector.open(opts.debugPort)
   }
 
   const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
