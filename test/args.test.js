@@ -150,5 +150,5 @@ test('should respect default values', t => {
   t.is(parsedArgs.logLevel, 'fatal')
   t.is(parsedArgs.pluginTimeout, 10000)
   t.is(parsedArgs.debug, false)
-  t.is(parsedArgs.debugPort, 9230)
+  t.is(parsedArgs.debugPort, 9320)
 })
