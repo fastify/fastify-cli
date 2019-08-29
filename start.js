@@ -14,11 +14,10 @@ const watch = require('./lib/watch')
 const parseArgs = require('./args')
 const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
 
-
 let Fastify = null
 let fastifyPackageJSON = null
 
-function loadModules(opts) {
+function loadModules (opts) {
   try {
     const { module: fastifyModule, pkg: fastifyPkg } = requireFastifyForModule(opts._[0])
 
@@ -29,7 +28,7 @@ function loadModules(opts) {
   }
 }
 
-function start(args, cb) {
+function start (args, cb) {
   const opts = parseArgs(args)
   if (opts.help) {
     return showHelpForCommand('start')
@@ -65,11 +64,11 @@ function start(args, cb) {
   return runFastify(args, cb)
 }
 
-function stop(message) {
+function stop (message) {
   exit(message)
 }
 
-function runFastify(args, cb) {
+function runFastify (args, cb) {
   const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   cb = cb || assert.ifError
@@ -129,14 +128,14 @@ function runFastify(args, cb) {
     fastify.listen(opts.port, wrap)
   }
 
-  function wrap(err) {
+  function wrap (err) {
     cb(err, fastify)
   }
 
   return fastify
 }
 
-function cli(args) {
+function cli (args) {
   start(args)
 }
 
