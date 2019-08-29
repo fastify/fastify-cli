@@ -442,7 +442,7 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
 })
 
 test('should start the server with watch options that the child process restart when directory changed', { skip: onTravis }, (t) => {
-  t.plan(6)
+  t.plan(5)
   const tmpjs = path.resolve(baseFilename + '.js')
 
   fs.writeFile(tmpjs, 'hello world', function (err) {
