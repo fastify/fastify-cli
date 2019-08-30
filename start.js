@@ -101,6 +101,14 @@ function runFastify (args, cb) {
     pump(pinoColada, process.stdout, assert.ifError)
   }
 
+  if (opts.debug) {
+    if (process.version.match(/v[0-6]\..*/g)) {
+      stop('Fastify debug mode not compatible with Node.js version < 6')
+    } else {
+      require('inspector').open(opts.debugPort)
+    }
+  }
+
   const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
 
   const pluginOptions = {}
