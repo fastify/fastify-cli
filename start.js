@@ -103,7 +103,7 @@ function runFastify (args, cb) {
 
   if (opts.debug) {
     if (process.version.match(/v[0-6]\..*/g)) {
-      console.warn('Fastify debug mode not compatible with Node.js version < 6')
+      stop('Fastify debug mode not compatible with Node.js version < 6')
     } else {
       require('inspector').open(opts.debugPort)
     }
