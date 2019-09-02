@@ -4,10 +4,11 @@
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "bin": {
-    "fastify": "cli.js"
+    "fastify": "./bin/run"
   },
   "scripts": {
     "lint": "standard",
+    "lint:fix": "standard --fix",
     "unit": "tap test/*.test.js templates/app/test/*/*.test.js",
     "test": "npm run lint && npm run unit"
   },
@@ -42,6 +43,7 @@
     ]
   },
   "dependencies": {
+    "@oclif/command": "^1.5.18",
     "chalk": "^2.4.2",
     "chokidar": "^2.1.5",
     "commist": "^1.0.0",
@@ -60,6 +62,7 @@
   },
   "devDependencies": {
     "fastify-autoload": "^1.0.0",
+    "globby": "^10.0.1",
     "minimatch": "^3.0.4",
     "mkdirp": "^0.5.1",
     "pre-commit": "^1.2.2",
@@ -78,6 +81,20 @@
       "dotenv",
       "tap",
       "update-notifier"
+    ]
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "fastify",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found"
     ]
   }
 }
