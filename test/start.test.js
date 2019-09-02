@@ -483,48 +483,52 @@ test('crash on unhandled rejection', t => {
   })
 })
 
-test('should start the server with inspect options and the defalut port is 9320', t => {
-  t.plan(4)
+if (!process.version.match(/v[0-6]\..*/g)) {
+  test('should start the server with inspect options and the defalut port is 9320', t => {
+    t.plan(4)
 
-  const start = proxyquire('../start', {
-    inspector: {
-      open (p) {
-        t.strictEqual(p, 9320)
-        t.pass('inspect open called')
+    const start = proxyquire('../start', {
+      inspector: {
+        open (p) {
+          t.strictEqual(p, 9320)
+          t.pass('inspect open called')
+        }
       }
-    }
-  })
-  const argv = ['--d', './examples/plugin.js']
-  start.start(argv, (err, fastify) => {
-    t.error(err)
+    })
+    const argv = ['--d', './examples/plugin.js']
 
-    fastify.close(() => {
-      t.pass('server closed')
+    start.start(argv, (err, fastify) => {
+      t.error(err)
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
-})
 
-test('should start the server with inspect options and use the exactly port', t => {
-  t.plan(4)
+  test('should start the server with inspect options and use the exactly port', t => {
+    t.plan(4)
 
-  const port = getPort()
-  const start = proxyquire('../start', {
-    inspector: {
-      open (p) {
-        t.strictEqual(p, Number(port))
-        t.pass('inspect open called')
+    const port = getPort()
+    const start = proxyquire('../start', {
+      inspector: {
+        open (p) {
+          t.strictEqual(p, Number(port))
+          t.pass('inspect open called')
+        }
       }
-    }
-  })
-  const argv = ['--d', '--debug-port', port, './examples/plugin.js']
-  start.start(argv, (err, fastify) => {
-    t.error(err)
+    })
+    const argv = ['--d', '--debug-port', port, './examples/plugin.js']
 
-    fastify.close(() => {
-      t.pass('server closed')
+    start.start(argv, (err, fastify) => {
+      t.error(err)
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
     })
   })
-})
+}
 
 test('boolean env are not overridden if no arguments are passed', t => {
   t.plan(1)
