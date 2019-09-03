@@ -3,14 +3,15 @@
 const { Command, flags } = require('@oclif/command')
 const updateNotifier = require('update-notifier')
 const { exit, requireFastifyForModule } = require('../../util')
+const watch = require('../../lib/watch')
 
-// let Fastify = null
+// const Fastify = null
 let fastifyPackageJSON = null
 
 class Start extends Command {
-  loadModules (opts) {
+  loadModules (file) {
     try {
-      const { /* module: fastifyModule, */ pkg: fastifyPkg } = requireFastifyForModule(opts._[0])
+      const { /* module: fastifyModule, */ pkg: fastifyPkg } = requireFastifyForModule(file)
 
       // Fastify = fastifyModule
       fastifyPackageJSON = fastifyPkg
@@ -25,13 +26,17 @@ class Start extends Command {
 
   async run () {
     const { argv } = this.parse(Start)
-    // const { flags } = this.parse(Start)
+    const { flags } = this.parse(Start)
 
     if (!argv[0]) {
       console.error('Missing the required file parameter\n')
-      process.exit(1)
+      this.exit(1)
     }
+
+    require('make-promises-safe')
+
     this.loadModules(argv[0])
+
     const notifier = updateNotifier({
       pkg: {
         name: 'fastify',
@@ -44,10 +49,23 @@ class Start extends Command {
       isGlobal: false,
       defer: false
     })
+
+    if (flags.watch) {
+      console.log(argv)
+      return watch(argv, flags.ignoreWatch)
+    }
+
+    // runFastify(argv, cb)
   }
 }
 
 Start.description = 'start a server'
+Start.args = [{
+  name: 'file',
+  required: true,
+  description: 'server start main file'
+
+}]
 Start.flags = {
   port: flags.integer({
     char: 'p',
@@ -79,6 +97,10 @@ Start.flags = {
   watch: flags.boolean({
     char: 'w',
     description: 'Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.'
+  }),
+  'ignore-watch': flags.string({
+    description: 'ingore watch files',
+    default: ''
   }),
   prefix: flags.string({
     char: 'r',

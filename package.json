@@ -44,6 +44,8 @@
   },
   "dependencies": {
     "@oclif/command": "^1.5.18",
+    "@oclif/plugin-help": "^2.2.1",
+    "@oclif/plugin-not-found": "^1.2.3",
     "chalk": "^2.4.2",
     "chokidar": "^2.1.5",
     "commist": "^1.0.0",
