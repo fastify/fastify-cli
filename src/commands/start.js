@@ -1,19 +1,24 @@
 'use strict'
 
+const assert = require('assert')
 const { Command, flags } = require('@oclif/command')
+const PinoColada = require('pino-colada')
+const pump = require('pump')
 const updateNotifier = require('update-notifier')
-const { exit, requireFastifyForModule } = require('../../util')
+const isDocker = require('is-docker')
+const { exit, requireFastifyForModule, requireServerPluginFromPath } = require('../../util')
 const watch = require('../../lib/watch')
 
-// const Fastify = null
+const listenAddressDocker = '0.0.0.0'
+let Fastify = null
 let fastifyPackageJSON = null
 
 class Start extends Command {
   loadModules (file) {
     try {
-      const { /* module: fastifyModule, */ pkg: fastifyPkg } = requireFastifyForModule(file)
+      const { module: fastifyModule, pkg: fastifyPkg } = requireFastifyForModule(file)
 
-      // Fastify = fastifyModule
+      Fastify = fastifyModule
       fastifyPackageJSON = fastifyPkg
     } catch (e) {
       this.stop(e)
@@ -22,6 +27,64 @@ class Start extends Command {
 
   stop (message) {
     exit(message)
+  }
+
+  runFastify (argv, flags) {
+    const cb = assert.ifError
+    flags.port = flags.port || process.env.PORT || 3000
+
+    this.loadModules(argv[0])
+
+    let file = null
+
+    try {
+      file = requireServerPluginFromPath(argv[0])
+    } catch (e) {
+      return this.stop(e)
+    }
+
+    const options = {
+      logger: {
+        level: flags['log-level']
+      },
+
+      pluginTimeout: flags.pluginTimeout
+    }
+
+    if (flags['body-limit']) {
+      options.bodyLimit = flags['body-limit']
+    }
+
+    if (flags['pretty-logs']) {
+      const pinoColada = PinoColada()
+      options.logger.stream = pinoColada
+      pump(pinoColada, process.stdout, assert.ifError)
+    }
+
+    const fastify = Fastify(flags.options ? Object.assign(options, file.options) : options)
+
+    const pluginOptions = {}
+    if (flags.prefix) {
+      pluginOptions.prefix = flags.prefix
+    }
+
+    fastify.register(file, pluginOptions)
+
+    if (flags.address) {
+      fastify.listen(flags.port, flags.address, wrap)
+    } else if (flags.socket) {
+      fastify.listen(flags.socket, wrap)
+    } else if (isDocker()) {
+      fastify.listen(flags.port, listenAddressDocker, wrap)
+    } else {
+      fastify.listen(flags.port, wrap)
+    }
+
+    function wrap (err) {
+      cb(err, fastify)
+    }
+
+    return fastify
   }
 
   async run () {
@@ -51,11 +114,10 @@ class Start extends Command {
     })
 
     if (flags.watch) {
-      console.log(argv)
-      return watch(argv, flags.ignoreWatch)
+      return watch(argv, flags['ignore-watch'])
     }
 
-    // runFastify(argv, cb)
+    this.runFastify(argv, flags)
   }
 }
 
@@ -88,7 +150,14 @@ Start.flags = {
   }),
   'pretty-logs': flags.boolean({
     char: 'P',
-    description: 'Prints pretty logs'
+    description: 'Prints pretty logs',
+    default: false
+  }),
+  'plugin-timeout': flags.integer({
+    char: 'T',
+    description: 'The maximum amount of time that a plugin can take to load (default to 10 seconds).',
+    multiple: false,
+    default: 10 * 1000
   }),
   options: flags.boolean({
     char: 'o',
@@ -96,19 +165,16 @@ Start.flags = {
   }),
   watch: flags.boolean({
     char: 'w',
-    description: 'Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.'
+    description: 'Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.',
+    default: false
   }),
   'ignore-watch': flags.string({
     description: 'ingore watch files',
-    default: ''
+    default: 'node_modules build dist .git bower_components logs'
   }),
   prefix: flags.string({
     char: 'r',
     description: 'Set the prefix'
-  }),
-  'plugin-timeout': flags.boolean({
-    char: 'T',
-    description: 'The maximum amount of time that a plugin can take to load (default to 10 seconds).'
   }),
   'body-limit': flags.string({
     description: 'Defines the maximum payload, in bytes, the server is allowed to accept'
