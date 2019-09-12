@@ -30,9 +30,7 @@ class Start extends Command {
   }
 
   runFastify (argv, flags) {
-    const cb = assert.ifError
     flags.port = flags.port || process.env.PORT || 3000
-
     this.loadModules(argv[0])
 
     let file = null
@@ -60,7 +58,6 @@ class Start extends Command {
       options.logger.stream = pinoColada
       pump(pinoColada, process.stdout, assert.ifError)
     }
-
     const fastify = Fastify(flags.options ? Object.assign(options, file.options) : options)
 
     const pluginOptions = {}
@@ -69,28 +66,29 @@ class Start extends Command {
     }
 
     fastify.register(file, pluginOptions)
+    return new Promise((resolve, reject) => {
+      if (flags.address) {
+        fastify.listen(flags.port, flags.address, wrap)
+      } else if (flags.socket) {
+        fastify.listen(flags.socket, wrap)
+      } else if (isDocker()) {
+        fastify.listen(flags.port, listenAddressDocker, wrap)
+      } else {
+        fastify.listen(flags.port, wrap)
+      }
 
-    if (flags.address) {
-      fastify.listen(flags.port, flags.address, wrap)
-    } else if (flags.socket) {
-      fastify.listen(flags.socket, wrap)
-    } else if (isDocker()) {
-      fastify.listen(flags.port, listenAddressDocker, wrap)
-    } else {
-      fastify.listen(flags.port, wrap)
-    }
-
-    function wrap (err) {
-      cb(err, fastify)
-    }
-
-    return fastify
+      function wrap (err) {
+        if (err) {
+          reject(err)
+        }
+        resolve(fastify)
+      }
+    })
   }
 
   async run () {
     const { argv } = this.parse(Start)
     const { flags } = this.parse(Start)
-
     if (!argv[0]) {
       console.error('Missing the required file parameter\n')
       this.exit(1)
@@ -117,7 +115,8 @@ class Start extends Command {
       return watch(argv, flags['ignore-watch'])
     }
 
-    this.runFastify(argv, flags)
+    const fastify = await this.runFastify(argv, flags)
+    return fastify
   }
 }
 

@@ -63,6 +63,7 @@
     "yargs-parser": "^13.0.0"
   },
   "devDependencies": {
+    "@oclif/test": "^1.2.5",
     "fastify-autoload": "^1.0.0",
     "globby": "^10.0.1",
     "minimatch": "^3.0.4",
