@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "unit": "tap test/*.test.js templates/app/test/*/*.test.js",
+    "unit": "tap test/start.test.js",
     "test": "npm run lint && npm run unit"
   },
   "keywords": [

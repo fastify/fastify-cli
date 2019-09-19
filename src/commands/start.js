@@ -89,6 +89,7 @@ class Start extends Command {
   async run () {
     const { argv } = this.parse(Start)
     const { flags } = this.parse(Start)
+    console.log(flags)
     if (!argv[0]) {
       console.error('Missing the required file parameter\n')
       this.exit(1)
@@ -158,7 +159,7 @@ Start.flags = {
     multiple: false,
     default: 10 * 1000
   }),
-  options: flags.boolean({
+  options: flags.string({
     char: 'o',
     description: 'Use custom options'
   }),

@@ -1,7 +1,7 @@
 'use strict'
 
-// const fs = require('fs')
-// const path = require('path')
+const fs = require('fs')
+const path = require('path')
 // const crypto = require('crypto')
 // const {expect, test} = require('@oclif/test')
 // const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
@@ -26,95 +26,111 @@ function getPort () {
 // paths are relative to the root of the project
 // this can be run only from there
 
-test('should start the server', async t => {
-  t.plan(5)
-  const argv = ['-p', getPort(), './examples/plugin.js']
-  const fastify = await start.run(argv)
-  await new Promise((resolve, reject) => {
-    sget({
-      method: 'GET',
-      url: `http://localhost:${fastify.server.address().port}`
-    }, (err, response, body) => {
-      t.error(err)
-      t.strictEqual(response.statusCode, 200)
-      t.strictEqual(response.headers['content-length'], '' + body.length)
-      t.deepEqual(JSON.parse(body), { hello: 'world' })
-      fastify.close(() => {
-        t.pass('server closed')
-        resolve()
-      })
-    })
-  })
-})
-
-test('should start fastify with custom options', async t => {
-  t.plan(1)
-  // here the test should fail because of the wrong certificate
-  // or because the server is booted without the custom options
-  try {
-    const argv = ['-p', getPort(), '-o', 'true', './examples/plugin-with-options.js']
-    const fastify = await start.run(argv)
-    fastify.close()
-    t.fail('Custom options')
-  } catch (e) {
-    t.pass('Custom options')
-  }
-})
-
-test('should start the server at the given prefix', async t => {
-  t.plan(5)
-
-  const argv = ['-p', getPort(), '-r', '/api/hello', './examples/plugin.js']
-  const fastify = await start.run(argv)
-  await new Promise((resolve, reject) => {
-    sget({
-      method: 'GET',
-      url: `http://localhost:${fastify.server.address().port}/api/hello`
-    }, (err, response, body) => {
-      t.error(err)
-      t.strictEqual(response.statusCode, 200)
-      t.strictEqual(response.headers['content-length'], '' + body.length)
-      t.deepEqual(JSON.parse(body), { hello: 'world' })
-
-      fastify.close(() => {
-        t.pass('server closed')
-        resolve()
-      })
-    })
-  })
-})
-
-// test('should start fastify at given socket path', { skip: process.platform === 'win32' }, async t => {
-//   t.plan(3)
-
-//   const sockFile = path.resolve('test.sock')
-//   const argv = ['-s', sockFile, '-o', 'true', './examples/plugin.js']
-
+// test('should start the server', async t => {
+//   t.plan(5)
+//   const argv = ['-p', getPort(), './examples/plugin.js']
 //   const fastify = await start.run(argv)
-
-//   try {
-//     fs.unlinkSync(sockFile)
-//   } catch (e) { }
 //   await new Promise((resolve, reject) => {
-//     fastify.ready(err => {
+//     sget({
+//       method: 'GET',
+//       url: `http://localhost:${fastify.server.address().port}`
+//     }, (err, response, body) => {
 //       t.error(err)
-
-//       let request = require('http').request({
-//         method: 'GET',
-//         path: '/',
-//         socketPath: sockFile
-//       }, function (response) {
-//         t.deepEqual(response.statusCode, 200)
-
-//         fastify.close(() => {
-//           t.pass('server closed')
-//           resolve()
-//         })
+//       t.strictEqual(response.statusCode, 200)
+//       t.strictEqual(response.headers['content-length'], '' + body.length)
+//       t.deepEqual(JSON.parse(body), { hello: 'world' })
+//       fastify.close(() => {
+//         t.pass('server closed')
+//         resolve()
 //       })
-//       request.end()
 //     })
 //   })
 // })
+
+// test('should start fastify with custom options', async t => {
+//   t.plan(1)
+//   // here the test should fail because of the wrong certificate
+//   // or because the server is booted without the custom options
+//   try {
+//     const argv = ['-p', getPort(), '-o', 'true', './examples/plugin-with-options.js']
+//     const fastify = await start.run(argv)
+//     fastify.close()
+//     t.fail('Custom options')
+//   } catch (e) {
+//     t.pass('Custom options')
+//   }
+// })
+
+// test('should start the server at the given prefix', async t => {
+//   t.plan(5)
+
+//   const argv = ['-p', getPort(), '-r', '/api/hello', './examples/plugin.js']
+//   const fastify = await start.run(argv)
+//   await new Promise((resolve, reject) => {
+//     sget({
+//       method: 'GET',
+//       url: `http://localhost:${fastify.server.address().port}/api/hello`
+//     }, (err, response, body) => {
+//       t.error(err)
+//       t.strictEqual(response.statusCode, 200)
+//       t.strictEqual(response.headers['content-length'], '' + body.length)
+//       t.deepEqual(JSON.parse(body), { hello: 'world' })
+
+//       fastify.close(() => {
+//         t.pass('server closed')
+//         resolve()
+//       })
+//     })
+//   })
+// })
+
+test('should start fastify at given socket path', { skip: process.platform === 'win32' }, async t => {
+  t.plan(3)
+
+  const sockFile = path.resolve('test.sock')
+  const argv = ['-s', sockFile, '-o', 'true', './examples/plugin.js']
+
+  const fastify = await start.run(argv)
+
+  try {
+    fs.unlinkSync(sockFile)
+  } catch (e) { 
+    console.log(e)
+  }
+
+  try {
+    await fastify.ready().then(() => {
+      let request = require('http').request({
+        method: 'GET',
+        path: '/',
+        socketPath: sockFile
+      }, function (response) {
+        t.deepEqual(response.statusCode, 200)
+
+        fastify.close(() => {
+          t.pass('server closed')
+        })
+      })
+      request.end()
+    })
+  } catch (e) {
+    t.error(e)
+  }
+  // await new Promise((resolve, reject) => {
+  //   let request = require('http').request({
+  //     method: 'GET',
+  //     path: '/'
+  //   }, function (response) {
+  //     t.deepEqual(response.statusCode, 200)
+
+  //     fastify.close(() => {
+  //       t.pass('server closed')
+  //       resolve()
+  //     })
+  //   })
+  //   request.end()
+  // })
+})
 
 // test('should error with a good timeout value', t => {
 //   t.plan(1)
