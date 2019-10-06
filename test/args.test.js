@@ -19,6 +19,7 @@ test('should parse args correctly', t => {
     '--body-limit', '5242880',
     '--debug', 'true',
     '--debug-port', 1111,
+    '--logging-module', './custom-logger.js',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -37,7 +38,8 @@ test('should parse args correctly', t => {
     pluginTimeout: 500,
     bodyLimit: 5242880,
     debug: true,
-    debugPort: 1111
+    debugPort: 1111,
+    loggingModule: './custom-logger.js'
   })
 })
 
@@ -58,6 +60,7 @@ test('should parse args with = assignment correctly', t => {
     '--body-limit=5242880',
     '--debug=true',
     '--debug-port', 1111,
+    '--logging-module', './custom-logger.js',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -76,7 +79,8 @@ test('should parse args with = assignment correctly', t => {
     pluginTimeout: 500,
     bodyLimit: 5242880,
     debug: true,
-    debugPort: 1111
+    debugPort: 1111,
+    loggingModule: './custom-logger.js'
   })
 })
 
@@ -96,6 +100,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PLUGIN_TIMEOUT = '500'
   process.env.FASTIFY_DEBUG = 'true'
   process.env.FASTIFY_DEBUG_PORT = '1111'
+  process.env.FASTIFY_LOGGING_MODULE = './custom-logger.js'
 
   t.teardown(function () {
     delete process.env.FASTIFY_PORT
@@ -111,6 +116,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PLUGIN_TIMEOUT
     delete process.env.FASTIFY_DEBUG
     delete process.env.FASTIFY_DEBUG_PORT
+    delete process.env.FASTIFY_LOGGING_MODULE
   })
 
   const parsedArgs = parseArgs([])
@@ -129,12 +135,13 @@ test('should parse env vars correctly', t => {
     socket: 'fastify.io.socket:9999',
     pluginTimeout: 500,
     debug: true,
-    debugPort: 1111
+    debugPort: 1111,
+    loggingModule: './custom-logger.js'
   })
 })
 
 test('should respect default values', t => {
-  t.plan(9)
+  t.plan(10)
 
   const argv = [
     'app.js'
@@ -151,4 +158,5 @@ test('should respect default values', t => {
   t.is(parsedArgs.pluginTimeout, 10000)
   t.is(parsedArgs.debug, false)
   t.is(parsedArgs.debugPort, 9320)
+  t.is(parsedArgs.loggingModule, undefined)
 })

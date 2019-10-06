@@ -5,6 +5,8 @@
 require('dotenv').config()
 
 const assert = require('assert')
+const path = require('path')
+
 const updateNotifier = require('update-notifier')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
@@ -83,10 +85,24 @@ function runFastify (args, cb) {
     return module.exports.stop(e)
   }
 
+  let logger
+  if (opts.loggingModule) {
+    try {
+      const moduleFilePath = path.resolve(opts.loggingModule)
+      const moduleFileExtension = path.extname(opts.loggingModule)
+      const modulePath = moduleFilePath.split(moduleFileExtension)[0]
+
+      logger = require(modulePath)
+    } catch (e) {
+      module.exports.stop(e)
+    }
+  }
+
+  const defaultLogger = {
+    level: opts.logLevel
+  }
   const options = {
-    logger: {
-      level: opts.logLevel
-    },
+    logger: logger || defaultLogger,
 
     pluginTimeout: opts.pluginTimeout
   }

@@ -545,3 +545,32 @@ test('boolean env are not overridden if no arguments are passed', t => {
     t.pass('Custom options')
   }
 })
+
+test('should support custom logger configuration', t => {
+  t.plan(2)
+
+  const argv = ['-L', './test/data/custom-logger.js', './examples/plugin.js']
+  start.start(argv, (err, fastify) => {
+    t.error(err)
+    t.ok(fastify.log.test)
+
+    fastify.close()
+  })
+})
+
+test('should throw on logger configuration module not found', t => {
+  t.plan(2)
+
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Cannot find module/.test(err.message), err.message)
+  }
+
+  const argv = ['-L', './test/data/missing.js', './examples/plugin.js']
+  start.start(argv, (err, fastify) => {
+    t.error(err)
+
+    fastify.close()
+  })
+})
