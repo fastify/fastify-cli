@@ -574,3 +574,16 @@ test('should throw on logger configuration module not found', t => {
     fastify.close()
   })
 })
+
+test('should pass pass args after -- to the server', t => {
+  const argv = ['-p', getPort(), './examples/plugin.js', '--', '--extra', 'good']
+  start.start(argv, function (err, fastify) {
+    t.error(err)
+    const serverArgv = process.argv.slice(2)
+    t.equal(serverArgv[0], '--extra')
+    t.equal(serverArgv[1], 'good')
+    fastify.close(() => {
+      t.end()
+    })
+  })
+})

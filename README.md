@@ -109,6 +109,8 @@ You can pass the following options via cli arguments, every options has the corr
 | Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
 | Set the plugin timeout | `-T` | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
 | Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
+| Flag terminator, supply additional flags to be passed to the server instead of to fastify-ci. Example: fastify `start app.js --my flags` | `--` | n/a | n/a |
+      
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 

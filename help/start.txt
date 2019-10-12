@@ -43,5 +43,9 @@ Usage: fastify start [opts] <file>
   -T, --plugin-timeout
       The maximum amount of time that a plugin can take to load (default to 10 seconds).
 
+  --
+      Flag terminator, supply additional flags to be passed to the server instead
+      of to fastify-ci. Example: fastify start app.js --my flags
+
   -h, --help
       Show this help message

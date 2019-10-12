@@ -36,7 +36,7 @@ function start (args, cb) {
     return showHelpForCommand('start')
   }
 
-  if (opts._.length !== 1) {
+  if (opts._.length < 1) {
     console.error('Missing the required file parameter\n')
     return showHelpForCommand('start')
   }
@@ -74,7 +74,7 @@ function runFastify (args, cb) {
   const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   cb = cb || assert.ifError
-
+  process.argv.push(...opts._.slice(1))
   loadModules(opts)
 
   let file = null
