@@ -59,7 +59,7 @@ module.exports = function (fastify, options, next) {
 }
 ```
 
-If you are using Node 8+, you can use `async` functions too:
+If you are using Node 8+, you can use `Promises` or `async` functions too:
 
 ```js
 // async-await-plugin.js
@@ -100,6 +100,8 @@ You can pass the following options via cli arguments, every options has the corr
 | Address to listen on | `-a` | `--address` | `FASTIFY_ADDRESS` |
 | Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
+| Start fastify app in debug mode with nodejs inspector | `-d` | `--debug` | `FASTIFY_DEBUG` |
+| Set the inspector port (default: 9320) | `-I` | `--debug-port` | `FASTIFY_DEBUG_PORT` |
 | Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` )|  | `--ignore-watch` | `FASTIFY_IGNORE_WATCH` |

@@ -17,6 +17,9 @@ test('should parse args correctly', t => {
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
     '--body-limit', '5242880',
+    '--debug', 'true',
+    '--debug-port', 1111,
+    '--logging-module', './custom-logger.js',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -33,7 +36,10 @@ test('should parse args correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
-    bodyLimit: 5242880
+    bodyLimit: 5242880,
+    debug: true,
+    debugPort: 1111,
+    loggingModule: './custom-logger.js'
   })
 })
 
@@ -52,6 +58,9 @@ test('should parse args with = assignment correctly', t => {
     '--prefix=FASTIFY_',
     '--plugin-timeout=500',
     '--body-limit=5242880',
+    '--debug=true',
+    '--debug-port', 1111,
+    '--logging-module', './custom-logger.js',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -68,7 +77,10 @@ test('should parse args with = assignment correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
-    bodyLimit: 5242880
+    bodyLimit: 5242880,
+    debug: true,
+    debugPort: 1111,
+    loggingModule: './custom-logger.js'
   })
 })
 
@@ -86,6 +98,9 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PREFIX = 'FASTIFY_'
   process.env.FASTIFY_BODY_LIMIT = '5242880'
   process.env.FASTIFY_PLUGIN_TIMEOUT = '500'
+  process.env.FASTIFY_DEBUG = 'true'
+  process.env.FASTIFY_DEBUG_PORT = '1111'
+  process.env.FASTIFY_LOGGING_MODULE = './custom-logger.js'
 
   t.teardown(function () {
     delete process.env.FASTIFY_PORT
@@ -99,6 +114,9 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PREFIX
     delete process.env.FASTIFY_BODY_LIMIT
     delete process.env.FASTIFY_PLUGIN_TIMEOUT
+    delete process.env.FASTIFY_DEBUG
+    delete process.env.FASTIFY_DEBUG_PORT
+    delete process.env.FASTIFY_LOGGING_MODULE
   })
 
   const parsedArgs = parseArgs([])
@@ -115,12 +133,15 @@ test('should parse env vars correctly', t => {
     port: 7777,
     prefix: 'FASTIFY_',
     socket: 'fastify.io.socket:9999',
-    pluginTimeout: 500
+    pluginTimeout: 500,
+    debug: true,
+    debugPort: 1111,
+    loggingModule: './custom-logger.js'
   })
 })
 
 test('should respect default values', t => {
-  t.plan(7)
+  t.plan(10)
 
   const argv = [
     'app.js'
@@ -135,4 +156,7 @@ test('should respect default values', t => {
   t.is(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs')
   t.is(parsedArgs.logLevel, 'fatal')
   t.is(parsedArgs.pluginTimeout, 10000)
+  t.is(parsedArgs.debug, false)
+  t.is(parsedArgs.debugPort, 9320)
+  t.is(parsedArgs.loggingModule, undefined)
 })
