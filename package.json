@@ -48,7 +48,7 @@
     "dotenv": "^7.0.0",
     "fastify": "^2.0.0",
     "fastify-plugin": "^1.5.0",
-    "generify": "^3.0.3",
+    "generify": "^4.0.0",
     "help-me": "^1.1.0",
     "is-docker": "^2.0.0",
     "make-promises-safe": "^5.0.0",
