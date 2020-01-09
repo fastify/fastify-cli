@@ -42,7 +42,7 @@ function generate (dir, cb) {
       pkg.scripts = Object.assign(pkg.scripts || {}, {
         test: 'tap test/**/*.test.js',
         start: 'fastify start -l info app.js',
-        dev: 'fastify start -l info -P app.js'
+        dev: 'fastify start -w -l info -P app.js'
       })
 
       pkg.dependencies = Object.assign(pkg.dependencies || {}, {
