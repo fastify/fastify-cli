@@ -125,7 +125,7 @@ function define (t) {
       t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
       t.equal(pkg.scripts.test, 'tap test/**/*.test.js')
       t.equal(pkg.scripts.start, 'fastify start -l info app.js')
-      t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
+      t.equal(pkg.scripts.dev, 'fastify start -w -l info -P app.js')
       t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
       t.equal(pkg.dependencies.fastify, cliPkg.dependencies.fastify)
       t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
