@@ -7,7 +7,6 @@ require('dotenv').config()
 const assert = require('assert')
 const path = require('path')
 
-const updateNotifier = require('update-notifier')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const isDocker = require('is-docker')
@@ -17,14 +16,12 @@ const parseArgs = require('./args')
 const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
 
 let Fastify = null
-let fastifyPackageJSON = null
 
 function loadModules (opts) {
   try {
-    const { module: fastifyModule, pkg: fastifyPkg } = requireFastifyForModule(opts._[0])
+    const { module: fastifyModule } = requireFastifyForModule(opts._[0])
 
     Fastify = fastifyModule
-    fastifyPackageJSON = fastifyPkg
   } catch (e) {
     module.exports.stop(e)
   }
@@ -45,19 +42,6 @@ function start (args, cb) {
   require('make-promises-safe')
 
   loadModules(opts)
-
-  const notifier = updateNotifier({
-    pkg: {
-      name: 'fastify',
-      version: fastifyPackageJSON.version
-    },
-    updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
-  })
-
-  notifier.notify({
-    isGlobal: false,
-    defer: false
-  })
 
   if (opts.watch) {
     return watch(args, opts.ignoreWatch)
