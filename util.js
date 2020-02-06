@@ -19,9 +19,8 @@ function requireFastifyForModule (modulePath) {
   try {
     const basedir = path.resolve(process.cwd(), modulePath)
     const module = require(resolveFrom.silent(basedir, 'fastify') || 'fastify')
-    const pkg = require(resolveFrom.silent(basedir, 'fastify/package.json') || 'fastify/package.json')
 
-    return { module, pkg }
+    return { module }
   } catch (e) {
     exit('unable to load fastify module')
   }
