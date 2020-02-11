@@ -1,47 +1,21 @@
+'use strict'
+
 const blessed = require('blessed')
 const contrib = require('blessed-contrib')
-const walkup = require('walk-up')
-const fs = require('fs').promises
-const { join } = require('path')
+const fs = require('fs')
+const path = require('path')
 
-function findDocs () {
-  return new Promise((resolve, reject) => {
-    const searchDir = 'node_modules/fastify/docs'
-    walkup(process.cwd(), searchDir, (err, results) => {
-      if (err) {
-        return reject(err)
-      }
-
-      if (results.found) {
-        return resolve(join(results.path, searchDir))
-      } else {
-        walkup(__dirname, searchDir, (err, results) => {
-          if (err) {
-            return reject(err)
-          }
-
-          if (results.found) {
-            return resolve(join(results.path, searchDir))
-          } else {
-            return resolve()
-          }
-        })
-      }
-    })
-  })
-}
-
-async function renderDocs () {
-  const docsBase = await findDocs()
+function renderDocs () {
+  const docsBase = path.join(path.dirname(require.resolve('fastify')), 'docs')
 
   if (!docsBase) return console.error('Something went wrong finding docs... please report a bug! https://github.com/fastify/fastify-cli')
 
-  const fileNames = await fs.readdir(docsBase)
+  const fileNames = fs.readdirSync(docsBase)
   const docNames = fileNames.map(fileName => fileName.replace(/-/g, ' ').replace(/\.md$/, ''))
 
   const fileContents = []
   for (const fileName of fileNames) {
-    fileContents.push((await fs.readFile(join(docsBase, fileName))).toString('utf8'))
+    fileContents.push((fs.readFileSync(path.join(docsBase, fileName))).toString('utf8'))
   }
 
   const screen = blessed.screen({

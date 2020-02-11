@@ -222,7 +222,7 @@ Finally there will be a new `README.md` file, which provides internal informatio
 
 `fastify-cli` allows you to view the documentation for fastify in your terminal. By default, fastify-cli attempts to render the documentation for the fastify version installed in the current working directory node_modules folder, however, if none are found, it should fall back to rendering the documentation for the version that fastify-cli depends on.
 
-The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys.
+The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys by pressing the enter key to select documentation to view.
 
 run `fastify docs` to get started.
 

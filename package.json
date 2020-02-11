@@ -57,7 +57,6 @@
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "walk-up": "^1.0.2",
     "yargs-parser": "^16.0.0"
   },
   "devDependencies": {
