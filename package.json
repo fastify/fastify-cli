@@ -60,6 +60,8 @@
     "yargs-parser": "^18.1.1"
   },
   "devDependencies": {
+    "@types/node": "^13.7.4",
+    "concurrently": "^5.1.0",
     "fastify-autoload": "^1.2.2",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.3",
@@ -71,6 +73,7 @@
     "standard": "^14.3.3",
     "strip-ansi": "^6.0.0",
     "tap": "^14.0.0",
+    "typescript": "^3.8.2",
     "walker": "^1.0.7"
   }
 }

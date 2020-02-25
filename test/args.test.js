@@ -41,7 +41,8 @@ test('should parse args correctly', t => {
     debug: true,
     debugPort: 1111,
     debugHost: '1.1.1.1',
-    loggingModule: './custom-logger.js'
+    loggingModule: './custom-logger.js',
+    lang: 'js'
   })
 })
 
@@ -84,7 +85,8 @@ test('should parse args with = assignment correctly', t => {
     debug: true,
     debugPort: 1111,
     debugHost: '1.1.1.1',
-    loggingModule: './custom-logger.js'
+    loggingModule: './custom-logger.js',
+    lang: 'js'
   })
 })
 
@@ -142,7 +144,8 @@ test('should parse env vars correctly', t => {
     debug: true,
     debugPort: 1111,
     debugHost: '1.1.1.1',
-    loggingModule: './custom-logger.js'
+    loggingModule: './custom-logger.js',
+    lang: 'js'
   })
 })
 
