@@ -76,7 +76,8 @@
       "chokidar",
       "dotenv",
       "tap",
-      "update-notifier"
+      "update-notifier",
+      "sinon"
     ]
   }
 }
