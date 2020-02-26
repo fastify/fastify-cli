@@ -19,6 +19,7 @@ test('should parse args correctly', t => {
     '--body-limit', '5242880',
     '--debug', 'true',
     '--debug-port', 1111,
+    '--debug-host', '1.1.1.1',
     '--logging-module', './custom-logger.js',
     'app.js'
   ]
@@ -39,6 +40,7 @@ test('should parse args correctly', t => {
     bodyLimit: 5242880,
     debug: true,
     debugPort: 1111,
+    debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js'
   })
 })
@@ -60,6 +62,7 @@ test('should parse args with = assignment correctly', t => {
     '--body-limit=5242880',
     '--debug=true',
     '--debug-port', 1111,
+    '--debug-host', '1.1.1.1',
     '--logging-module', './custom-logger.js',
     'app.js'
   ]
@@ -80,6 +83,7 @@ test('should parse args with = assignment correctly', t => {
     bodyLimit: 5242880,
     debug: true,
     debugPort: 1111,
+    debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js'
   })
 })
@@ -100,6 +104,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PLUGIN_TIMEOUT = '500'
   process.env.FASTIFY_DEBUG = 'true'
   process.env.FASTIFY_DEBUG_PORT = '1111'
+  process.env.FASTIFY_DEBUG_HOST = '1.1.1.1'
   process.env.FASTIFY_LOGGING_MODULE = './custom-logger.js'
 
   t.teardown(function () {
@@ -136,6 +141,7 @@ test('should parse env vars correctly', t => {
     pluginTimeout: 500,
     debug: true,
     debugPort: 1111,
+    debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js'
   })
 })

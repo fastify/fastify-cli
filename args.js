@@ -6,7 +6,7 @@ module.exports = function parseArgs (args) {
   const parsedArgs = argv(args, {
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
     boolean: ['pretty-logs', 'options', 'watch', 'debug'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -45,6 +45,7 @@ module.exports = function parseArgs (args) {
     watch: parsedArgs.watch,
     debug: parsedArgs.debug,
     debugPort: parsedArgs.debugPort,
+    debugHost: parsedArgs.debugHost,
     ignoreWatch: parsedArgs.ignoreWatch,
     logLevel: parsedArgs.logLevel,
     address: parsedArgs.address,
