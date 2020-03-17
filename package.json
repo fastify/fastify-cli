@@ -55,7 +55,7 @@
     "pino-colada": "^1.4.4",
     "pump": "^3.0.0",
     "resolve-from": "^4.0.0",
-    "yargs-parser": "^16.0.0"
+    "yargs-parser": "^18.1.1"
   },
   "devDependencies": {
     "fastify-autoload": "^1.0.0",
