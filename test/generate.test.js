@@ -13,7 +13,7 @@ const path = require('path')
 const rimraf = require('rimraf')
 const mkdirp = require('mkdirp')
 const walker = require('walker')
-const { generate } = require('../generate')
+const { generate, javascriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'app')
 const cliPkg = require('../package')
@@ -103,10 +103,10 @@ function define (t) {
     })
   })
 
-  test('should finish succesfully', async (t) => {
+  test('should finish succesfully with javascript template', (t) => {
     t.plan(13 + Object.keys(expected).length)
     try {
-      await generate(workdir)
+      await generate(workdir, javascriptTemplate)
       await verifyPkg(t)
       await verifyCopy(t)
     } catch (err) {

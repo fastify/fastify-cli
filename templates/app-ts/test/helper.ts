@@ -1,11 +1,9 @@
-'use strict'
-
 // This file contains code that we reuse
 // between our tests.
-
-const Fastify = require('fastify')
-const fp = require('fastify-plugin')
-const App = require('../app')
+import Fastify from 'fastify'
+import fp from 'fastify-plugin'
+import App from '../app'
+import { Test } from 'tap'
 
 // Fill in this config with all the configurations
 // needed for testing the application
@@ -14,7 +12,7 @@ function config () {
 }
 
 // automatically build and tear down our instance
-function build (t) {
+function build (t: Test) {
   const app = Fastify()
 
   // fastify-plugin ensures that all decorators
@@ -28,7 +26,7 @@ function build (t) {
   return app
 }
 
-module.exports = {
+export {
   config,
   build
 }

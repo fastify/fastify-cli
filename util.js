@@ -37,7 +37,7 @@ function requireServerPluginFromPath (modulePath) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
-  const serverPlugin = require(resolvedModulePath)
+  const serverPlugin = require(resolvedModulePath).default || require(resolvedModulePath)
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     return new Error('Async/Await plugin function should contain 2 arguments.' +

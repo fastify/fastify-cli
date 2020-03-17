@@ -4,7 +4,6 @@
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "target": "es6",
-        "noImplicitAny": true,
         "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "dist",
@@ -16,6 +15,7 @@
         }
     },
     "include": [
+        "@types",
         "services/**/*.ts",
         "plugins/**/*.ts",
         "app.ts"
