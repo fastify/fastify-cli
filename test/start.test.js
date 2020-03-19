@@ -463,7 +463,8 @@ test('should start the server with watch options that the child process restart 
       fs.writeFileSync(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
     })
 
-    fastifyEmitter.on('restart', () => {
+    // this might happen more than once
+    fastifyEmitter.once('restart', () => {
       t.pass('should receive restart event')
     })
 

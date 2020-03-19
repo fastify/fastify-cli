@@ -103,6 +103,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
 | Start fastify app in debug mode with nodejs inspector | `-d` | `--debug` | `FASTIFY_DEBUG` |
 | Set the inspector port (default: 9320) | `-I` | `--debug-port` | `FASTIFY_DEBUG_PORT` |
+| Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker) | | `--debug-host` | `FASTIFY_DEBUG_HOST` |
 | Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` )|  | `--ignore-watch` | `FASTIFY_IGNORE_WATCH` |
