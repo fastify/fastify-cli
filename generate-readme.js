@@ -35,14 +35,14 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
 
   let accessibilityTemplate = ''
   if (!encapsulated) {
-    accessibilityTemplate = `- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n`
+    accessibilityTemplate = '- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n'
   } else {
-    accessibilityTemplate = `- [ ] Accessible in the same context where you require them\n- [X] Accessible only in a child context\n`
+    accessibilityTemplate = '- [ ] Accessible in the same context where you require them\n- [X] Accessible only in a child context\n'
   }
 
-  let fastifyDecorators = toMarkdownList(pluginMeta.decorators.fastify)
-  let replyDecorators = toMarkdownList(pluginMeta.decorators.reply)
-  let pluginDeps = toMarkdownList(pluginMeta.dependencies)
+  const fastifyDecorators = toMarkdownList(pluginMeta.decorators.fastify)
+  const replyDecorators = toMarkdownList(pluginMeta.decorators.reply)
+  const pluginDeps = toMarkdownList(pluginMeta.dependencies)
 
   generify(
     path.join(__dirname, 'templates', 'readme'),
@@ -116,7 +116,7 @@ function cli (args) {
     process.exit(1)
   }
 
-  let encapsulated = !plugin[Symbol.for('skip-override')]
+  const encapsulated = !plugin[Symbol.for('skip-override')]
   const pluginFileName = path.basename(opts._[0])
 
   generate(dir, { pluginMeta, encapsulated, pluginFileName }, function (

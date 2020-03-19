@@ -4,9 +4,9 @@ const argv = require('yargs-parser')
 
 module.exports = function parseArgs (args) {
   const parsedArgs = argv(args, {
-    number: ['port', 'body-limit', 'plugin-timeout'],
-    boolean: ['pretty-logs', 'options', 'watch'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch'],
+    number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
+    boolean: ['pretty-logs', 'options', 'watch', 'debug'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -16,16 +16,21 @@ module.exports = function parseArgs (args) {
       address: ['a'],
       watch: ['w'],
       prefix: ['r'],
+      debug: ['d'],
+      'debug-port': ['I'],
       'log-level': ['l'],
       'pretty-logs': ['P'],
-      'plugin-timeout': ['T']
+      'plugin-timeout': ['T'],
+      'logging-module': ['L']
     },
     default: {
       'log-level': 'fatal',
       'pretty-logs': false,
-      'watch': false,
+      watch: false,
+      debug: false,
+      debugPort: 9320,
       'ignore-watch': 'node_modules build dist .git bower_components logs',
-      'options': false,
+      options: false,
       'plugin-timeout': 10 * 1000 // everything should load in 10 seconds
     }
   })
@@ -38,10 +43,14 @@ module.exports = function parseArgs (args) {
     prettyLogs: parsedArgs.prettyLogs,
     options: parsedArgs.options,
     watch: parsedArgs.watch,
+    debug: parsedArgs.debug,
+    debugPort: parsedArgs.debugPort,
+    debugHost: parsedArgs.debugHost,
     ignoreWatch: parsedArgs.ignoreWatch,
     logLevel: parsedArgs.logLevel,
     address: parsedArgs.address,
     socket: parsedArgs.socket,
-    prefix: parsedArgs.prefix
+    prefix: parsedArgs.prefix,
+    loggingModule: parsedArgs.loggingModule
   }
 }

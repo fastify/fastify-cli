@@ -4,65 +4,44 @@
 
 require('dotenv').config()
 
-const path = require('path')
-const fs = require('fs')
 const assert = require('assert')
-const updateNotifier = require('update-notifier')
+const path = require('path')
+
 const PinoColada = require('pino-colada')
 const pump = require('pump')
-const resolveFrom = require('resolve-from')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
+const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
 
 let Fastify = null
-let fastifyPackageJSON = null
 
 function loadModules (opts) {
   try {
-    const basedir = path.resolve(process.cwd(), opts._[0])
+    const { module: fastifyModule } = requireFastifyForModule(opts._[0])
 
-    Fastify = require(resolveFrom.silent(basedir, 'fastify') || 'fastify')
-    fastifyPackageJSON = require(resolveFrom.silent(basedir, 'fastify/package.json') || 'fastify/package.json')
+    Fastify = fastifyModule
   } catch (e) {
     module.exports.stop(e)
   }
 }
 
-function showHelp () {
-  console.log(fs.readFileSync(path.join(__dirname, 'help', 'start.txt'), 'utf8'))
-  return module.exports.stop()
-}
-
 function start (args, cb) {
-  let opts = parseArgs(args)
+  const opts = parseArgs(args)
   if (opts.help) {
-    return showHelp()
+    return showHelpForCommand('start')
   }
 
   if (opts._.length !== 1) {
     console.error('Missing the required file parameter\n')
-    return showHelp()
+    return showHelpForCommand('start')
   }
 
   // we start crashing on unhandledRejection
   require('make-promises-safe')
 
   loadModules(opts)
-
-  const notifier = updateNotifier({
-    pkg: {
-      name: 'fastify',
-      version: fastifyPackageJSON.version
-    },
-    updateCheckInterval: 1000 * 60 * 60 * 24 * 7 // 1 week
-  })
-
-  notifier.notify({
-    isGlobal: false,
-    defer: false
-  })
 
   if (opts.watch) {
     return watch(args, opts.ignoreWatch)
@@ -71,41 +50,43 @@ function start (args, cb) {
   return runFastify(args, cb)
 }
 
-function stop (error) {
-  if (error) {
-    console.log(error)
-    process.exit(1)
-  }
-  process.exit()
+function stop (message) {
+  exit(message)
 }
 
 function runFastify (args, cb) {
-  let opts = parseArgs(args)
+  const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
   cb = cb || assert.ifError
 
   loadModules(opts)
 
-  var file = null
+  let file = null
+
   try {
-    file = require(path.resolve(process.cwd(), opts._[0]))
+    file = requireServerPluginFromPath(opts._[0])
   } catch (e) {
     return module.exports.stop(e)
   }
 
-  if (file.length !== 3 && file.constructor.name === 'Function') {
-    return module.exports.stop(new Error('Plugin function should contain 3 arguments. Refer to ' +
-                    'documentation for more information.'))
-  }
-  if (file.length !== 2 && file.constructor.name === 'AsyncFunction') {
-    return module.exports.stop(new Error('Async/Await plugin function should contain 2 arguments.' +
-    'Refer to documentation for more information.'))
+  let logger
+  if (opts.loggingModule) {
+    try {
+      const moduleFilePath = path.resolve(opts.loggingModule)
+      const moduleFileExtension = path.extname(opts.loggingModule)
+      const modulePath = moduleFilePath.split(moduleFileExtension)[0]
+
+      logger = require(modulePath)
+    } catch (e) {
+      module.exports.stop(e)
+    }
   }
 
+  const defaultLogger = {
+    level: opts.logLevel
+  }
   const options = {
-    logger: {
-      level: opts.logLevel
-    },
+    logger: logger || defaultLogger,
 
     pluginTimeout: opts.pluginTimeout
   }
@@ -118,6 +99,14 @@ function runFastify (args, cb) {
     const pinoColada = PinoColada()
     options.logger.stream = pinoColada
     pump(pinoColada, process.stdout, assert.ifError)
+  }
+
+  if (opts.debug) {
+    if (process.version.match(/v[0-6]\..*/g)) {
+      stop('Fastify debug mode not compatible with Node.js version < 6')
+    } else {
+      require('inspector').open(opts.debugPort, opts.debugHost || isDocker() ? listenAddressDocker : undefined)
+    }
   }
 
   const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
