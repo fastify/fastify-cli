@@ -47,12 +47,47 @@ test('should start the server', t => {
   })
 })
 
+test('should start the server with a typescript compiled module', t => {
+  t.plan(6)
+
+  const argv = ['-p', getPort(), './examples/ts-plugin.js']
+  start.start(argv, function (err, fastify) {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: `http://localhost:${fastify.server.address().port}`
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+})
+
 test('should start fastify with custom options', t => {
   t.plan(1)
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
     const argv = ['-p', getPort(), '-o', 'true', './examples/plugin-with-options.js']
+    start.start(argv).close()
+    t.fail('Custom options')
+  } catch (e) {
+    t.pass('Custom options')
+  }
+})
+
+test('should start fastify with custom options with a typescript compiled plugin', t => {
+  t.plan(1)
+  // here the test should fail because of the wrong certificate
+  // or because the server is booted without the custom options
+  try {
+    const argv = ['-p', getPort(), '-o', 'true', './examples/ts-plugin-with-options.js']
     start.start(argv).close()
     t.fail('Custom options')
   } catch (e) {
