@@ -1,6 +1,6 @@
 # fastify-cli
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/) [![Build Status](https://travis-ci.org/fastify/fastify-cli.svg?branch=master)](https://travis-ci.org/fastify/fastify-cli) [![Greenkeeper badge](https://badges.greenkeeper.io/fastify/fastify-cli.svg)](https://greenkeeper.io/)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/) ![Tests](https://github.com/fastify/fastify-cli/workflows/Tests/badge.svg) [![Greenkeeper badge](https://badges.greenkeeper.io/fastify/fastify-cli.svg)](https://greenkeeper.io/)
 
 Command line tools for [Fastify](https://github.com/fastify/fastify).
 Generate, write and run an application with one single command!
@@ -94,22 +94,22 @@ module.exports.options = {
 #### Options
 You can pass the following options via cli arguments, every options has the corresponding environment variable:
 
-|  Description | Short command | Full command | Environment variable |
-| ------------- | ------------- |-------------| ----- |
-| Port to listen on (default to 3000) | `-p` | `--port` | `FASTIFY_PORT or PORT` |
-| Address to listen on | `-a` | `--address` | `FASTIFY_ADDRESS` |
-| Socket to listen on | `-s` | `--socket` | `FASTIFY_SOCKET` |
-| Log level (default to fatal) | `-l` | `--log-level` | `FASTIFY_LOG_LEVEL` |
-| Start fastify app in debug mode with nodejs inspector | `-d` | `--debug` | `FASTIFY_DEBUG` |
-| Set the inspector port (default: 9320) | `-I` | `--debug-port` | `FASTIFY_DEBUG_PORT` |
-| Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker) | | `--debug-host` | `FASTIFY_DEBUG_HOST` |
-| Prints pretty logs | `-P` | `--pretty-logs` | `FASTIFY_PRETTY_LOGS` |
-| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload. | `-w` | `--watch` | `FASTIFY_WATCH` |
-| Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` )|  | `--ignore-watch` | `FASTIFY_IGNORE_WATCH` |
-| Use custom options | `-o` | `--options` | `FASTIFY_OPTIONS` |
-| Set the prefix | `-r` | `--prefix` | `FASTIFY_PREFIX` |
-| Set the plugin timeout | `-T` | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
-| Defines the maximum payload, in bytes,<br>the server is allowed to accept |  | `--body-limit` | `FASTIFY_BODY_LIMIT` |
+| Description                                                                                                                             | Short command | Full command       | Environment variable     |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------------------ |
+| Port to listen on (default to 3000)                                                                                                     | `-p`          | `--port`           | `FASTIFY_PORT or PORT`   |
+| Address to listen on                                                                                                                    | `-a`          | `--address`        | `FASTIFY_ADDRESS`        |
+| Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
+| Log level (default to fatal)                                                                                                            | `-l`          | `--log-level`      | `FASTIFY_LOG_LEVEL`      |
+| Start fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
+| Set the inspector port (default: 9320)                                                                                                  | `-I`          | `--debug-port`     | `FASTIFY_DEBUG_PORT`     |
+| Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
+| Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
+| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.                                | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
+| Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
+| Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
+| Set the prefix                                                                                                                          | `-r`          | `--prefix`         | `FASTIFY_PREFIX`         |
+| Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
+| Defines the maximum payload, in bytes,<br>the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 
