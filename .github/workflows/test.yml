@@ -1,0 +1,22 @@
+name: Tests
+
+on: [pull_request, push]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node: [ '10', '11', '12', '13' ]
+    name: Node ${{ matrix.node }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - name: Install Dependencies
+      run: npm install
+    - name: Run Tests
+      run: npm run test
