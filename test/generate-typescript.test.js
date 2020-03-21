@@ -18,6 +18,7 @@ const appTemplateDir = path.join(__dirname, '..', 'templates', 'app-ts')
 const cliPkg = require('../package')
 const { exec } = require('child_process')
 const minimatch = require('minimatch')
+const strip = require('strip-ansi')
 const expected = {}
 
 ;(function (cb) {
@@ -56,46 +57,47 @@ function define (t) {
     rimraf(workdir, () => {
       // skip any errors
 
-      mkdirp(workdir, cb)
+      mkdirp.sync(workdir)
+      cb()
     })
   })
 
   test('errors if directory exists', (t) => {
     t.plan(2)
-    exec('node generate.js ./test/workdir', (err, stdout) => {
-      t.is('directory ./test/workdir already exists', stdout.toString().trim())
+    exec('node generate.js --lang=ts ./test/workdir', (err, stdout) => {
+      t.is('directory ./test/workdir already exists', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
 
   test('errors if generate doesn\'t have <folder> arguments', (t) => {
     t.plan(2)
-    exec('node generate.js', (err, stdout) => {
-      t.is('must specify a directory to \'fastify generate\'', stdout.toString().trim())
+    exec('node generate.js --lang=ts', (err, stdout) => {
+      t.is('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
 
   test('errors if package.json exists when use generate .', (t) => {
     t.plan(2)
-    exec('node generate.js .', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+    exec('node generate.js --lang=ts .', (err, stdout) => {
+      t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
 
   test('errors if package.json exists when use generate ./', (t) => {
     t.plan(2)
-    exec('node generate.js ./', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+    exec('node generate.js --lang=ts ./', (err, stdout) => {
+      t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
 
   test('errors if folder exists', (t) => {
     t.plan(2)
-    exec('node generate.js test', (err, stdout) => {
-      t.is('directory test already exists', stdout.toString().trim())
+    exec('node generate.js --lang=ts test', (err, stdout) => {
+      t.is('directory test already exists', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })

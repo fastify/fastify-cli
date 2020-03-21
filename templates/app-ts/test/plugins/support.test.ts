@@ -1,5 +1,6 @@
 import { test } from 'tap'
-const Fastify = require('fastify')
+import Fastify from 'fastify'
+import types from '../../@types'
 import Support from '../../plugins/support'
 
 test('support works standalone', async (t: any) => {
