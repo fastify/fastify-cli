@@ -1,6 +1,5 @@
 import { test } from 'tap'
 import Fastify from 'fastify'
-import types from '../../@types'
 import Support from '../../plugins/support'
 
 test('support works standalone', async (t: any) => {

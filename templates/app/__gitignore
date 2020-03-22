@@ -58,5 +58,5 @@ profile*
 *flamegraph*
 
 # generated code
-examples/typescript-server.js
-test/types/index.js
+*/**/*.js
+dist

@@ -162,7 +162,6 @@ function define (t) {
       t.equal(tsConfig.compilerOptions.baseUrl, '.')
       t.deepEqual(tsConfig.compilerOptions.paths['*'], ['node_modules/*'])
       t.deepEqual(tsConfig.include, [
-        '@types',
         'services/**/*.ts',
         'plugins/**/*.ts',
         'app.ts'

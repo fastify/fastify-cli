@@ -15,7 +15,6 @@
         }
     },
     "include": [
-        "@types",
         "services/**/*.ts",
         "plugins/**/*.ts",
         "app.ts"
