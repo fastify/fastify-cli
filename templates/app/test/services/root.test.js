@@ -3,25 +3,25 @@
 const { test } = require('tap')
 const { build } = require('../helper')
 
-test('default root route', (t) => {
-  t.plan(2)
+test('default root route', async (t) => {
   const app = build(t)
 
-  app.inject({
+  const res = await app.inject({
     url: '/'
-  }, (err, res) => {
-    t.error(err)
-    t.deepEqual(JSON.parse(res.payload), { root: true })
   })
+  t.deepEqual(JSON.parse(res.payload), { root: true })
 })
 
-// If you prefer async/await, use the following
+// You can also use plugins with opts in fastify v2
 //
-// test('default root route', async (t) => {
+// test('default root route', (t) => {
+//   t.plan(2)
 //   const app = build(t)
 //
-//   const res = await app.inject({
+//   app.inject({
 //     url: '/'
+//   }, (err, res) => {
+//     t.error(err)
+//     t.deepEqual(JSON.parse(res.payload), { root: true })
 //   })
-//   t.deepEqual(JSON.parse(res.payload), { root: true })
 // })

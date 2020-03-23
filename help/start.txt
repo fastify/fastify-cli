@@ -16,6 +16,10 @@ Usage: fastify start [opts] <file>
   [env: FASTIFY_LOG_LEVEL]
       Log level (default to fatal)
 
+  -L, --logging-module
+  [env: FASTIFY_LOGGING_MODULE]
+      Path to logging configuration module to use
+
   -P, --pretty-logs
   [env: FASTIFY_PRETTY_LOGS]
       Prints pretty logs

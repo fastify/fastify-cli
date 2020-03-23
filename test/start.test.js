@@ -47,12 +47,47 @@ test('should start the server', t => {
   })
 })
 
+test('should start the server with a typescript compiled module', t => {
+  t.plan(6)
+
+  const argv = ['-p', getPort(), './examples/ts-plugin.js']
+  start.start(argv, function (err, fastify) {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: `http://localhost:${fastify.server.address().port}`
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+})
+
 test('should start fastify with custom options', t => {
   t.plan(1)
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
     const argv = ['-p', getPort(), '-o', 'true', './examples/plugin-with-options.js']
+    start.start(argv).close()
+    t.fail('Custom options')
+  } catch (e) {
+    t.pass('Custom options')
+  }
+})
+
+test('should start fastify with custom options with a typescript compiled plugin', t => {
+  t.plan(1)
+  // here the test should fail because of the wrong certificate
+  // or because the server is booted without the custom options
+  try {
+    const argv = ['-p', getPort(), '-o', 'true', './examples/ts-plugin-with-options.js']
     start.start(argv).close()
     t.fail('Custom options')
   } catch (e) {
@@ -112,19 +147,6 @@ test('should start fastify at given socket path', { skip: process.platform === '
     })
     request.end()
   })
-})
-
-test('should only accept plugin functions with 3 arguments', t => {
-  t.plan(1)
-
-  const oldStop = start.stop
-  t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.equal(err.message, 'Plugin function should contain 3 arguments. Refer to documentation for more information.')
-  }
-
-  const argv = ['-p', getPort(), './test/data/incorrect-plugin.js']
-  start.start(argv)
 })
 
 test('should error with a good timeout value', t => {
@@ -210,16 +232,20 @@ test('should start the server with an async/await plugin', t => {
 })
 
 test('should exit without error on help', t => {
-  t.plan(1)
+  const exit = process.exit
+  process.exit = sinon.spy()
 
-  const oldStop = start.stop
-  t.tearDown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.equal(err, undefined)
-  }
+  t.tearDown(() => {
+    process.exit = exit
+  })
 
   const argv = ['-p', getPort(), '-h', 'true']
   start.start(argv)
+
+  t.ok(process.exit.called)
+  t.equal(process.exit.lastCall.args[0], undefined)
+
+  t.end()
 })
 
 test('should throw the right error on require file', t => {
@@ -451,7 +477,7 @@ test('should start the server listening on 0.0.0.0 when runing in docker', t => 
 })
 
 test('should start the server with watch options that the child process restart when directory changed', { skip: onTravis }, (t) => {
-  t.plan(6)
+  t.plan(5)
   const tmpjs = path.resolve(baseFilename + '.js')
 
   fs.writeFile(tmpjs, 'hello world', function (err) {
@@ -472,7 +498,8 @@ test('should start the server with watch options that the child process restart 
       fs.writeFileSync(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
     })
 
-    fastifyEmitter.on('restart', () => {
+    // this might happen more than once
+    fastifyEmitter.once('restart', () => {
       t.pass('should receive restart event')
     })
 
@@ -492,6 +519,53 @@ test('crash on unhandled rejection', t => {
   })
 })
 
+if (!process.version.match(/v[0-6]\..*/g)) {
+  test('should start the server with inspect options and the defalut port is 9320', t => {
+    t.plan(4)
+
+    const start = proxyquire('../start', {
+      inspector: {
+        open (p) {
+          t.strictEqual(p, 9320)
+          t.pass('inspect open called')
+        }
+      }
+    })
+    const argv = ['--d', './examples/plugin.js']
+
+    start.start(argv, (err, fastify) => {
+      t.error(err)
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+
+  test('should start the server with inspect options and use the exactly port', t => {
+    t.plan(4)
+
+    const port = getPort()
+    const start = proxyquire('../start', {
+      inspector: {
+        open (p) {
+          t.strictEqual(p, Number(port))
+          t.pass('inspect open called')
+        }
+      }
+    })
+    const argv = ['--d', '--debug-port', port, './examples/plugin.js']
+
+    start.start(argv, (err, fastify) => {
+      t.error(err)
+
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+}
+
 test('boolean env are not overridden if no arguments are passed', t => {
   t.plan(1)
 
@@ -506,4 +580,33 @@ test('boolean env are not overridden if no arguments are passed', t => {
   } catch (e) {
     t.pass('Custom options')
   }
+})
+
+test('should support custom logger configuration', t => {
+  t.plan(2)
+
+  const argv = ['-L', './test/data/custom-logger.js', './examples/plugin.js']
+  start.start(argv, (err, fastify) => {
+    t.error(err)
+    t.ok(fastify.log.test)
+
+    fastify.close()
+  })
+})
+
+test('should throw on logger configuration module not found', t => {
+  t.plan(2)
+
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Cannot find module/.test(err.message), err.message)
+  }
+
+  const argv = ['-L', './test/data/missing.js', './examples/plugin.js']
+  start.start(argv, (err, fastify) => {
+    t.error(err)
+
+    fastify.close()
+  })
 })

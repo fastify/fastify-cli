@@ -19,6 +19,7 @@ const appTemplateDir = path.join(__dirname, '..', 'templates', 'app')
 const cliPkg = require('../package')
 const { exec } = require('child_process')
 const minimatch = require('minimatch')
+const strip = require('strip-ansi')
 const expected = {}
 
 ;(function (cb) {
@@ -57,14 +58,15 @@ function define (t) {
     rimraf(workdir, () => {
       // skip any errors
 
-      mkdirp(workdir, cb)
+      mkdirp.sync(workdir)
+      cb()
     })
   })
 
   test('errors if directory exists', (t) => {
     t.plan(2)
     exec('node generate.js ./test/workdir', (err, stdout) => {
-      t.is('directory ./test/workdir already exists', stdout.toString().trim())
+      t.is('directory ./test/workdir already exists', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
@@ -72,7 +74,7 @@ function define (t) {
   test('errors if generate doesn\'t have <folder> arguments', (t) => {
     t.plan(2)
     exec('node generate.js', (err, stdout) => {
-      t.is('must specify a directory to \'fastify generate\'', stdout.toString().trim())
+      t.is('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
@@ -80,7 +82,7 @@ function define (t) {
   test('errors if package.json exists when use generate .', (t) => {
     t.plan(2)
     exec('node generate.js .', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
@@ -88,7 +90,7 @@ function define (t) {
   test('errors if package.json exists when use generate ./', (t) => {
     t.plan(2)
     exec('node generate.js ./', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', stdout.toString().trim())
+      t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
@@ -96,7 +98,7 @@ function define (t) {
   test('errors if folder exists', (t) => {
     t.plan(2)
     exec('node generate.js test', (err, stdout) => {
-      t.is('directory test already exists', stdout.toString().trim())
+      t.is('directory test already exists', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
@@ -128,12 +130,12 @@ function define (t) {
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
         t.equal(pkg.scripts.test, 'tap test/**/*.test.js')
         t.equal(pkg.scripts.start, 'fastify start -l info app.js')
-        t.equal(pkg.scripts.dev, 'fastify start -l info -P app.js')
+        t.equal(pkg.scripts.dev, 'fastify start -w -l info -P app.js')
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
         t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
         t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
-        t.equal(pkg.devDependencies['tap'], cliPkg.devDependencies['tap'])
+        t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
 
         const testGlob = pkg.scripts.test.split(' ')[1]
         t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)

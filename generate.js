@@ -43,7 +43,7 @@ function generate (dir) {
         pkg.scripts = Object.assign(pkg.scripts || {}, {
           test: 'tap test/**/*.test.js',
           start: 'fastify start -l info app.js',
-          dev: 'fastify start -l info -P app.js'
+          dev: 'fastify start -w -l info -P app.js'
         })
 
         pkg.dependencies = Object.assign(pkg.dependencies || {}, {
@@ -54,7 +54,7 @@ function generate (dir) {
         })
 
         pkg.devDependencies = Object.assign(pkg.devDependencies || {}, {
-          tap: cliPkg.devDependencies['tap']
+          tap: cliPkg.devDependencies.tap
         })
 
         log('debug', `edited package.json, saving`)

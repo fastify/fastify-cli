@@ -1,17 +1,16 @@
 'use strict'
 
-module.exports = function (fastify, opts, next) {
-  fastify.get('/', function (request, reply) {
-    reply.send({ root: true })
+module.exports = async function (fastify, opts) {
+  fastify.get('/', async function (request, reply) {
+    return { root: true }
   })
-
-  next()
 }
 
-// If you prefer async/await, use the following
+// You can also use plugin with opts in fastify v2
 //
-// module.exports = async function (fastify, opts) {
-//   fastify.get('/', async function (request, reply) {
-//     return { root: true }
+// module.exports = function (fastify, opts, next) {
+//   fastify.get('/', function (request, reply) {
+//     reply.send({ root: true })
 //   })
+//   next()
 // }
