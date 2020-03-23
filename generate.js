@@ -28,7 +28,7 @@ function generate (dir) {
       log('info', `reading package.json in ${dir}`)
       readFile('package.json', (err, data) => {
         if (err) {
-          reject(err)
+          return reject(err)
         }
 
         var pkg
