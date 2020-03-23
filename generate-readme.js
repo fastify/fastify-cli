@@ -35,9 +35,9 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }) {
 
     let accessibilityTemplate = ''
     if (!encapsulated) {
-      accessibilityTemplate = `- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n`
+      accessibilityTemplate = '- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n'
     } else {
-      accessibilityTemplate = `- [ ] Accessible in the same context where you require them\n- [X] Accessible only in a child context\n`
+      accessibilityTemplate = '- [ ] Accessible in the same context where you require them\n- [X] Accessible only in a child context\n'
     }
 
     const fastifyDecorators = toMarkdownList(pluginMeta.decorators.fastify)

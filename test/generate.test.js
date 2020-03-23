@@ -132,7 +132,7 @@ function define (t) {
         t.equal(pkg.scripts.start, 'fastify start -l info app.js')
         t.equal(pkg.scripts.dev, 'fastify start -w -l info -P app.js')
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
-        t.equal(pkg.dependencies['fastify'], cliPkg.dependencies.fastify)
+        t.equal(pkg.dependencies.fastify, cliPkg.dependencies.fastify)
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
         t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
