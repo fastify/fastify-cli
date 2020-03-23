@@ -6,6 +6,7 @@ process.env.TAP_BAIL = true
 
 const t = require('tap')
 const {
+  readFileSync,
   readFile
 } = require('fs')
 const path = require('path')
@@ -102,57 +103,69 @@ function define (t) {
     })
   })
 
-  test('should finish succesfully', (t) => {
-    t.plan(15 + Object.keys(expected).length * 2)
-
-    generate(workdir, function (err) {
+  test('should finish succesfully', async (t) => {
+    t.plan(13 + Object.keys(expected).length)
+    try {
+      await generate(workdir)
+      await verifyPkg(t)
+      await verifyCopy(t)
+    } catch (err) {
       t.error(err)
-      verifyPkg(t)
-      verifyCopy(t)
-    })
+    }
   })
 
   function verifyPkg (t) {
-    const pkgFile = path.join(workdir, 'package.json')
+    return new Promise((resolve, reject) => {
+      const pkgFile = path.join(workdir, 'package.json')
 
-    readFile(pkgFile, function (err, data) {
-      t.error(err)
-      const pkg = JSON.parse(data)
-      t.equal(pkg.name, 'workdir')
-      // we are not checking author because it depends on global npm configs
-      t.equal(pkg.version, '1.0.0')
-      t.equal(pkg.description, '')
-      // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
-      // so for local tests we need to accept MIT as well
-      t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-      t.equal(pkg.scripts.test, 'tap test/**/*.test.js')
-      t.equal(pkg.scripts.start, 'fastify start -l info app.js')
-      t.equal(pkg.scripts.dev, 'fastify start -w -l info -P app.js')
-      t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
-      t.equal(pkg.dependencies.fastify, cliPkg.dependencies.fastify)
-      t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
-      t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
-      t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
+      readFile(pkgFile, function (err, data) {
+        err && reject(err)
+        const pkg = JSON.parse(data)
+        t.equal(pkg.name, 'workdir')
+        // we are not checking author because it depends on global npm configs
+        t.equal(pkg.version, '1.0.0')
+        t.equal(pkg.description, '')
+        // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
+        // so for local tests we need to accept MIT as well
+        t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
+        t.equal(pkg.scripts.test, 'tap test/**/*.test.js')
+        t.equal(pkg.scripts.start, 'fastify start -l info app.js')
+        t.equal(pkg.scripts.dev, 'fastify start -w -l info -P app.js')
+        t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
+        t.equal(pkg.dependencies.fastify, cliPkg.dependencies.fastify)
+        t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
+        t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
+        t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
 
-      const testGlob = pkg.scripts.test.split(' ')[1]
-      t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)
+        const testGlob = pkg.scripts.test.split(' ')[1]
+        t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)
+        resolve()
+      })
     })
   }
 
   function verifyCopy (t) {
     const pkgFile = path.join(workdir, 'package.json')
-
-    walker(workdir)
-      .on('file', function (file) {
-        if (file === pkgFile) {
-          return
-        }
-
-        readFile(file, function (err, data) {
-          t.notOk(err)
-          file = file.replace(workdir, '')
-          t.deepEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
+    return new Promise((resolve, reject) => {
+      walker(workdir)
+        .on('file', function (file) {
+          if (file === pkgFile) {
+            return
+          }
+          try {
+            const data = readFileSync(file)
+            file = file.replace(workdir, '')
+            t.deepEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
+          } catch (err) {
+            reject(err)
+          }
         })
-      })
+        .on('end', function () {
+          resolve()
+        })
+        .on('error', function (err, entry, stat) {
+          reject(err)
+        })
+    })
   }
 }

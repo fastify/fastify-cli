@@ -10,63 +10,64 @@ const log = require('./log')
 function toMarkdownList (a) {
   return a.map(d => `- ${d}`).join('\n')
 }
-function generate (dir, { pluginMeta, encapsulated, pluginFileName }, cb) {
+function generate (dir, { pluginMeta, encapsulated, pluginFileName }) {
   process.chdir(dir)
-
-  if (!existsSync(path.join(dir, 'package.json'))) {
-    execSync('npm init -y')
-    log('info', `generated package.json in ${dir}`)
-  }
-
-  log('info', `reading package.json in ${dir}`)
-  let pkg = readFileSync('package.json')
-  try {
-    pkg = JSON.parse(pkg)
-  } catch (err) {
-    return cb(err)
-  }
-
-  pluginMeta.decorators = pluginMeta.decorators ? pluginMeta.decorators : { fastify: [], reply: [] }
-  pluginMeta.dependencies = pluginMeta.dependencies ? pluginMeta.dependencies : []
-
-  const peerDepFastify = pkg.peerDependencies ? pkg.peerDependencies.fastify : ''
-  const depFastify = pkg.dependencies ? pkg.dependencies.fastify : ''
-  const minFastify = pluginMeta.fastify || peerDepFastify || depFastify
-
-  let accessibilityTemplate = ''
-  if (!encapsulated) {
-    accessibilityTemplate = '- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n'
-  } else {
-    accessibilityTemplate = '- [ ] Accessible in the same context where you require them\n- [X] Accessible only in a child context\n'
-  }
-
-  const fastifyDecorators = toMarkdownList(pluginMeta.decorators.fastify)
-  const replyDecorators = toMarkdownList(pluginMeta.decorators.reply)
-  const pluginDeps = toMarkdownList(pluginMeta.dependencies)
-
-  generify(
-    path.join(__dirname, 'templates', 'readme'),
-    dir,
-    {
-      accessibilityTemplate,
-      fastifyDecorators,
-      replyDecorators,
-      pluginDeps,
-      packageName: pkg.name,
-      pluginFileName,
-      minFastify
-    },
-    function (file) {
-      log('debug', `generated ${file}`)
-    },
-    function (err) {
-      if (err) {
-        return cb(err)
-      }
-      log('info', `README for plugin ${pkg.name} generated successfully`)
-      cb()
+  return new Promise((resolve, reject) => {
+    if (!existsSync(path.join(dir, 'package.json'))) {
+      execSync('npm init -y')
+      log('info', `generated package.json in ${dir}`)
     }
-  )
+
+    log('info', `reading package.json in ${dir}`)
+    let pkg = readFileSync('package.json')
+    try {
+      pkg = JSON.parse(pkg)
+    } catch (err) {
+      return reject(err)
+    }
+
+    pluginMeta.decorators = pluginMeta.decorators ? pluginMeta.decorators : { fastify: [], reply: [] }
+    pluginMeta.dependencies = pluginMeta.dependencies ? pluginMeta.dependencies : []
+
+    const peerDepFastify = pkg.peerDependencies ? pkg.peerDependencies.fastify : ''
+    const depFastify = pkg.dependencies ? pkg.dependencies.fastify : ''
+    const minFastify = pluginMeta.fastify || peerDepFastify || depFastify
+
+    let accessibilityTemplate = ''
+    if (!encapsulated) {
+      accessibilityTemplate = '- [X] Accessible in the same context where you require them\n- [ ] Accessible only in a child context\n'
+    } else {
+      accessibilityTemplate = '- [ ] Accessible in the same context where you require them\n- [X] Accessible only in a child context\n'
+    }
+
+    const fastifyDecorators = toMarkdownList(pluginMeta.decorators.fastify)
+    const replyDecorators = toMarkdownList(pluginMeta.decorators.reply)
+    const pluginDeps = toMarkdownList(pluginMeta.dependencies)
+
+    generify(
+      path.join(__dirname, 'templates', 'readme'),
+      dir,
+      {
+        accessibilityTemplate,
+        fastifyDecorators,
+        replyDecorators,
+        pluginDeps,
+        packageName: pkg.name,
+        pluginFileName,
+        minFastify
+      },
+      function (file) {
+        log('debug', `generated ${file}`)
+      },
+      function (err) {
+        if (err) {
+          return reject(err)
+        }
+        log('info', `README for plugin ${pkg.name} generated successfully`)
+        resolve()
+      }
+    )
+  })
 }
 
 function stop (error) {
@@ -119,9 +120,7 @@ function cli (args) {
   const encapsulated = !plugin[Symbol.for('skip-override')]
   const pluginFileName = path.basename(opts._[0])
 
-  generate(dir, { pluginMeta, encapsulated, pluginFileName }, function (
-    err
-  ) {
+  generate(dir, { pluginMeta, encapsulated, pluginFileName }).catch(function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
