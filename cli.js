@@ -12,10 +12,12 @@ const start = require('./start')
 const generate = require('./generate')
 const generateReadme = require('./generate-readme')
 const printRoutes = require('./print-routes')
+const renderDocs = require('./docs')
 
 commist.register('start', start.cli)
 commist.register('generate', generate.cli)
 commist.register('readme', generateReadme.cli)
+commist.register('docs', renderDocs)
 commist.register('help', help.toStdout)
 commist.register('version', function () {
   console.log(require('./package.json').version)

@@ -1,0 +1,7 @@
+Usage: fastify docs
+
+Starts an interactive terminal session to view the documentation for the fastify version installed.
+
+If no fastify version is found in the current work directory node_modules folder, the fastify version that the cli depends on is used for docs.
+
+Navigate with arrow keys and pressing the enter key to select documentation to view.

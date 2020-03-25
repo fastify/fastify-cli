@@ -28,6 +28,7 @@ Fastify command line interface, available commands are:
   * generate      generate a new project
   * readme        generate a README.md for the plugin
   * version       the current fastify-cli version
+  * docs          starts an interactive terminal session to view the fastify docs for the fastify version installed. navigate with arrow keys
   * help          help about commands
 
 Launch 'fastify help [command]' to know more about the commands.
@@ -217,6 +218,14 @@ Finally there will be a new `README.md` file, which provides internal informatio
 + "lint": "standard --fix"
 },
 ```
+
+### docs
+
+`fastify-cli` allows you to view the documentation for fastify in your terminal. By default, fastify-cli attempts to render the documentation for the fastify version installed in the current working directory node_modules folder, however, if none are found, it should fall back to rendering the documentation for the version that fastify-cli depends on.
+
+The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys by pressing the enter key to select documentation to view.
+
+run `fastify docs` to get started.
 
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
