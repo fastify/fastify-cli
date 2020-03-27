@@ -47,6 +47,28 @@ test('should start the server', t => {
   })
 })
 
+test('should start the server with pretty output', t => {
+  t.plan(6)
+
+  const argv = ['-p', getPort(), '-P', './examples/plugin.js']
+  start.start(argv, function (err, fastify) {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: `http://localhost:${fastify.server.address().port}`
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), { hello: 'world' })
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+})
+
 test('should start the server with a typescript compiled module', t => {
   t.plan(6)
 
