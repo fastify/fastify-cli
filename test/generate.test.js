@@ -103,12 +103,12 @@ function define (t) {
     })
   })
 
-  test('should finish succesfully with javascript template', (t) => {
+  test('should finish succesfully with javascript template', async (t) => {
     t.plan(13 + Object.keys(expected).length)
     try {
       await generate(workdir, javascriptTemplate)
       await verifyPkg(t)
-      await verifyCopy(t)
+      await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
     }
@@ -144,7 +144,7 @@ function define (t) {
     })
   }
 
-  function verifyCopy (t) {
+  function verifyCopy (t, expected) {
     const pkgFile = path.join(workdir, 'package.json')
     return new Promise((resolve, reject) => {
       walker(workdir)
