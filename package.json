@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "standard",
-    "unit": "tap test/*.test.js templates/app/test/*/*.test.js",
+    "unit": "cross-env TS_NODE_PROJECT=./templates/app-ts/tsconfig.json tap test/generate-typescript.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts",
     "test": "npm run lint && npm run unit"
   },
   "keywords": [
@@ -60,6 +60,9 @@
     "yargs-parser": "^18.1.1"
   },
   "devDependencies": {
+    "@types/node": "^13.7.4",
+    "concurrently": "^5.1.0",
+    "cross-env": "^7.0.2",
     "fastify-autoload": "^1.2.2",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.3",
@@ -71,6 +74,7 @@
     "standard": "^14.3.3",
     "strip-ansi": "^6.0.0",
     "tap": "^14.0.0",
+    "typescript": "^3.8.2",
     "walker": "^1.0.7"
   }
 }

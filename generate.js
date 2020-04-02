@@ -13,9 +13,68 @@ const cliPkg = require('./package')
 const { execSync } = require('child_process')
 const log = require('./log')
 
-function generate (dir) {
+const javascriptTemplate = {
+  dir: 'app',
+  main: 'app.js',
+  scripts: {
+    test: 'tap test/**/*.test.js',
+    start: 'fastify start -l info app.js',
+    dev: 'fastify start -w -l info -P app.js'
+  },
+  dependencies: {
+    fastify: cliPkg.dependencies.fastify,
+    'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
+    'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
+    'fastify-cli': '^' + cliPkg.version
+  },
+  devDependencies: {
+    tap: cliPkg.devDependencies.tap
+  },
+  logInstructions: function (pkg) {
+    log('debug', 'saved package.json')
+    log('info', `project ${pkg.name} generated successfully`)
+    log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
+    log('debug', `run '${chalk.bold('npm start')}' to start the application`)
+    log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
+    log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
+  }
+}
+
+const typescriptTemplate = {
+  dir: 'app-ts',
+  main: 'app.ts',
+  scripts: {
+    test: 'tap test/**/*.test.ts',
+    start: 'npm run build && fastify start -l info dist/app.js',
+    'build:ts': 'tsc',
+    dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"'
+  },
+  dependencies: {
+    fastify: cliPkg.dependencies.fastify,
+    'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
+    'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
+    'fastify-cli': '^' + cliPkg.version
+  },
+  devDependencies: {
+    '@types/node': cliPkg.devDependencies['@types/node'],
+    concurrently: cliPkg.devDependencies.concurrently,
+    tap: cliPkg.devDependencies.tap,
+    typescript: cliPkg.devDependencies.typescript
+  },
+  logInstructions: function (pkg) {
+    log('debug', 'saved package.json')
+    log('info', `project ${pkg.name} generated successfully`)
+    log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
+    log('debug', `run '${chalk.bold('npm start')}' to start the application`)
+    log('debug', `run '${chalk.bold('npm build:ts')}' to compile the typescript application`)
+    log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
+    log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
+  }
+}
+
+function generate (dir, template) {
   return new Promise((resolve, reject) => {
-    generify(path.join(__dirname, 'templates', 'app'), dir, {}, function (file) {
+    generify(path.join(__dirname, 'templates', template.dir), dir, {}, function (file) {
       log('debug', `generated ${file}`)
     }, function (err) {
       if (err) {
@@ -38,24 +97,13 @@ function generate (dir) {
           return reject(err)
         }
 
-        pkg.main = 'app.js'
+        pkg.main = template.main
 
-        pkg.scripts = Object.assign(pkg.scripts || {}, {
-          test: 'tap test/**/*.test.js',
-          start: 'fastify start -l info app.js',
-          dev: 'fastify start -w -l info -P app.js'
-        })
+        pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
 
-        pkg.dependencies = Object.assign(pkg.dependencies || {}, {
-          fastify: cliPkg.dependencies.fastify,
-          'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
-          'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
-          'fastify-cli': '^' + cliPkg.version
-        })
+        pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
 
-        pkg.devDependencies = Object.assign(pkg.devDependencies || {}, {
-          tap: cliPkg.devDependencies.tap
-        })
+        pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
 
         log('debug', 'edited package.json, saving')
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
@@ -63,12 +111,7 @@ function generate (dir) {
             return reject(err)
           }
 
-          log('debug', 'saved package.json')
-          log('info', `project ${pkg.name} generated successfully`)
-          log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
-          log('debug', `run '${chalk.bold('npm start')}' to start the application`)
-          log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
-          log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
+          template.logInstructions(pkg)
           resolve()
         })
       })
@@ -96,7 +139,9 @@ function cli (args) {
     process.exit(1)
   }
 
-  generate(dir).catch(function (err) {
+  const template = opts.lang === 'ts' || opts.lang === 'typescript' ? typescriptTemplate : javascriptTemplate
+
+  generate(dir, template).catch(function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
@@ -106,7 +151,9 @@ function cli (args) {
 
 module.exports = {
   generate,
-  cli
+  cli,
+  javascriptTemplate,
+  typescriptTemplate
 }
 
 if (require.main === module) {
