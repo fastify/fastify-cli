@@ -9,7 +9,9 @@
   "scripts": {
     "lint": "standard",
     "unit": "cross-env TS_NODE_PROJECT=./templates/app-ts/tsconfig.json tap test/generate-typescript.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts",
-    "test": "npm run lint && npm run unit"
+    "test": "npm run lint && npm run unit",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [
     "fastify",
@@ -57,7 +59,8 @@
     "pino-colada": "^2.0.0",
     "pump": "^3.0.0",
     "resolve-from": "^5.0.0",
-    "yargs-parser": "^18.1.1"
+    "yargs-parser": "^18.1.1",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@types/node": "^13.7.4",
@@ -76,5 +79,6 @@
     "tap": "^14.0.0",
     "typescript": "^3.8.2",
     "walker": "^1.0.7"
-  }
+  },
+  "snyk": true
 }
