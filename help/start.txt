@@ -1,4 +1,6 @@
-Usage: fastify start [opts] <file>
+Usage: fastify start [opts] <file> [--] [<plugin-options>]
+
+OPTS
 
   -p, --port
   [env: FASTIFY_PORT or PORT]
@@ -45,3 +47,13 @@ Usage: fastify start [opts] <file>
 
   -h, --help
       Show this help message
+
+Examples:
+
+  start plugin.js on port 8080
+
+    fastify start -p 8080 plugin.js
+
+  start plugin.js passing custom options to it
+
+    fastify start plugin.js -- --custom-plugin-option-1 --custom-plugin-option-2

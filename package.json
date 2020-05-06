@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "standard",
-    "unit": "cross-env TS_NODE_PROJECT=./templates/app-ts/tsconfig.json tap test/generate-typescript.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts",
+    "unit": "cross-env TS_NODE_PROJECT=./templates/app-ts/tsconfig.json tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts",
     "test": "npm run lint && npm run unit"
   },
   "keywords": [
