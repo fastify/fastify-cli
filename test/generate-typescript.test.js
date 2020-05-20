@@ -130,7 +130,7 @@ function define (t) {
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
         t.equal(pkg.scripts.test, 'tap test/**/*.test.ts')
-        t.equal(pkg.scripts.start, 'npm run build && fastify start -l info dist/app.js')
+        t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts.dev, 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"')
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
