@@ -27,6 +27,7 @@ test('should parse args correctly', t => {
 
   t.strictDeepEqual(parsedArgs, {
     _: ['app.js'],
+    '--': [],
     prettyLogs: true,
     options: true,
     watch: true,
@@ -37,6 +38,7 @@ test('should parse args correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    pluginOptions: {},
     bodyLimit: 5242880,
     debug: true,
     debugPort: 1111,
@@ -71,6 +73,7 @@ test('should parse args with = assignment correctly', t => {
 
   t.strictDeepEqual(parsedArgs, {
     _: ['app.js'],
+    '--': [],
     prettyLogs: true,
     options: true,
     watch: true,
@@ -81,6 +84,7 @@ test('should parse args with = assignment correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    pluginOptions: {},
     bodyLimit: 5242880,
     debug: true,
     debugPort: 1111,
@@ -130,6 +134,7 @@ test('should parse env vars correctly', t => {
 
   t.strictDeepEqual(parsedArgs, {
     _: [],
+    '--': [],
     prettyLogs: true,
     options: true,
     watch: true,
@@ -141,6 +146,7 @@ test('should parse env vars correctly', t => {
     prefix: 'FASTIFY_',
     socket: 'fastify.io.socket:9999',
     pluginTimeout: 500,
+    pluginOptions: {},
     debug: true,
     debugPort: 1111,
     debugHost: '1.1.1.1',
@@ -168,4 +174,62 @@ test('should respect default values', t => {
   t.is(parsedArgs.debug, false)
   t.is(parsedArgs.debugPort, 9320)
   t.is(parsedArgs.loggingModule, undefined)
+})
+
+test('should parse custom plugin options', t => {
+  t.plan(1)
+
+  const argv = [
+    '--port', '7777',
+    '--address', 'fastify.io:9999',
+    '--socket', 'fastify.io.socket:9999',
+    '--log-level', 'info',
+    '--pretty-logs', 'true',
+    '--watch', 'true',
+    '--ignore-watch', 'ignoreme.js',
+    '--options', 'true',
+    '--prefix', 'FASTIFY_',
+    '--plugin-timeout', '500',
+    '--body-limit', '5242880',
+    '--debug', 'true',
+    '--debug-port', 1111,
+    '--debug-host', '1.1.1.1',
+    '--logging-module', './custom-logger.js',
+    'app.js',
+    '--',
+    '-abc',
+    '--hello', 'world'
+  ]
+  const parsedArgs = parseArgs(argv)
+
+  t.strictDeepEqual(parsedArgs, {
+    _: ['app.js'],
+    '--': [
+      '-abc',
+      '--hello',
+      'world'
+    ],
+    prettyLogs: true,
+    options: true,
+    watch: true,
+    ignoreWatch: 'ignoreme.js',
+    port: 7777,
+    address: 'fastify.io:9999',
+    socket: 'fastify.io.socket:9999',
+    logLevel: 'info',
+    prefix: 'FASTIFY_',
+    pluginTimeout: 500,
+    pluginOptions: {
+      a: true,
+      b: true,
+      c: true,
+      hello: 'world'
+    },
+    bodyLimit: 5242880,
+    debug: true,
+    debugPort: 1111,
+    debugHost: '1.1.1.1',
+    loggingModule: './custom-logger.js',
+    lang: 'js'
+  })
 })

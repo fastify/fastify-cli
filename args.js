@@ -4,6 +4,9 @@ const argv = require('yargs-parser')
 
 module.exports = function parseArgs (args) {
   const parsedArgs = argv(args, {
+    configuration: {
+      'populate--': true
+    },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
     boolean: ['pretty-logs', 'options', 'watch', 'debug'],
     string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang'],
@@ -36,11 +39,16 @@ module.exports = function parseArgs (args) {
     }
   })
 
+  const additionalArgs = parsedArgs['--'] || []
+  const { _, ...pluginOptions } = argv(additionalArgs)
+
   return {
     _: parsedArgs._,
+    '--': additionalArgs,
     port: parsedArgs.port,
     bodyLimit: parsedArgs.bodyLimit,
     pluginTimeout: parsedArgs.pluginTimeout,
+    pluginOptions,
     prettyLogs: parsedArgs.prettyLogs,
     options: parsedArgs.options,
     watch: parsedArgs.watch,

@@ -82,6 +82,41 @@ test('should start fastify with custom options', t => {
   }
 })
 
+test('should start fastify with custom plugin options', t => {
+  t.plan(6)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/plugin-with-custom-options.js',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  start.start(argv, function (err, fastify) {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: `http://localhost:${fastify.server.address().port}`
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), {
+        a: true,
+        b: true,
+        c: true,
+        hello: 'world'
+      })
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
+})
+
 test('should start fastify with custom options with a typescript compiled plugin', t => {
   t.plan(1)
   // here the test should fail because of the wrong certificate
@@ -93,6 +128,41 @@ test('should start fastify with custom options with a typescript compiled plugin
   } catch (e) {
     t.pass('Custom options')
   }
+})
+
+test('should start fastify with custom plugin options with a typescript compiled plugin', t => {
+  t.plan(6)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/ts-plugin-with-custom-options.js',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  start.start(argv, function (err, fastify) {
+    t.error(err)
+
+    sget({
+      method: 'GET',
+      url: `http://localhost:${fastify.server.address().port}`
+    }, (err, response, body) => {
+      t.error(err)
+      t.strictEqual(response.statusCode, 200)
+      t.strictEqual(response.headers['content-length'], '' + body.length)
+      t.deepEqual(JSON.parse(body), {
+        a: true,
+        b: true,
+        c: true,
+        hello: 'world'
+      })
+      fastify.close(() => {
+        t.pass('server closed')
+      })
+    })
+  })
 })
 
 test('should start the server at the given prefix', t => {

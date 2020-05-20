@@ -73,7 +73,7 @@ module.exports = async function (fastify, options) {
 
 For a list of available flags for `fastify start` see the help: `fastify help start`.
 
-If you want to use custom options, just export an options object with your route and run the cli command with the `--options` flag.
+If you want to use custom options for the server creation, just export an options object with your route and run the cli command with the `--options` flag.
 
 ```js
 // plugin.js
@@ -90,6 +90,23 @@ module.exports.options = {
     cert: 'cert'
   }
 }
+```
+
+If you want to use custom options for your plugin, just add them after the `--` terminator.
+
+```js
+// plugin.js
+module.exports = function (fastify, options, next) {
+  if (option.one) {
+    //...
+  }
+  //...
+  next()
+}
+```
+
+```bash
+$ fastify start plugin.js -- --one
 ```
 
 #### Options

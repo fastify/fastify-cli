@@ -111,12 +111,11 @@ function runFastify (args, cb) {
 
   const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
 
-  const pluginOptions = {}
   if (opts.prefix) {
-    pluginOptions.prefix = opts.prefix
+    opts.pluginOptions.prefix = opts.prefix
   }
 
-  fastify.register(file.default || file, pluginOptions)
+  fastify.register(file.default || file, opts.pluginOptions)
 
   if (opts.address) {
     fastify.listen(opts.port, opts.address, wrap)
