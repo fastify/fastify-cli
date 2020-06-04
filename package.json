@@ -63,7 +63,7 @@
     "@types/node": "^14.0.1",
     "concurrently": "^5.1.0",
     "cross-env": "^7.0.2",
-    "fastify-autoload": "^2.0.0",
+    "fastify-autoload": "^3.0.2",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.3",
     "pre-commit": "^1.2.2",
