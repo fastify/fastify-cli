@@ -17,6 +17,7 @@
     "include": [
         "services/**/*.ts",
         "plugins/**/*.ts",
+        "test/**/*.ts",
         "app.ts"
     ]
 }

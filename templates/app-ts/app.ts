@@ -12,16 +12,14 @@ export default function (fastify: FastifyInstance, opts: any, next: Function) {
   // through your application
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'plugins'),
-    options: opts,
-    includeTypeScript: true
+    options: opts
   })
 
   // This loads all plugins defined in services
   // define your routes in one of these
   fastify.register(AutoLoad, {
     dir: path.join(__dirname, 'services'),
-    options: opts,
-    includeTypeScript: true
+    options: opts
   })
 
   // Make sure to call next when done
