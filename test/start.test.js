@@ -190,18 +190,21 @@ test('should start the server at the given prefix', t => {
 })
 
 test('should start fastify at given socket path', { skip: process.platform === 'win32' }, t => {
-  t.plan(3)
+  t.plan(2)
 
   const sockFile = path.resolve('test.sock')
+  t.tearDown(() => {
+    try {
+      fs.unlinkSync(sockFile)
+    } catch (e) { }
+  })
   const argv = ['-s', sockFile, '-o', 'true', './examples/plugin.js']
-
-  const fastify = start.start(argv)
 
   try {
     fs.unlinkSync(sockFile)
   } catch (e) { }
 
-  fastify.ready(err => {
+  const fastify = start.start(argv, (err) => {
     t.error(err)
 
     var request = require('http').request({
@@ -210,13 +213,10 @@ test('should start fastify at given socket path', { skip: process.platform === '
       socketPath: sockFile
     }, function (response) {
       t.deepEqual(response.statusCode, 200)
-
-      fastify.close(() => {
-        t.pass('server closed')
-      })
     })
     request.end()
   })
+  t.tearDown(fastify.close.bind(fastify))
 })
 
 test('should error with a good timeout value', t => {
