@@ -2,7 +2,7 @@ import AutoLoad from 'fastify-autoload';
 import * as path from 'path';
 import { FastifyInstance } from 'fastify';
 
-export default function (fastify: FastifyInstance, opts: any, next: Function) {
+export default async function (fastify: FastifyInstance, opts: any) {
   // Place here your custom code!
 
   // Do not touch the following lines
@@ -15,13 +15,11 @@ export default function (fastify: FastifyInstance, opts: any, next: Function) {
     options: opts
   })
 
-  // This loads all plugins defined in services
+  // This loads all plugins defined in routes
   // define your routes in one of these
   fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'services'),
+    dir: path.join(__dirname, 'routes'),
     options: opts
   })
 
-  // Make sure to call next when done
-  next()
 }

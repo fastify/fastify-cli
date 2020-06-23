@@ -3,7 +3,7 @@
 const path = require('path')
 const AutoLoad = require('fastify-autoload')
 
-module.exports = function (fastify, opts, next) {
+module.exports = async function (fastify, opts, next) {
   // Place here your custom code!
 
   // Do not touch the following lines
@@ -16,13 +16,10 @@ module.exports = function (fastify, opts, next) {
     options: Object.assign({}, opts)
   })
 
-  // This loads all plugins defined in services
+  // This loads all plugins defined in routes
   // define your routes in one of these
   fastify.register(AutoLoad, {
-    dir: path.join(__dirname, 'services'),
+    dir: path.join(__dirname, 'routes'),
     options: Object.assign({}, opts)
   })
-
-  // Make sure to call next when done
-  next()
 }

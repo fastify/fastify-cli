@@ -15,7 +15,7 @@
         }
     },
     "include": [
-        "services/**/*.ts",
+        "routes/**/*.ts",
         "plugins/**/*.ts",
         "test/**/*.ts",
         "app.ts"
