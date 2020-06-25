@@ -48,7 +48,7 @@
     "chokidar": "^3.3.1",
     "commist": "^1.0.0",
     "dotenv": "^8.2.0",
-    "fastify": "^3.0.0-rc.1",
+    "fastify": "^3.0.0-rc.4",
     "fastify-plugin": "^2.0.0",
     "generify": "^4.0.0",
     "help-me": "^1.1.0",
