@@ -10,12 +10,3 @@ module.exports = fp(async function (fastify, opts) {
     return 'hugs'
   })
 })
-
-// You can also use plugin with opts in fastify v2
-//
-// module.exports = fp(function (fastify, opts, next) {
-//   fastify.decorate('someSupport', function () {
-//     return 'hugs'
-//   })
-//   next()
-// })

@@ -144,7 +144,7 @@ function define (t) {
 
         const testGlob = pkg.scripts.test.split(' ')[1]
 
-        t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
+        t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()
       })
     })
@@ -167,7 +167,7 @@ function define (t) {
       t.equal(tsConfig.compilerOptions.baseUrl, '.')
       t.deepEqual(tsConfig.compilerOptions.paths['*'], ['node_modules/*'])
       t.deepEqual(tsConfig.include, [
-        'services/**/*.ts',
+        'routes/**/*.ts',
         'plugins/**/*.ts',
         'app.ts'
       ])

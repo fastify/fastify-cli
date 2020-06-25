@@ -3,25 +3,25 @@
 const { test } = require('tap')
 const { build } = require('../helper')
 
-test('example is loaded', async (t) => {
+test('default root route', async (t) => {
   const app = build(t)
 
   const res = await app.inject({
-    url: '/example'
+    url: '/'
   })
-  t.equal(res.payload, 'this is an example')
+  t.deepEqual(JSON.parse(res.payload), { root: true })
 })
 
-// You can also use plugin with opts in fastify v2
+// inject callback style:
 //
-// test('example is loaded', (t) => {
+// test('default root route', (t) => {
 //   t.plan(2)
 //   const app = build(t)
 //
 //   app.inject({
-//     url: '/example'
+//     url: '/'
 //   }, (err, res) => {
 //     t.error(err)
-//     t.equal(res.payload, 'this is an example')
+//     t.deepEqual(JSON.parse(res.payload), { root: true })
 //   })
 // })
