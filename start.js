@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const assert = require('assert')
 const path = require('path')
-
+const split = require('split2')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const isDocker = require('is-docker')
@@ -96,9 +96,9 @@ function runFastify (args, cb) {
   }
 
   if (opts.prettyLogs) {
-    const pinoColada = PinoColada()
-    options.logger.stream = pinoColada
-    pump(pinoColada, process.stdout, assert.ifError)
+    const stream = split(PinoColada())
+    options.logger.stream = stream
+    pump(stream, process.stdout, assert.ifError)
   }
 
   if (opts.debug) {
