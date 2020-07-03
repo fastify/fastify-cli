@@ -8,7 +8,7 @@ const printRoutes = require('../print-routes')
 
 const test = tap.test
 
-test('should print routes', t => {
+test('should print routes', async t => {
   t.plan(2)
 
   const spy = sinon.spy()
@@ -16,14 +16,15 @@ test('should print routes', t => {
     './log': spy
   })
 
-  command.printRoutes(['./examples/plugin.js'], (err, fastify) => {
-    if (err) t.error(err)
+  try {
+    const fastify = await command.printRoutes(['./examples/plugin.js'])
 
-    fastify.close(() => {
-      t.ok(spy.called)
-      t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
-    })
-  })
+    await fastify.close()
+    t.ok(spy.called)
+    t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
+  } catch (err) {
+    t.error(err)
+  }
 })
 
 test('should warn on file not found', t => {
@@ -82,7 +83,7 @@ test('should exit without error on help', t => {
   t.end()
 })
 
-test('should print routes of server with an async/await plugin', t => {
+test('should print routes of server with an async/await plugin', async t => {
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   if (nodeMajorVersion < 7) {
     t.pass('Skip because Node version < 7')
@@ -96,13 +97,14 @@ test('should print routes of server with an async/await plugin', t => {
     './log': spy
   })
 
-  const argv = ['./examples/async-await-plugin.js']
-  command.printRoutes(argv, (err, fastify) => {
-    if (err) t.error(err)
+  try {
+    const argv = ['./examples/async-await-plugin.js']
+    const fastify = await command.printRoutes(argv)
 
-    fastify.close(() => {
-      t.ok(spy.called)
-      t.ok(spy.calledWithMatch('debug', '└── / (GET)\n'))
-    })
-  })
+    await fastify.close()
+    t.ok(spy.called)
+    t.ok(spy.calledWithMatch('debug', '└── / (GET)\n'))
+  } catch (err) {
+    if (err) t.error(err)
+  }
 })
