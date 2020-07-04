@@ -564,44 +564,42 @@ test('crash on unhandled rejection', t => {
   })
 })
 
-if (!process.version.match(/v[0-6]\..*/g)) {
-  test('should start the server with inspect options and the defalut port is 9320', async t => {
-    t.plan(3)
+test('should start the server with inspect options and the defalut port is 9320', async t => {
+  t.plan(3)
 
-    const start = proxyquire('../start', {
-      inspector: {
-        open (p) {
-          t.strictEqual(p, 9320)
-          t.pass('inspect open called')
-        }
+  const start = proxyquire('../start', {
+    inspector: {
+      open (p) {
+        t.strictEqual(p, 9320)
+        t.pass('inspect open called')
       }
-    })
-    const argv = ['--d', './examples/plugin.js']
-    const fastify = await start.start(argv)
-
-    await fastify.close()
-    t.pass('server closed')
+    }
   })
+  const argv = ['--d', './examples/plugin.js']
+  const fastify = await start.start(argv)
 
-  test('should start the server with inspect options and use the exactly port', async t => {
-    t.plan(3)
+  await fastify.close()
+  t.pass('server closed')
+})
 
-    const port = getPort()
-    const start = proxyquire('../start', {
-      inspector: {
-        open (p) {
-          t.strictEqual(p, Number(port))
-          t.pass('inspect open called')
-        }
+test('should start the server with inspect options and use the exactly port', async t => {
+  t.plan(3)
+
+  const port = getPort()
+  const start = proxyquire('../start', {
+    inspector: {
+      open (p) {
+        t.strictEqual(p, Number(port))
+        t.pass('inspect open called')
       }
-    })
-    const argv = ['--d', '--debug-port', port, './examples/plugin.js']
-    const fastify = await start.start(argv)
-
-    await fastify.close()
-    t.pass('server closed')
+    }
   })
-}
+  const argv = ['--d', '--debug-port', port, './examples/plugin.js']
+  const fastify = await start.start(argv)
+
+  await fastify.close()
+  t.pass('server closed')
+})
 
 test('boolean env are not overridden if no arguments are passed', async t => {
   t.plan(1)

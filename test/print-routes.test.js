@@ -15,16 +15,11 @@ test('should print routes', async t => {
   const command = proxyquire('../print-routes', {
     './log': spy
   })
+  const fastify = await command.printRoutes(['./examples/plugin.js'])
 
-  try {
-    const fastify = await command.printRoutes(['./examples/plugin.js'])
-
-    await fastify.close()
-    t.ok(spy.called)
-    t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
-  } catch (err) {
-    t.error(err)
-  }
+  await fastify.close()
+  t.ok(spy.called)
+  t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
 })
 
 test('should warn on file not found', t => {
@@ -96,15 +91,10 @@ test('should print routes of server with an async/await plugin', async t => {
   const command = proxyquire('../print-routes', {
     './log': spy
   })
+  const argv = ['./examples/async-await-plugin.js']
+  const fastify = await command.printRoutes(argv)
 
-  try {
-    const argv = ['./examples/async-await-plugin.js']
-    const fastify = await command.printRoutes(argv)
-
-    await fastify.close()
-    t.ok(spy.called)
-    t.ok(spy.calledWithMatch('debug', '└── / (GET)\n'))
-  } catch (err) {
-    if (err) t.error(err)
-  }
+  await fastify.close()
+  t.ok(spy.called)
+  t.ok(spy.calledWithMatch('debug', '└── / (GET)\n'))
 })
