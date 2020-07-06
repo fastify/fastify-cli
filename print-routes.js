@@ -4,7 +4,6 @@
 
 require('dotenv').config()
 
-const assert = require('assert')
 const parseArgs = require('./args')
 const log = require('./log')
 const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
@@ -19,7 +18,7 @@ function loadModules (opts) {
   }
 }
 
-function printRoutes (args, cb) {
+function printRoutes (args) {
   const opts = parseArgs(args)
   if (opts.help) {
     return showHelpForCommand('print-routes')
@@ -35,12 +34,10 @@ function printRoutes (args, cb) {
 
   loadModules(opts)
 
-  return runFastify(opts, cb)
+  return runFastify(opts)
 }
 
-function runFastify (opts, cb) {
-  cb = cb || assert.ifError
-
+async function runFastify (opts) {
   let file = null
 
   try {
@@ -56,17 +53,9 @@ function runFastify (opts, cb) {
     pluginOptions.prefix = opts.prefix
   }
 
-  fastify
-    .register(file, pluginOptions)
-    .ready((err) => {
-      if (err) {
-        return cb(err, fastify)
-      }
-
-      log('debug', fastify.printRoutes())
-
-      cb(null, fastify)
-    })
+  await fastify.register(file, pluginOptions)
+  await fastify.ready()
+  log('debug', fastify.printRoutes())
 
   return fastify
 }

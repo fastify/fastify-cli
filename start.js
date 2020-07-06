@@ -27,7 +27,7 @@ function loadModules (opts) {
   }
 }
 
-function start (args, cb) {
+async function start (args) {
   const opts = parseArgs(args)
   if (opts.help) {
     return showHelpForCommand('start')
@@ -47,17 +47,16 @@ function start (args, cb) {
     return watch(args, opts.ignoreWatch)
   }
 
-  return runFastify(args, cb)
+  return runFastify(args)
 }
 
 function stop (message) {
   exit(message)
 }
 
-function runFastify (args, cb) {
+async function runFastify (args) {
   const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
-  cb = cb || assert.ifError
 
   loadModules(opts)
 
@@ -115,20 +114,16 @@ function runFastify (args, cb) {
     opts.pluginOptions.prefix = opts.prefix
   }
 
-  fastify.register(file.default || file, opts.pluginOptions)
+  await fastify.register(file.default || file, opts.pluginOptions)
 
   if (opts.address) {
-    fastify.listen(opts.port, opts.address, wrap)
+    await fastify.listen(opts.port, opts.address)
   } else if (opts.socket) {
-    fastify.listen(opts.socket, wrap)
+    await fastify.listen(opts.socket)
   } else if (isDocker()) {
-    fastify.listen(opts.port, listenAddressDocker, wrap)
+    await fastify.listen(opts.port, listenAddressDocker)
   } else {
-    fastify.listen(opts.port, wrap)
-  }
-
-  function wrap (err) {
-    cb(err, fastify)
+    await fastify.listen(opts.port)
   }
 
   return fastify

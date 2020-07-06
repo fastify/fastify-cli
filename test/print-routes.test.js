@@ -8,22 +8,18 @@ const printRoutes = require('../print-routes')
 
 const test = tap.test
 
-test('should print routes', t => {
+test('should print routes', async t => {
   t.plan(2)
 
   const spy = sinon.spy()
   const command = proxyquire('../print-routes', {
     './log': spy
   })
+  const fastify = await command.printRoutes(['./examples/plugin.js'])
 
-  command.printRoutes(['./examples/plugin.js'], (err, fastify) => {
-    if (err) t.error(err)
-
-    fastify.close(() => {
-      t.ok(spy.called)
-      t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
-    })
-  })
+  await fastify.close()
+  t.ok(spy.called)
+  t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
 })
 
 test('should warn on file not found', t => {
@@ -82,7 +78,7 @@ test('should exit without error on help', t => {
   t.end()
 })
 
-test('should print routes of server with an async/await plugin', t => {
+test('should print routes of server with an async/await plugin', async t => {
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   if (nodeMajorVersion < 7) {
     t.pass('Skip because Node version < 7')
@@ -95,14 +91,10 @@ test('should print routes of server with an async/await plugin', t => {
   const command = proxyquire('../print-routes', {
     './log': spy
   })
-
   const argv = ['./examples/async-await-plugin.js']
-  command.printRoutes(argv, (err, fastify) => {
-    if (err) t.error(err)
+  const fastify = await command.printRoutes(argv)
 
-    fastify.close(() => {
-      t.ok(spy.called)
-      t.ok(spy.calledWithMatch('debug', '└── / (GET)\n'))
-    })
-  })
+  await fastify.close()
+  t.ok(spy.called)
+  t.ok(spy.calledWithMatch('debug', '└── / (GET)\n'))
 })
