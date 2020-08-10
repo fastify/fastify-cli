@@ -132,6 +132,7 @@ You can pass the following options via cli arguments, every options has the corr
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 
 The default value for `--plugin-timeout` is 10 seconds.
+By default `--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp' files.
 
 #### Fastify version discovery
 
