@@ -168,7 +168,7 @@ test('should respect default values', t => {
   t.is(parsedArgs.options, false)
   t.is(parsedArgs.prettyLogs, false)
   t.is(parsedArgs.watch, false)
-  t.is(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs')
+  t.is(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp')
   t.is(parsedArgs.logLevel, 'fatal')
   t.is(parsedArgs.pluginTimeout, 10000)
   t.is(parsedArgs.debug, false)
