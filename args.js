@@ -32,7 +32,7 @@ module.exports = function parseArgs (args) {
       watch: false,
       debug: false,
       debugPort: 9320,
-      'ignore-watch': 'node_modules build dist .git bower_components logs',
+      'ignore-watch': 'node_modules build dist .git bower_components logs .swp',
       options: false,
       'plugin-timeout': 10 * 1000, // everything should load in 10 seconds
       lang: 'js'
