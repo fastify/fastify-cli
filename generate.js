@@ -133,8 +133,7 @@ function cli (args) {
     log('error', 'must specify a directory to \'fastify generate\'')
     process.exit(1)
   }
-
-  if (existsSync(path.join(dir, 'package.json'))) {
+  if (!opts.integrate && existsSync(path.join(dir, 'package.json'))) {
     log('error', 'a package.json file already exists in target directory')
     process.exit(1)
   }
