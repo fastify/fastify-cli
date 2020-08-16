@@ -530,7 +530,7 @@ test('should start the server with watch options that the child process restart 
   const tmpjs = path.resolve(baseFilename + '.js')
 
   await writeFile(tmpjs, 'hello world')
-  const argv = ['-p', '3042', '-w', './examples/plugin.js']
+  const argv = ['-p', '4042', '-w', './examples/plugin.js']
   const fastifyEmitter = await start.start(argv)
 
   t.tearDown(() => {
