@@ -7,9 +7,11 @@ process.env.TAP_BAIL = true
 const t = require('tap')
 const {
   readFileSync,
-  readFile
+  readFile,
+  unlink
 } = require('fs')
 const path = require('path')
+const { promisify } = require('util')
 const rimraf = require('rimraf')
 const mkdirp = require('mkdirp')
 const walker = require('walker')
@@ -18,6 +20,8 @@ const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'app')
 const cliPkg = require('../package')
 const { exec } = require('child_process')
+const pExec = promisify(exec)
+const pUnlink = promisify(unlink)
 const minimatch = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
@@ -79,7 +83,7 @@ function define (t) {
     })
   })
 
-  test('errors if package.json exists when use generate .', (t) => {
+  test('errors if package.json exists when use generate . and integrate flag is not set', (t) => {
     t.plan(2)
     exec('node generate.js .', (err, stdout) => {
       t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
@@ -87,7 +91,7 @@ function define (t) {
     })
   })
 
-  test('errors if package.json exists when use generate ./', (t) => {
+  test('errors if package.json exists when use generate ./ and integrate flag is not set', (t) => {
     t.plan(2)
     exec('node generate.js ./', (err, stdout) => {
       t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
@@ -107,6 +111,20 @@ function define (t) {
     t.plan(13 + Object.keys(expected).length)
     try {
       await generate(workdir, javascriptTemplate)
+      await verifyPkg(t)
+      await verifyCopy(t, expected)
+    } catch (err) {
+      t.error(err)
+    }
+  })
+
+  test('--integrate option will enhance preexisting package.json and overwrite preexisting files', async (t) => {
+    t.plan(13 + Object.keys(expected).length)
+    try {
+      await generate(workdir, javascriptTemplate)
+      await pUnlink(path.join(workdir, 'package.json'))
+      await pExec('npm init -y', { cwd: workdir })
+      await pExec('node ../../generate . --integrate', { cwd: workdir })
       await verifyPkg(t)
       await verifyCopy(t, expected)
     } catch (err) {

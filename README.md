@@ -202,6 +202,17 @@ You will find three different folders:
 Finally there will be an `app.js` file, which is your entry point.
 It is a standard Fastify plugin and you will not need to add the `listen` method to run the server, just run it with one of the scripts above.
 
+Normally if the target directory exists generate will fail. Unless the target directory is `.`, as in the current directory.
+
+If the target directory is the current directory (`.`) and it already contains a `package.json` file, generate will normally fail. This can 
+be overidden with the `--integrate` flag: 
+
+`fastify generate . --integrate`
+
+This will add or alter the `main`, `scripts`, `dependencies` and `devDependencies` fields on the `package.json`. In cases of file name collisions
+for any files being added, the file will be overwritten with the new file added by generate. So if there is an existing `app.js` in this scenario,
+it will be overwritten. Use the `--integrate` flag with care. 
+
 ### readme
 
 `fastify-cli` can also help with generating a concise and informative readme for your plugin. If no `package.json` was provided a new one is generated automatically.
