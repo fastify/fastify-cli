@@ -65,8 +65,8 @@ function stop (message) {
 }
 
 function cli (args) {
-  printRoutes(args).then(fastify => {
-    if (fastify) fastify.close()
+  return printRoutes(args).then(fastify => {
+    if (fastify) return fastify.close()
   })
 }
 
