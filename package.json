@@ -8,8 +8,9 @@
   },
   "scripts": {
     "lint": "standard",
-    "unit": "tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts",
-    "test": "npm run lint && npm run unit"
+    "unit": "tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts templates/plugin/test/*.test.js",
+    "test": "npm run lint && npm run unit && npm run typescript",
+    "typescript": "tsd templates/plugin"
   },
   "keywords": [
     "fastify",
@@ -79,5 +80,8 @@
     "tsd": "^0.13.1",
     "typescript": "^4.0.2",
     "walker": "^1.0.7"
+  },
+  "tsd": {
+    "directory": "test"
   }
 }
