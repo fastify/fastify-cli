@@ -1,0 +1,4 @@
+esm: false
+jsx: false
+jobs: 1
+reporter: terse
