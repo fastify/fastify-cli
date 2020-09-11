@@ -204,14 +204,28 @@ It is a standard Fastify plugin and you will not need to add the `listen` method
 
 Normally if the target directory exists generate will fail. Unless the target directory is `.`, as in the current directory.
 
-If the target directory is the current directory (`.`) and it already contains a `package.json` file, generate will normally fail. This can 
-be overidden with the `--integrate` flag: 
+If the target directory is the current directory (`.`) and it already contains a `package.json` file, generate will normally fail. This can
+be overidden with the `--integrate` flag:
 
 `fastify generate . --integrate`
 
 This will add or alter the `main`, `scripts`, `dependencies` and `devDependencies` fields on the `package.json`. In cases of file name collisions
 for any files being added, the file will be overwritten with the new file added by generate. So if there is an existing `app.js` in this scenario,
-it will be overwritten. Use the `--integrate` flag with care. 
+it will be overwritten. Use the `--integrate` flag with care.
+
+### generate-plugin
+
+`fastify-cli` can help you improve your plugin development by generating a scaffolding project:
+
+1. `fastify generate <yourplugin>`
+2. `cd yourplugin`
+3. `npm install`
+
+Your boilerplate will provide you some useful npm scripts:
+* `npm unit`: runs all unit tests
+* `npm lint`: to check your project's code style
+* `npm typescript`: runs types tests
+* `npm test`: runs all the checks at once
 
 ### readme
 
