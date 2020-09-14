@@ -73,7 +73,7 @@ function define (t) {
 
   test('errors if generate doesn\'t have <folder> arguments', (t) => {
     t.plan(2)
-    exec('node generate-plugin.js --plugin', (err, stdout) => {
+    exec('node generate-plugin.js', (err, stdout) => {
       t.is('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
@@ -81,7 +81,7 @@ function define (t) {
 
   test('errors if package.json exists when use generate .', (t) => {
     t.plan(2)
-    exec('node generate-plugin.js . --plugin', (err, stdout) => {
+    exec('node generate-plugin.js .', (err, stdout) => {
       t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
@@ -89,7 +89,7 @@ function define (t) {
 
   test('errors if package.json exists when use generate ./', (t) => {
     t.plan(2)
-    exec('node generate-plugin.js ./ --plugin', (err, stdout) => {
+    exec('node generate-plugin.js ./', (err, stdout) => {
       t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
@@ -97,14 +97,14 @@ function define (t) {
 
   test('errors if folder exists', (t) => {
     t.plan(2)
-    exec('node generate-plugin.js test --plugin', (err, stdout) => {
+    exec('node generate-plugin.js test', (err, stdout) => {
       t.is('directory test already exists', strip(stdout.toString().trim()))
       t.is(1, err.code)
     })
   })
 
   test('should finish succesfully', async (t) => {
-    t.plan(20 + Object.keys(expected).length)
+    t.plan(21 + Object.keys(expected).length)
     try {
       await generate(workdir, pluginTemplate)
       await verifyPkg(t)
@@ -130,7 +130,8 @@ function define (t) {
         t.ok(pkg.license === 'MIT')
         t.equal(pkg.scripts.lint, 'standard && npm run lint:typescript')
         t.equal(pkg.scripts['lint:typescript'], 'standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin test/types/*.ts')
-        t.equal(pkg.scripts.typescript, 'tsd')
+        t.equal(pkg.scripts.test, 'npm run lint && npm run unit && npm run test:typescript')
+        t.equal(pkg.scripts['test:typescript'], 'tsd')
         t.equal(pkg.scripts.unit, 'tap test/**/*.test.js')
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])

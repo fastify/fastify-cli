@@ -2,9 +2,9 @@
 
 const {
   readFile,
-  writeFile,
-  existsSync
-} = require('fs')
+  writeFile
+} = require('fs').promises
+const { existsSync } = require('fs')
 const path = require('path')
 const chalk = require('chalk')
 const generify = require('generify')
@@ -20,8 +20,8 @@ const pluginTemplate = {
   scripts: {
     lint: 'standard && npm run lint:typescript',
     'lint:typescript': 'standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin test/types/*.ts',
-    test: 'npm run lint && npm run unit && npm run typescript',
-    typescript: 'tsd',
+    test: 'npm run lint && npm run unit && npm run test:typescript',
+    'test:typescript': 'tsd',
     unit: 'tap test/**/*.test.js'
   },
   dependencies: {
@@ -49,51 +49,51 @@ const pluginTemplate = {
 }
 
 async function generate (dir, template) {
-  return new Promise((resolve, reject) => {
-    generify(path.join(__dirname, 'templates', template.dir), dir, {}, function (file) {
-      log('debug', `generated ${file}`)
-    }, function (err) {
-      if (err) {
-        return reject(err)
-      }
+  try {
+    await generify(
+      path.join(__dirname, 'templates', template.dir),
+      dir,
+      {},
+      (file) => log('debug', `generated ${file}`)
+    )
+  } catch (err) {
+    throw new Error(err)
+  }
 
-      process.chdir(dir)
-      execSync('npm init -y')
+  process.chdir(dir)
+  execSync('npm init -y')
 
-      log('info', `reading package.json in ${dir}`)
-      readFile('package.json', (err, data) => {
-        if (err) {
-          return reject(err)
-        }
+  log('info', `reading package.json in ${dir}`)
+  let data
+  try {
+    data = await readFile('package.json')
+  } catch (err) {
+    throw new Error(err)
+  }
+  let pkg
+  try {
+    pkg = JSON.parse(data)
+  } catch (err) {
+    throw new Error(err)
+  }
 
-        var pkg
-        try {
-          pkg = JSON.parse(data)
-        } catch (err) {
-          return reject(err)
-        }
+  pkg.main = template.main
+  pkg.types = template.types
+  pkg.description = ''
+  pkg.license = 'MIT'
+  pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
+  pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
+  pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
+  pkg.tsd = Object.assign(pkg.tsd || {}, template.tsd)
 
-        pkg.main = template.main
-        pkg.types = template.types
-        pkg.description = ''
-        pkg.license = 'MIT'
-        pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
-        pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
-        pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
-        pkg.tsd = Object.assign(pkg.tsd || {}, template.tsd)
+  log('debug', 'edited package.json, saving')
+  try {
+    await writeFile('package.json', JSON.stringify(pkg, null, 2))
+  } catch (err) {
+    throw new Error(err)
+  }
 
-        log('debug', 'edited package.json, saving')
-        writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
-          if (err) {
-            return reject(err)
-          }
-
-          template.logInstructions(pkg)
-          resolve()
-        })
-      })
-    })
-  })
+  template.logInstructions(pkg)
 }
 
 function cli (args) {

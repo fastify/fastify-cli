@@ -222,9 +222,9 @@ it will be overwritten. Use the `--integrate` flag with care.
 3. `npm install`
 
 Your boilerplate will provide you some useful npm scripts:
-* `npm unit`: runs all unit tests
-* `npm lint`: to check your project's code style
-* `npm typescript`: runs types tests
+* `npm run unit`: runs all unit tests
+* `npm run lint`: to check your project's code style
+* `npm run test:typescript`: runs types tests
 * `npm test`: runs all the checks at once
 
 ### readme
