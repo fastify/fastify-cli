@@ -1,4 +1,4 @@
 esm: false
+ts: false
 jsx: false
-jobs: 1
-reporter: terse
+coverage: false
