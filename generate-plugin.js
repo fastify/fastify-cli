@@ -11,6 +11,7 @@ const generify = require('generify')
 const argv = require('yargs-parser')
 const cliPkg = require('./package')
 const { execSync } = require('child_process')
+const { promisify } = require('util')
 const log = require('./log')
 
 const pluginTemplate = {
@@ -49,17 +50,17 @@ const pluginTemplate = {
 }
 
 async function generate (dir, template) {
+  const generifyPromise = promisify(generify)
   try {
-    await generify(
+    const file = await generifyPromise(
       path.join(__dirname, 'templates', template.dir),
       dir,
-      {},
-      (file) => log('debug', `generated ${file}`)
+      {}
     )
+    log('debug', `generated ${file}`)
   } catch (err) {
     throw new Error(err)
   }
-
   process.chdir(dir)
   execSync('npm init -y')
 
