@@ -104,7 +104,7 @@ function define (t) {
   })
 
   test('should finish succesfully', async (t) => {
-    t.plan(21 + Object.keys(expected).length)
+    t.plan(19 + Object.keys(expected).length)
     try {
       await generate(workdir, pluginTemplate)
       await verifyPkg(t)
@@ -129,14 +129,12 @@ function define (t) {
         t.equal(pkg.description, '')
         t.ok(pkg.license === 'MIT')
         t.equal(pkg.scripts.lint, 'standard && npm run lint:typescript')
-        t.equal(pkg.scripts['lint:typescript'], 'standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin test/types/*.ts')
+        t.equal(pkg.scripts['lint:typescript'], 'ts-standard')
         t.equal(pkg.scripts.test, 'npm run lint && npm run unit && npm run test:typescript')
         t.equal(pkg.scripts['test:typescript'], 'tsd')
         t.equal(pkg.scripts.unit, 'tap test/**/*.test.js')
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
-        t.equal(pkg.devDependencies['@typescript-eslint/eslint-plugin'], cliPkg.devDependencies['@typescript-eslint/eslint-plugin'])
-        t.equal(pkg.devDependencies['@typescript-eslint/parser'], cliPkg.devDependencies['@typescript-eslint/parser'])
         t.equal(pkg.devDependencies.fastify, cliPkg.devDependencies.fastify)
         t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)

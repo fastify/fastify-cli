@@ -20,7 +20,7 @@ const pluginTemplate = {
   types: 'index.d.ts',
   scripts: {
     lint: 'standard && npm run lint:typescript',
-    'lint:typescript': 'standard --parser @typescript-eslint/parser --plugin @typescript-eslint/eslint-plugin test/types/*.ts',
+    'lint:typescript': 'ts-standard',
     test: 'npm run lint && npm run unit && npm run test:typescript',
     'test:typescript': 'tsd',
     unit: 'tap test/**/*.test.js'
@@ -30,11 +30,10 @@ const pluginTemplate = {
   },
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
-    '@typescript-eslint/eslint-plugin': cliPkg.devDependencies['@typescript-eslint/eslint-plugin'],
-    '@typescript-eslint/parser': cliPkg.devDependencies['@typescript-eslint/parser'],
     fastify: cliPkg.devDependencies.fastify,
     standard: cliPkg.devDependencies.standard,
     tap: cliPkg.devDependencies.tap,
+    'ts-standard': cliPkg.devDependencies['ts-standard'],
     tsd: cliPkg.devDependencies.tsd,
     typescript: cliPkg.devDependencies.typescript
   },
