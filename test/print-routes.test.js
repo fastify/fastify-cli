@@ -22,6 +22,19 @@ test('should print routes', async t => {
   t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
 })
 
+test('should print routes via cli', async t => {
+  t.plan(2)
+
+  const spy = sinon.spy()
+  const command = proxyquire('../print-routes', {
+    './log': spy
+  })
+  await command.cli(['./examples/plugin.js'])
+
+  t.ok(spy.called)
+  t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
+})
+
 test('should warn on file not found', t => {
   t.plan(1)
 

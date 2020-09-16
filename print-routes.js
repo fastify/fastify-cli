@@ -65,7 +65,9 @@ function stop (message) {
 }
 
 function cli (args) {
-  printRoutes(args).close()
+  return printRoutes(args).then(fastify => {
+    if (fastify) return fastify.close()
+  })
 }
 
 module.exports = { cli, stop, printRoutes }
