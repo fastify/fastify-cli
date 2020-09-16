@@ -44,7 +44,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'tap test/**/*.test.ts',
+    test: 'npm run build:ts && tsc -p test/tsconfig.test.json && tap test/**/*.test.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"'
@@ -57,6 +57,7 @@ const typescriptTemplate = {
   },
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
+    '@types/tap': cliPkg.devDependencies['@types/tap'],
     concurrently: cliPkg.devDependencies.concurrently,
     tap: cliPkg.devDependencies.tap,
     typescript: cliPkg.devDependencies.typescript
