@@ -23,8 +23,6 @@ const sinon = require('sinon')
 const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')
 
-const onGithubAction = !!process.env.GITHUB_ACTION
-
 let _port = 3001
 
 function getPort () {
@@ -524,7 +522,7 @@ test('should start the server listening on 0.0.0.0 when runing in docker', async
   t.pass('server closed')
 })
 
-test('should start the server with watch options that the child process restart when directory changed', { skip: onGithubAction }, async (t) => {
+test('should start the server with watch options that the child process restart when directory changed', async (t) => {
   t.plan(4)
   const writeFile = util.promisify(fs.writeFile)
   const tmpjs = path.resolve(baseFilename + '.js')
