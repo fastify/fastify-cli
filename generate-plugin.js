@@ -31,6 +31,7 @@ const pluginTemplate = {
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
     fastify: cliPkg.devDependencies.fastify,
+    'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
     standard: cliPkg.devDependencies.standard,
     tap: cliPkg.devDependencies.tap,
     'ts-standard': cliPkg.devDependencies['ts-standard'],
@@ -50,33 +51,19 @@ const pluginTemplate = {
 
 async function generate (dir, template) {
   const generifyPromise = promisify(generify)
-  try {
-    const file = await generifyPromise(
-      path.join(__dirname, 'templates', template.dir),
-      dir,
-      {}
-    )
-    log('debug', `generated ${file}`)
-  } catch (err) {
-    throw new Error(err)
-  }
+  const file = await generifyPromise(
+    path.join(__dirname, 'templates', template.dir),
+    dir,
+    {}
+  )
+  log('debug', `generated ${file}`)
+
   process.chdir(dir)
   execSync('npm init -y')
 
   log('info', `reading package.json in ${dir}`)
-  let data
-  try {
-    data = await readFile('package.json')
-  } catch (err) {
-    throw new Error(err)
-  }
-  let pkg
-  try {
-    pkg = JSON.parse(data)
-  } catch (err) {
-    throw new Error(err)
-  }
 
+  const pkg = await readFile('package.json').then(JSON.parse)
   pkg.main = template.main
   pkg.types = template.types
   pkg.description = ''
@@ -87,11 +74,8 @@ async function generate (dir, template) {
   pkg.tsd = Object.assign(pkg.tsd || {}, template.tsd)
 
   log('debug', 'edited package.json, saving')
-  try {
-    await writeFile('package.json', JSON.stringify(pkg, null, 2))
-  } catch (err) {
-    throw new Error(err)
-  }
+
+  await writeFile('package.json', JSON.stringify(pkg, null, 2))
 
   template.logInstructions(pkg)
 }
