@@ -50,7 +50,6 @@
     "commist": "^1.0.0",
     "dotenv": "^8.2.0",
     "fastify": "^3.0.0",
-    "fastify-plugin": "^2.0.0",
     "generify": "^4.0.0",
     "help-me": "^1.1.0",
     "is-docker": "^2.0.0",
@@ -59,12 +58,14 @@
     "pump": "^3.0.0",
     "resolve-from": "^5.0.0",
     "split2": "^3.1.1",
-    "yargs-parser": "^19.0.1"
+    "yargs-parser": "^20.0.0"
   },
   "devDependencies": {
     "@types/node": "^14.0.18",
+    "@types/tap": "^14.10.0",
     "concurrently": "^5.1.0",
     "fastify-autoload": "^3.0.2",
+    "fastify-plugin": "^2.3.0",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.3",
     "pre-commit": "^1.2.2",

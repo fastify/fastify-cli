@@ -104,7 +104,7 @@ function define (t) {
   })
 
   test('should finish succesfully with typescript template', async (t) => {
-    t.plan(28 + Object.keys(expected).length)
+    t.plan(27 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -129,7 +129,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.equal(pkg.scripts.test, 'tap test/**/*.test.ts')
+        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.test.json && tap test/**/*.test.ts')
         t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts.dev, 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"')
@@ -142,7 +142,7 @@ function define (t) {
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
-        const testGlob = pkg.scripts.test.split(' ')[1]
+        const testGlob = pkg.scripts.test.split(' ')[9]
 
         t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()
@@ -160,17 +160,12 @@ function define (t) {
       t.equal(tsConfig.compilerOptions.module, 'commonjs')
       t.equal(tsConfig.compilerOptions.esModuleInterop, true)
       t.equal(tsConfig.compilerOptions.allowSyntheticDefaultImports, true)
-      t.equal(tsConfig.compilerOptions.target, 'es6')
+      t.equal(tsConfig.compilerOptions.target, 'ES2018')
       t.equal(tsConfig.compilerOptions.moduleResolution, 'node')
       t.equal(tsConfig.compilerOptions.sourceMap, true)
       t.equal(tsConfig.compilerOptions.outDir, 'dist')
       t.equal(tsConfig.compilerOptions.baseUrl, '.')
-      t.deepEqual(tsConfig.compilerOptions.paths['*'], ['node_modules/*'])
-      t.deepEqual(tsConfig.include, [
-        'routes/**/*.ts',
-        'plugins/**/*.ts',
-        'app.ts'
-      ])
+      t.deepEqual(tsConfig.include, ['src/**/*.ts'])
     })
   }
 
