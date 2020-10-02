@@ -1,14 +1,7 @@
 {
+    "extends": "fastify-tsconfig",
     "compilerOptions": {
-        "target": "ES2018",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "strict": true,
-        "sourceMap": true,
-        "outDir": "dist",
-        "baseUrl": "."
+        "outDir": "dist"
     },
     "include": ["src/**/*.ts"]
 }

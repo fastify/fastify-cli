@@ -104,7 +104,7 @@ function define (t) {
   })
 
   test('should finish succesfully with typescript template', async (t) => {
-    t.plan(27 + Object.keys(expected).length)
+    t.plan(21 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -157,14 +157,8 @@ function define (t) {
       t.error(err)
       const tsConfig = JSON.parse(data)
 
-      t.equal(tsConfig.compilerOptions.module, 'commonjs')
-      t.equal(tsConfig.compilerOptions.esModuleInterop, true)
-      t.equal(tsConfig.compilerOptions.allowSyntheticDefaultImports, true)
-      t.equal(tsConfig.compilerOptions.target, 'ES2018')
-      t.equal(tsConfig.compilerOptions.moduleResolution, 'node')
-      t.equal(tsConfig.compilerOptions.sourceMap, true)
+      t.equal(tsConfig.extends, 'fastify-tsconfig')
       t.equal(tsConfig.compilerOptions.outDir, 'dist')
-      t.equal(tsConfig.compilerOptions.baseUrl, '.')
       t.deepEqual(tsConfig.include, ['src/**/*.ts'])
     })
   }
