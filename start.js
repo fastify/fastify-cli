@@ -12,6 +12,7 @@ const pump = require('pump')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
+const tsWatch = require('./lib/watch/tsc-watcher')
 const parseArgs = require('./args')
 const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
 
@@ -19,7 +20,8 @@ let Fastify = null
 
 function loadModules (opts) {
   try {
-    const { module: fastifyModule } = requireFastifyForModule(opts._[0])
+    const app = opts._[0]
+    const { module: fastifyModule } = requireFastifyForModule(app)
 
     Fastify = fastifyModule
   } catch (e) {
@@ -29,6 +31,7 @@ function loadModules (opts) {
 
 async function start (args) {
   const opts = parseArgs(args)
+
   if (opts.help) {
     return showHelpForCommand('start')
   }
@@ -40,6 +43,10 @@ async function start (args) {
 
   // we start crashing on unhandledRejection
   require('make-promises-safe')
+
+  if (path.extname(opts._[0]) === '.ts') {
+    return tsWatch(args, opts)
+  }
 
   loadModules(opts)
 

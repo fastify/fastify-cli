@@ -1,0 +1,10 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "dist"
+  },
+  "include": [
+    "test/fixtures/**/*.ts"
+  ]
+}
