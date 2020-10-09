@@ -4,7 +4,9 @@ const util = require('util')
 const { once } = require('events')
 const fs = require('fs')
 const crypto = require('crypto')
+const { resolve, join } = require('path')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
+const root = join(__dirname, '..')
 const t = require('tap')
 const test = t.test
 const { sgetOriginal } = require('./util')
@@ -18,11 +20,12 @@ test('should start the server with watch options and refresh app instance on dir
   const copyFile = util.promisify(fs.copyFile)
   const readFile = util.promisify(fs.readFile)
   const tmpts = baseFilename + '.ts'
+  const example = resolve(__dirname, join(root, 'examples', 'plugin.ts'))
 
-  await copyFile('examples/plugin.ts', tmpts)
+  await copyFile(example, tmpts)
   t.pass('plugin copied to fixture')
 
-  const argv = ['-p', '5001', '-w', '--tsconfig', 'tsconfig.tswatch.json', tmpts]
+  const argv = ['-p', '5001', '-w', '--tsconfig', join(root, 'tsconfig.tswatch.json'), tmpts]
   const fastifyEmitter = await start.start(argv)
 
   await once(fastifyEmitter, 'ready')

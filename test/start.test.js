@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
+const root = path.join(__dirname, '..')
 const { fork } = require('child_process')
 
 const t = require('tap')
@@ -24,14 +25,10 @@ function getPort () {
   return '' + _port++
 }
 
-// FIXME
-// paths are relative to the root of the project
-// this can be run only from there
-
 test('should start the server', async t => {
   t.plan(4)
 
-  const argv = ['-p', getPort(), './examples/plugin.js']
+  const argv = ['-p', getPort(), path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -49,7 +46,7 @@ test('should start the server', async t => {
 test('should start the server with a typescript compiled module', async t => {
   t.plan(4)
 
-  const argv = ['-p', getPort(), './examples/ts-plugin.js']
+  const argv = ['-p', getPort(), path.join(root, 'examples/ts-plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -67,7 +64,7 @@ test('should start the server with a typescript compiled module', async t => {
 test('should start the server with pretty output', async t => {
   t.plan(4)
 
-  const argv = ['-p', getPort(), '-P', './examples/plugin.js']
+  const argv = ['-p', getPort(), '-P', path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -87,7 +84,7 @@ test('should start fastify with custom options', async t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    const argv = ['-p', getPort(), '-o', 'true', './examples/plugin-with-options.js']
+    const argv = ['-p', getPort(), '-o', 'true', path.join(root, 'examples/plugin-with-options.js')]
     const fastify = await start.start(argv)
     await fastify.close()
     t.pass('server closed')
@@ -102,7 +99,7 @@ test('should start fastify with custom plugin options', async t => {
   const argv = [
     '-p',
     getPort(),
-    './examples/plugin-with-custom-options.js',
+    path.join(root, 'examples/plugin-with-custom-options.js'),
     '--',
     '-abc',
     '--hello',
@@ -133,7 +130,7 @@ test('should start fastify with custom options with a typescript compiled plugin
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    const argv = ['-p', getPort(), '-o', 'true', './examples/ts-plugin-with-options.js']
+    const argv = ['-p', getPort(), '-o', 'true', path.join(root, 'examples/ts-plugin-with-options.js')]
     await start.start(argv)
     t.fail('Custom options')
   } catch (e) {
@@ -147,7 +144,7 @@ test('should start fastify with custom plugin options with a typescript compiled
   const argv = [
     '-p',
     getPort(),
-    './examples/ts-plugin-with-custom-options.js',
+    path.join(root, 'examples/ts-plugin-with-custom-options.js'),
     '--',
     '-abc',
     '--hello',
@@ -176,7 +173,7 @@ test('should start fastify with custom plugin options with a typescript compiled
 test('should start the server at the given prefix', async t => {
   t.plan(4)
 
-  const argv = ['-p', getPort(), '-r', '/api/hello', './examples/plugin.js']
+  const argv = ['-p', getPort(), '-r', '/api/hello', path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -201,7 +198,7 @@ test('should start fastify at given socket path', { skip: process.platform === '
       fs.unlinkSync(sockFile)
     } catch (e) { }
   })
-  const argv = ['-s', sockFile, '-o', 'true', './examples/plugin.js']
+  const argv = ['-s', sockFile, '-o', 'true', path.join(root, 'examples/plugin.js')]
 
   try {
     fs.unlinkSync(sockFile)
@@ -230,16 +227,16 @@ test('should error with a good timeout value', async t => {
   const start = proxyquire('../start', {
     assert: {
       ifError (err) {
-        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}`)
+        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(root, 'test', 'data', 'timeout-plugin.js')}`)
       }
     }
   })
 
   try {
-    const argv = ['-p', '3040', '-T', '100', './test/data/timeout-plugin.js']
+    const argv = ['-p', '3040', '-T', '100', path.join(root, 'test', 'data/timeout-plugin.js')]
     await start.start(argv)
   } catch (err) {
-    t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}`)
+    t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(root, 'test', 'data', 'timeout-plugin.js')}`)
   }
 })
 
@@ -252,7 +249,7 @@ test('should warn on file not found', t => {
     t.ok(/.*not-found.js doesn't exist within/.test(message), message)
   }
 
-  const argv = ['-p', getPort(), './data/not-found.js']
+  const argv = ['-p', getPort(), path.join(root, 'test', 'data/not-found.js')]
   start.start(argv)
 })
 
@@ -265,7 +262,7 @@ test('should throw on package not found', t => {
     t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
   }
 
-  const argv = ['-p', getPort(), './test/data/package-not-found.js']
+  const argv = ['-p', getPort(), path.join(root, 'test', 'data/package-not-found.js')]
   start.start(argv)
 })
 
@@ -278,7 +275,7 @@ test('should throw on parsing error', t => {
     t.equal(err.constructor, SyntaxError)
   }
 
-  const argv = ['-p', getPort(), './test/data/parsing-error.js']
+  const argv = ['-p', getPort(), path.join(root, 'test', 'data/parsing-error.js')]
   start.start(argv)
 })
 
@@ -290,7 +287,7 @@ test('should start the server with an async/await plugin', async t => {
 
   t.plan(4)
 
-  const argv = ['-p', getPort(), './examples/async-await-plugin.js']
+  const argv = ['-p', getPort(), path.join(root, 'examples/async-await-plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -332,7 +329,7 @@ test('should throw the right error on require file', t => {
     t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
   }
 
-  const argv = ['-p', getPort(), './test/data/undefinedVariable.js']
+  const argv = ['-p', getPort(), path.join(root, 'test', 'data/undefinedVariable.js')]
   start.start(argv)
 })
 
@@ -343,7 +340,7 @@ test('should respond 413 - Payload too large', async t => {
   const bodySmaller = '{1: 1}'
 
   const bodyLimitValue = '' + (bodyTooLarge.length + 2 - 1)
-  const argv = ['-p', getPort(), '--body-limit', bodyLimitValue, './examples/plugin.js']
+  const argv = ['-p', getPort(), '--body-limit', bodyLimitValue, path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response: responseFail } = await sget({
@@ -371,7 +368,7 @@ test('should start the server (using env var)', async t => {
   t.plan(4)
 
   process.env.FASTIFY_PORT = getPort()
-  const argv = ['./examples/plugin.js']
+  const argv = [path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -392,7 +389,7 @@ test('should start the server (using PORT-env var)', async t => {
   t.plan(4)
 
   process.env.PORT = getPort()
-  const argv = ['./examples/plugin.js']
+  const argv = [path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -414,7 +411,7 @@ test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', 
 
   process.env.FASTIFY_PORT = getPort()
   process.env.PORT = getPort()
-  const argv = ['./examples/plugin.js']
+  const argv = [path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -438,7 +435,7 @@ test('should start the server (using -p preceding FASTIFY_PORT-env var)', async 
 
   const port = getPort()
   process.env.FASTIFY_PORT = getPort()
-  const argv = ['-p', port, './examples/plugin.js']
+  const argv = ['-p', port, path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -461,7 +458,7 @@ test('should start the server at the given prefix (using env var)', async t => {
 
   process.env.FASTIFY_PORT = getPort()
   process.env.FASTIFY_PREFIX = '/api/hello'
-  const argv = ['./examples/plugin.js']
+  const argv = [path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -490,7 +487,7 @@ test('should start the server at the given prefix (using env var read from doten
       }
     }
   })
-  const argv = ['./examples/plugin.js']
+  const argv = [path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
   t.strictEqual(fastify.server.address().port, 8080)
   delete process.env.FASTIFY_PORT
@@ -508,7 +505,7 @@ test('should start the server listening on 0.0.0.0 when runing in docker', async
     'is-docker': isDocker
   })
 
-  const argv = ['-p', getPort(), './examples/plugin.js']
+  const argv = ['-p', getPort(), path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   t.strictEqual(fastify.server.address().address, '0.0.0.0')
@@ -523,7 +520,7 @@ test('should start the server with watch options that the child process restart 
   const tmpjs = path.resolve(baseFilename + '.js')
 
   await writeFile(tmpjs, 'hello world')
-  const argv = ['-p', '4042', '-w', './examples/plugin.js']
+  const argv = ['-p', '4042', '-w', path.join(root, 'examples/plugin.js')]
   const fastifyEmitter = await start.start(argv)
 
   t.tearDown(() => {
@@ -550,7 +547,7 @@ test('should start the server with watch options that the child process restart 
 test('crash on unhandled rejection', t => {
   t.plan(1)
 
-  const argv = ['-p', getPort(), './test/data/rejection.js']
+  const argv = ['-p', getPort(), path.join(root, 'test', 'data/rejection.js')]
   const child = fork(path.join(__dirname, '..', 'start.js'), argv, { silent: true })
   child.on('close', function (code) {
     t.strictEqual(code, 1)
@@ -568,7 +565,7 @@ test('should start the server with inspect options and the defalut port is 9320'
       }
     }
   })
-  const argv = ['--d', './examples/plugin.js']
+  const argv = ['--d', path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   await fastify.close()
@@ -587,7 +584,7 @@ test('should start the server with inspect options and use the exactly port', as
       }
     }
   })
-  const argv = ['--d', '--debug-port', port, './examples/plugin.js']
+  const argv = ['--d', '--debug-port', port, path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   await fastify.close()
@@ -602,7 +599,7 @@ test('boolean env are not overridden if no arguments are passed', async t => {
   // here the test should fail because of the wrong certificate
   // or because the server is booted without the custom options
   try {
-    const argv = ['./examples/plugin-with-options.js']
+    const argv = [path.join(root, 'examples/plugin-with-options.js')]
     await start.start(argv)
     t.fail('Custom options')
   } catch (e) {
@@ -613,7 +610,7 @@ test('boolean env are not overridden if no arguments are passed', async t => {
 test('should support custom logger configuration', async t => {
   t.plan(2)
 
-  const argv = ['-L', './test/data/custom-logger.js', './examples/plugin.js']
+  const argv = ['-L', path.join(root, 'test', 'data/custom-logger.js'), path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
   t.ok(fastify.log.test)
 
@@ -630,7 +627,7 @@ test('should throw on logger configuration module not found', async t => {
     t.ok(/Cannot find module/.test(err.message), err.message)
   }
 
-  const argv = ['-L', './test/data/missing.js', './examples/plugin.js']
+  const argv = ['-L', path.join(root, 'test', 'data/missing.js'), path.join(root, 'examples/plugin.js')]
   const fastify = await start.start(argv)
 
   await fastify.close()
