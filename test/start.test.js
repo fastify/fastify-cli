@@ -10,15 +10,8 @@ const { fork } = require('child_process')
 
 const t = require('tap')
 const test = t.test
-const sgetOriginal = require('simple-get').concat
-const sget = (opts, cb) => {
-  return new Promise((resolve, reject) => {
-    sgetOriginal(opts, (err, response, body) => {
-      if (err) return reject(err)
-      return resolve({ response, body })
-    })
-  })
-}
+const { sgetOriginal } = require('./util')
+const sget = util.promisify(sgetOriginal)
 const sinon = require('sinon')
 const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')

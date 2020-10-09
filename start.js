@@ -12,7 +12,6 @@ const pump = require('pump')
 const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
-const tsWatch = require('./lib/watch/tsc-watcher')
 const parseArgs = require('./args')
 const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
 
@@ -45,7 +44,7 @@ async function start (args) {
   require('make-promises-safe')
 
   if (path.extname(opts._[0]) === '.ts') {
-    return tsWatch(args, opts)
+    return require('./lib/watch/tsc-watcher')(args, opts)
   }
 
   loadModules(opts)

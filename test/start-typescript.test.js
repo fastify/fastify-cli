@@ -5,23 +5,11 @@ const { once } = require('events')
 const fs = require('fs')
 const crypto = require('crypto')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
-
 const t = require('tap')
 const test = t.test
-const sgetOriginal = require('simple-get').concat
-const sget = (opts, cb) => {
-  return new Promise((resolve, reject) => {
-    sgetOriginal(opts, (err, response, body) => {
-      if (err) return reject(err)
-      return resolve({ response, body })
-    })
-  })
-}
+const { sgetOriginal } = require('./util')
+const sget = util.promisify(sgetOriginal)
 const start = require('../start')
-
-// FIXME
-// paths are relative to the root of the project
-// this can be run only from there
 
 test('should start the server with watch options and refresh app instance on directory change', async (t) => {
   t.plan(5)
