@@ -9,7 +9,7 @@ module.exports = function parseArgs (args) {
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
     boolean: ['pretty-logs', 'options', 'watch', 'debug'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'tsconfig'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -35,7 +35,8 @@ module.exports = function parseArgs (args) {
       'ignore-watch': 'node_modules build dist .git bower_components logs .swp',
       options: false,
       'plugin-timeout': 10 * 1000, // everything should load in 10 seconds
-      lang: 'js'
+      lang: 'js',
+      tsconfig: 'tsconfig.json'
     }
   })
 
@@ -61,6 +62,7 @@ module.exports = function parseArgs (args) {
     socket: parsedArgs.socket,
     prefix: parsedArgs.prefix,
     loggingModule: parsedArgs.loggingModule,
-    lang: parsedArgs.lang
+    lang: parsedArgs.lang,
+    tsconfig: parsedArgs.tsconfig
   }
 }

@@ -44,7 +44,8 @@ test('should parse args correctly', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    tsconfig: 'tsconfig.json'
   })
 })
 
@@ -90,7 +91,8 @@ test('should parse args with = assignment correctly', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    tsconfig: 'tsconfig.json'
   })
 })
 
@@ -151,7 +153,8 @@ test('should parse env vars correctly', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    tsconfig: 'tsconfig.json'
   })
 })
 
@@ -230,6 +233,7 @@ test('should parse custom plugin options', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    tsconfig: 'tsconfig.json'
   })
 })
