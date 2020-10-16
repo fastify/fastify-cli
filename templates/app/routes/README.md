@@ -23,4 +23,5 @@ If you need to share functionality between services, place that
 functionality into the `plugins` folder, and share it via
 [decorators](https://www.fastify.io/docs/latest/Decorators/).
 
-If you're a bit confused about using `async/await` to write services, you would better take a look at [Promise resolution](https://github.com/fastify/fastify/blob/master/docs/Routes.md#promise-resolution) for more details.
+If you're a bit confused about using `async/await` to write services, you would
+better take a look at [Promise resolution](https://www.fastify.io/docs/latest/Routes/#promise-resolution) for more details.
