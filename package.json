@@ -65,7 +65,7 @@
     "@types/tap": "^14.10.0",
     "concurrently": "^5.1.0",
     "fastify-autoload": "^3.0.2",
-    "fastify-plugin": "^2.3.0",
+    "fastify-plugin": "^3.0.0",
     "fastify-tsconfig": "^1.0.0",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.3",
