@@ -1,0 +1,13 @@
+{
+    "exclude": ["node_modules", "dist", "lib"],
+    "compilerOptions": {
+        "lib": ["es2019"],
+        "target": "es2019",
+        "module": "commonjs",
+        "rootDir": ".",
+        "outDir": "lib",
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "moduleResolution": "node"
+    }
+}

@@ -51,8 +51,9 @@ test.sock
 
 # test artifacts
 test/workdir
-test/fixtures/*.js
-test/fixtures/*.ts
+test/fixtures/**/*.js
+test/fixtures/**/*.ts
+test/fixtures/**/*.json
 .vscode/launch.json
 
 # ts compiled
