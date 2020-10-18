@@ -43,7 +43,7 @@ async function start (args) {
   // we start crashing on unhandledRejection
   require('make-promises-safe')
 
-  if (path.extname(opts._[0]) === '.ts' && opts.watch) {
+  if (path.extname(opts._[0]) === '.ts' && opts.watch && opts.tsWatcher) {
     return require('./lib/watch/tsc-watcher')(args, opts)
   }
 

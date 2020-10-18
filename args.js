@@ -8,7 +8,7 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
-    boolean: ['pretty-logs', 'options', 'watch', 'debug'],
+    boolean: ['pretty-logs', 'options', 'watch', 'debug', 'ts-watcher'],
     string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'tsconfig'],
     envPrefix: 'FASTIFY_',
     alias: {
@@ -36,7 +36,8 @@ module.exports = function parseArgs (args) {
       options: false,
       'plugin-timeout': 10 * 1000, // everything should load in 10 seconds
       lang: 'js',
-      tsconfig: 'tsconfig.json'
+      tsconfig: 'tsconfig.json',
+      'ts-watcher': true
     }
   })
 
@@ -63,6 +64,7 @@ module.exports = function parseArgs (args) {
     prefix: parsedArgs.prefix,
     loggingModule: parsedArgs.loggingModule,
     lang: parsedArgs.lang,
-    tsconfig: parsedArgs.tsconfig
+    tsconfig: parsedArgs.tsconfig,
+    tsWatcher: parsedArgs.tsWatcher
   }
 }
