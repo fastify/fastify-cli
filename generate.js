@@ -47,7 +47,7 @@ const typescriptTemplate = {
     test: 'npm run build:ts && tsc -p test/tsconfig.test.json && tap test/**/*.test.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
-    dev: 'fastify start -w -l info -P src/app.ts'
+    dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"'
   },
   dependencies: {
     fastify: cliPkg.dependencies.fastify,
@@ -58,6 +58,7 @@ const typescriptTemplate = {
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
     '@types/tap': cliPkg.devDependencies['@types/tap'],
+    concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
     tap: cliPkg.devDependencies.tap,
     typescript: cliPkg.devDependencies.typescript

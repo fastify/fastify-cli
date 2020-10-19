@@ -2,7 +2,7 @@
     "extends": "fastify-tsconfig",
     "compilerOptions": {
       "esModuleInterop": true,
-      "outDir": "dist"
+      "noEmit": true
     },
     "include": [
         "routes/**/*.ts",

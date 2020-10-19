@@ -104,7 +104,7 @@ function define (t) {
   })
 
   test('should finish succesfully with typescript template', async (t) => {
-    t.plan(20 + Object.keys(expected).length)
+    t.plan(21 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -132,12 +132,13 @@ function define (t) {
         t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.test.json && tap test/**/*.test.ts')
         t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
-        t.equal(pkg.scripts.dev, 'fastify start -w -l info -P src/app.ts')
+        t.equal(pkg.scripts.dev, 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"')
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
         t.equal(pkg.dependencies.fastify, cliPkg.dependencies.fastify)
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
         t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
+        t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 

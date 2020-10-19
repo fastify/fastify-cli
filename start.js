@@ -19,8 +19,7 @@ let Fastify = null
 
 function loadModules (opts) {
   try {
-    const app = opts._[0]
-    const { module: fastifyModule } = requireFastifyForModule(app)
+    const { module: fastifyModule } = requireFastifyForModule(opts._[0])
 
     Fastify = fastifyModule
   } catch (e) {
@@ -30,7 +29,6 @@ function loadModules (opts) {
 
 async function start (args) {
   const opts = parseArgs(args)
-
   if (opts.help) {
     return showHelpForCommand('start')
   }
@@ -42,10 +40,6 @@ async function start (args) {
 
   // we start crashing on unhandledRejection
   require('make-promises-safe')
-
-  if (path.extname(opts._[0]) === '.ts') {
-    return require('./lib/watch/tsc-watcher')(args, opts)
-  }
 
   loadModules(opts)
 
