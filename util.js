@@ -40,7 +40,7 @@ function requireServerPluginFromPath (modulePath) {
   const serverPlugin = require(resolvedModulePath)
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
-    return new Error('Async/Await plugin function should contain 2 arguments.' +
+    throw new Error('Async/Await plugin function should contain 2 arguments. ' +
       'Refer to documentation for more information.')
   }
 
