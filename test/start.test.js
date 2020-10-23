@@ -643,3 +643,16 @@ test('should throw on logger configuration module not found', async t => {
   await fastify.close()
   t.pass('server closed')
 })
+
+test('should throw on async plugin with one argument', async t => {
+  t.plan(1)
+
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Async\/Await plugin function should contain 2 arguments./.test(err.message), err.message)
+  }
+
+  const argv = ['./test/data/async-plugin-with-one-argument.js']
+  start.start(argv)
+})
