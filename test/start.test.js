@@ -25,6 +25,8 @@ const start = require('../start')
 
 const onGithubAction = !!process.env.GITHUB_ACTION
 
+const hasESM = process.versions.node.split('.')[0] >= 14
+
 let _port = 3001
 
 function getPort () {
@@ -654,5 +656,37 @@ test('should throw on async plugin with one argument', async t => {
   }
 
   const argv = ['./test/data/async-plugin-with-one-argument.js']
-  start.start(argv)
+  await start.start(argv)
+})
+
+test('should start fastify with custom plugin options with a ESM typescript compiled plugin', { skip: !hasESM }, async t => {
+  t.plan(4)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/ts-plugin-with-custom-options.mjs',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.strictEqual(response.statusCode, 200)
+  t.strictEqual(response.headers['content-length'], '' + body.length)
+  t.deepEqual(JSON.parse(body), {
+    a: true,
+    b: true,
+    c: true,
+    hello: 'world'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
 })

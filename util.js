@@ -1,7 +1,10 @@
 const fs = require('fs')
 const path = require('path')
+const url = require('url')
 
 const resolveFrom = require('resolve-from')
+
+const hasESM = process.versions.node.split('.')[0] >= 14
 
 function exit (message) {
   if (message instanceof Error) {
@@ -30,14 +33,14 @@ function isInvalidAsyncPlugin (plugin) {
   return plugin.length !== 2 && plugin.constructor.name === 'AsyncFunction'
 }
 
-function requireServerPluginFromPath (modulePath) {
+async function requireServerPluginFromPath (modulePath) {
   const resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
   if (!fs.existsSync(resolvedModulePath)) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
-  const serverPlugin = require(resolvedModulePath)
+  const serverPlugin = hasESM ? (await import(url.pathToFileURL(resolvedModulePath).href)).default : require(resolvedModulePath)
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +

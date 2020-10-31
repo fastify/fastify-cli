@@ -109,6 +109,16 @@ module.exports = function (fastify, options, next) {
 $ fastify start plugin.js -- --one
 ```
 
+Modules in EcmaScript Module format can be used on Node.js >= 14.0.0
+```js
+// plugin.mjs
+const plugin = function (fastify, options, next) {
+  fastify.get('/', (req, reply) => reply.send(options))
+  next()
+}
+export default plugin
+```
+
 #### Options
 You can pass the following options via cli arguments, every options has the corresponding environment variable:
 
