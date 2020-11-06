@@ -5,8 +5,10 @@ const { once } = require('events')
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
+const semver = require('semver')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
 const { fork } = require('child_process')
+const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 const t = require('tap')
 const test = t.test
@@ -659,7 +661,7 @@ test('should throw on async plugin with one argument', async t => {
   await start.start(argv)
 })
 
-test('should start fastify with custom plugin options with a ESM typescript compiled plugin', { skip: !hasESM }, async t => {
+test('should start fastify with custom plugin options with a ESM typescript compiled plugin', { skip: !moduleSupport }, async t => {
   t.plan(4)
 
   const argv = [

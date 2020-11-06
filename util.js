@@ -1,10 +1,11 @@
 const fs = require('fs')
 const path = require('path')
 const url = require('url')
-
+const semver = require('semver')
 const resolveFrom = require('resolve-from')
 
-const hasESM = process.versions.node.split('.')[0] >= 14
+const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
+
 
 function exit (message) {
   if (message instanceof Error) {
@@ -40,7 +41,7 @@ async function requireServerPluginFromPath (modulePath) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
-  const serverPlugin = hasESM ? (await import(url.pathToFileURL(resolvedModulePath).href)).default : require(resolvedModulePath)
+  const serverPlugin = moduleSupport ? (await import(url.pathToFileURL(resolvedModulePath).href)).default : require(resolvedModulePath)
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +

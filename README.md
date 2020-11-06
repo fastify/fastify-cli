@@ -109,7 +109,7 @@ module.exports = function (fastify, options, next) {
 $ fastify start plugin.js -- --one
 ```
 
-Modules in EcmaScript Module format can be used on Node.js >= 14.0.0
+Modules in EcmaScript Module format can be used on Node.js >= 14 or >= 12.17.0 but < 13.0.0'
 ```js
 // plugin.mjs
 export default async function plugin (fastify, options) {
