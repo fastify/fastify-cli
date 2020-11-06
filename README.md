@@ -112,11 +112,11 @@ $ fastify start plugin.js -- --one
 Modules in EcmaScript Module format can be used on Node.js >= 14.0.0
 ```js
 // plugin.mjs
-const plugin = function (fastify, options, next) {
-  fastify.get('/', (req, reply) => reply.send(options))
-  next()
+export default async function plugin (fastify, options) {
+  fastify.get('/', async function (req, reply) {
+    return options
+  })
 }
-export default plugin
 ```
 
 #### Options
