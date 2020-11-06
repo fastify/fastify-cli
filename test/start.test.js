@@ -27,8 +27,6 @@ const start = require('../start')
 
 const onGithubAction = !!process.env.GITHUB_ACTION
 
-const hasESM = process.versions.node.split('.')[0] >= 14
-
 let _port = 3001
 
 function getPort () {
@@ -691,4 +689,19 @@ test('should start fastify with custom plugin options with a ESM typescript comp
 
   await fastify.close()
   t.pass('server closed')
+  t.end()
+})
+
+test('should throw an error when loading ESM typescript compiled plugin and ESM is not supported', { skip: moduleSupport }, async t => {
+  t.plan(1)
+
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Your version of node does not support ES modules./.test(err.message), err.message)
+  }
+
+  const argv = ['./examples/ts-plugin-with-custom-options.mjs']
+  await start.start(argv)
+  t.end()
 })

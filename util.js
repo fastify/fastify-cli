@@ -6,7 +6,6 @@ const resolveFrom = require('resolve-from')
 
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
-
 function exit (message) {
   if (message instanceof Error) {
     console.log(message)
@@ -41,7 +40,17 @@ async function requireServerPluginFromPath (modulePath) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
-  const serverPlugin = moduleSupport ? (await import(url.pathToFileURL(resolvedModulePath).href)).default : require(resolvedModulePath)
+  const modulePattern = /\.mjs$/i
+  let serverPlugin
+  if (modulePattern.test(modulePath)) {
+    if (moduleSupport) {
+      serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href)).default
+    } else {
+      throw new Error(`fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
+    }
+  } else {
+    serverPlugin = require(resolvedModulePath)
+  }
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +
