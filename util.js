@@ -41,6 +41,12 @@ async function getPackageType (cwd) {
   }
 }
 
+function getScriptType (fname, packageType) {
+  const modulePattern = /\.mjs$/i
+  const commonjsPattern = /\.cjs$/i
+  return (modulePattern.test(fname) ? 'module' : commonjsPattern.test(fname) ? 'commonjs' : packageType) || 'commonjs'
+}
+
 async function requireServerPluginFromPath (modulePath) {
   const resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
@@ -49,10 +55,10 @@ async function requireServerPluginFromPath (modulePath) {
   }
 
   const packageType = await getPackageType(resolvedModulePath)
-  console.log({ resolvedModulePath, packageType })
-  const modulePattern = /\.mjs$/i
+  const type = getScriptType(resolvedModulePath, packageType)
+
   let serverPlugin
-  if (modulePattern.test(modulePath) || (packageType === 'module')) {
+  if (type === 'module') {
     if (moduleSupport) {
       serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href)).default
     } else {

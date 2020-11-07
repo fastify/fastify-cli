@@ -712,7 +712,40 @@ test('should start fastify with custom plugin options with a ESM plugin with pac
   const argv = [
     '-p',
     getPort(),
-    './examples/ESM-plugin-as-js/ESM-plugin-with-custom-options.js',
+    './examples/package-type-module/ESM-plugin-with-custom-options.js',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.strictEqual(response.statusCode, 200)
+  t.strictEqual(response.headers['content-length'], '' + body.length)
+  t.deepEqual(JSON.parse(body), {
+    a: true,
+    b: true,
+    c: true,
+    hello: 'world'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
+})
+
+test('should start fastify with custom plugin options with a CJS plugin with package.json "type":"module"', { skip: !moduleSupport }, async t => {
+  t.plan(4)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/package-type-module/CJS-plugin-with-custom-options.cjs',
     '--',
     '-abc',
     '--hello',
