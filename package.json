@@ -55,6 +55,7 @@
     "is-docker": "^2.0.0",
     "make-promises-safe": "^5.0.0",
     "pino-colada": "^2.0.1",
+    "pkg-up": "^3.1.0",
     "pump": "^3.0.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.2",

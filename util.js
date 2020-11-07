@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const url = require('url')
 const semver = require('semver')
+const pkgUp = require('pkg-up')
 const resolveFrom = require('resolve-from')
 
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
@@ -33,6 +34,13 @@ function isInvalidAsyncPlugin (plugin) {
   return plugin.length !== 2 && plugin.constructor.name === 'AsyncFunction'
 }
 
+async function getPackageType (cwd) {
+  const nearestPackage = await pkgUp({ cwd })
+  if (nearestPackage) {
+    return require(nearestPackage).type
+  }
+}
+
 async function requireServerPluginFromPath (modulePath) {
   const resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
@@ -40,9 +48,11 @@ async function requireServerPluginFromPath (modulePath) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
+  const packageType = await getPackageType(resolvedModulePath)
+  console.log({ resolvedModulePath, packageType })
   const modulePattern = /\.mjs$/i
   let serverPlugin
-  if (modulePattern.test(modulePath)) {
+  if (modulePattern.test(modulePath) || (packageType === 'module')) {
     if (moduleSupport) {
       serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href)).default
     } else {
