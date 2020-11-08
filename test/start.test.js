@@ -5,8 +5,10 @@ const { once } = require('events')
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
+const semver = require('semver')
 const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
 const { fork } = require('child_process')
+const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 const t = require('tap')
 const test = t.test
@@ -654,5 +656,118 @@ test('should throw on async plugin with one argument', async t => {
   }
 
   const argv = ['./test/data/async-plugin-with-one-argument.js']
-  start.start(argv)
+  await start.start(argv)
+})
+
+test('should start fastify with custom plugin options with a ESM typescript compiled plugin', { skip: !moduleSupport }, async t => {
+  t.plan(4)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/ts-plugin-with-custom-options.mjs',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.strictEqual(response.statusCode, 200)
+  t.strictEqual(response.headers['content-length'], '' + body.length)
+  t.deepEqual(JSON.parse(body), {
+    a: true,
+    b: true,
+    c: true,
+    hello: 'world'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
+})
+
+test('should throw an error when loading ESM typescript compiled plugin and ESM is not supported', { skip: moduleSupport }, async t => {
+  t.plan(1)
+
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Your version of node does not support ES modules./.test(err.message), err.message)
+  }
+
+  const argv = ['./examples/ts-plugin-with-custom-options.mjs']
+  await start.start(argv)
+  t.end()
+})
+
+test('should start fastify with custom plugin options with a ESM plugin with package.json "type":"module"', { skip: !moduleSupport }, async t => {
+  t.plan(4)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/package-type-module/ESM-plugin-with-custom-options.js',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.strictEqual(response.statusCode, 200)
+  t.strictEqual(response.headers['content-length'], '' + body.length)
+  t.deepEqual(JSON.parse(body), {
+    a: true,
+    b: true,
+    c: true,
+    hello: 'world'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
+})
+
+test('should start fastify with custom plugin options with a CJS plugin with package.json "type":"module"', { skip: !moduleSupport }, async t => {
+  t.plan(4)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/package-type-module/CJS-plugin-with-custom-options.cjs',
+    '--',
+    '-abc',
+    '--hello',
+    'world'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.strictEqual(response.statusCode, 200)
+  t.strictEqual(response.headers['content-length'], '' + body.length)
+  t.deepEqual(JSON.parse(body), {
+    a: true,
+    b: true,
+    c: true,
+    hello: 'world'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
 })

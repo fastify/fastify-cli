@@ -1,0 +1,12 @@
+{
+  "name": "esm-plugin-as-js",
+  "version": "1.0.0",
+  "description": "example of a ESM plugin with js filetype and type module",
+  "main": "ESM-plugin-with-custom-options.js",
+  "type":"module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

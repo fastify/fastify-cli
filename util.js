@@ -1,7 +1,11 @@
 const fs = require('fs')
 const path = require('path')
-
+const url = require('url')
+const semver = require('semver')
+const pkgUp = require('pkg-up')
 const resolveFrom = require('resolve-from')
+
+const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 function exit (message) {
   if (message instanceof Error) {
@@ -30,14 +34,39 @@ function isInvalidAsyncPlugin (plugin) {
   return plugin.length !== 2 && plugin.constructor.name === 'AsyncFunction'
 }
 
-function requireServerPluginFromPath (modulePath) {
+async function getPackageType (cwd) {
+  const nearestPackage = await pkgUp({ cwd })
+  if (nearestPackage) {
+    return require(nearestPackage).type
+  }
+}
+
+function getScriptType (fname, packageType) {
+  const modulePattern = /\.mjs$/i
+  const commonjsPattern = /\.cjs$/i
+  return (modulePattern.test(fname) ? 'module' : commonjsPattern.test(fname) ? 'commonjs' : packageType) || 'commonjs'
+}
+
+async function requireServerPluginFromPath (modulePath) {
   const resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
   if (!fs.existsSync(resolvedModulePath)) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
-  const serverPlugin = require(resolvedModulePath)
+  const packageType = await getPackageType(resolvedModulePath)
+  const type = getScriptType(resolvedModulePath, packageType)
+
+  let serverPlugin
+  if (type === 'module') {
+    if (moduleSupport) {
+      serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href)).default
+    } else {
+      throw new Error(`fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
+    }
+  } else {
+    serverPlugin = require(resolvedModulePath)
+  }
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +
