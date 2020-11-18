@@ -76,7 +76,7 @@
     "rimraf": "^3.0.2",
     "simple-get": "^4.0.0",
     "sinon": "^9.0.0",
-    "standard": "^14.3.3",
+    "standard": "^16.0.3",
     "strip-ansi": "^6.0.0",
     "tap": "^14.0.0",
     "ts-standard": "^9.0.0",
