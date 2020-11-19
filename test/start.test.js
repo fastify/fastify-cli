@@ -6,7 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const semver = require('semver')
-const baseFilename = `${__dirname}/fixtures/test_${crypto.randomBytes(16).toString('hex')}`
+const baseFilename = path.join(__dirname, 'fixtures', `test_${crypto.randomBytes(16).toString('hex')}`)
 const { fork } = require('child_process')
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 

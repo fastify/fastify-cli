@@ -23,13 +23,13 @@ const strip = require('strip-ansi')
 const expected = {}
 
 ;(function (cb) {
-  var files = []
+  const files = []
   walker(appTemplateDir)
     .on('file', function (file) {
       files.push(file)
     })
     .on('end', function () {
-      var count = 0
+      let count = 0
       files.forEach(function (file) {
         readFile(file, function (err, data) {
           if (err) {
