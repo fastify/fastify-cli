@@ -92,7 +92,7 @@ function generate (dir, template) {
           return reject(err)
         }
 
-        var pkg
+        let pkg
         try {
           pkg = JSON.parse(data)
         } catch (err) {

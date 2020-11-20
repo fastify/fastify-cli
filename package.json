@@ -8,6 +8,7 @@
   },
   "scripts": {
     "lint": "standard",
+    "lint:fix": "standard --fix",
     "unit": "tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts templates/plugin/test/*.test.js",
     "test": "npm run lint && npm run unit && npm run test:typescript",
     "test:typescript": "tsd templates/plugin"
@@ -76,7 +77,7 @@
     "rimraf": "^3.0.2",
     "simple-get": "^4.0.0",
     "sinon": "^9.0.0",
-    "standard": "^14.3.3",
+    "standard": "^16.0.3",
     "strip-ansi": "^6.0.0",
     "tap": "^14.0.0",
     "ts-standard": "^9.0.0",
