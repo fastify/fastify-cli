@@ -223,6 +223,13 @@ This will add or alter the `main`, `scripts`, `dependencies` and `devDependencie
 for any files being added, the file will be overwritten with the new file added by generate. So if there is an existing `app.js` in this scenario,
 it will be overwritten. Use the `--integrate` flag with care.
 
+#### Options
+
+| Description | Full command |
+| --- | --- |
+| Use the TypeScript template | `--lang=ts`, `--lang=typescript` |
+| Overwrite it when the target directory is the current directory (`.`) | `--integrate`|
+
 ### generate-plugin
 
 `fastify-cli` can help you improve your plugin development by generating a scaffolding project:
