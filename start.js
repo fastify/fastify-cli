@@ -2,8 +2,6 @@
 
 'use strict'
 
-require('dotenv').config()
-
 const assert = require('assert')
 const path = require('path')
 const split = require('split2')
@@ -13,7 +11,12 @@ const isDocker = require('is-docker')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
-const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
+const {
+  exit,
+  requireFastifyForModule,
+  requireServerPluginFromPath,
+  showHelpForCommand
+} = require('./util')
 
 let Fastify = null
 
@@ -55,6 +58,8 @@ function stop (message) {
 }
 
 async function runFastify (args) {
+  require('dotenv').config()
+
   const opts = parseArgs(args)
   opts.port = opts.port || process.env.PORT || 3000
 
@@ -104,11 +109,16 @@ async function runFastify (args) {
     if (process.version.match(/v[0-6]\..*/g)) {
       stop('Fastify debug mode not compatible with Node.js version < 6')
     } else {
-      require('inspector').open(opts.debugPort, opts.debugHost || isDocker() ? listenAddressDocker : undefined)
+      require('inspector').open(
+        opts.debugPort,
+        opts.debugHost || isDocker() ? listenAddressDocker : undefined
+      )
     }
   }
 
-  const fastify = Fastify(opts.options ? Object.assign(options, file.options) : options)
+  const fastify = Fastify(
+    opts.options ? Object.assign(options, file.options) : options
+  )
 
   if (opts.prefix) {
     opts.pluginOptions.prefix = opts.prefix
