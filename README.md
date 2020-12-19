@@ -24,12 +24,14 @@ Will print an help:
 ```
 Fastify command line interface, available commands are:
 
-  * start         start a server
-  * generate      generate a new project
-  * readme        generate a README.md for the plugin
-  * version       the current fastify-cli version
-  * docs          starts an interactive terminal session to view the fastify docs for the fastify version installed. navigate with arrow keys
-  * help          help about commands
+  * start                 start a server
+  * generate              generate a new project
+  * generate-plugin       generate a new plugin project
+  * readme                generate a README.md for the plugin
+  * print-routes          prints the representation of the internal radix tree used by the router, useful for debugging.
+  * version               the current fastify-cli version
+  * docs                  starts an interactive terminal session to view the fastify docs for the fastify version installed. navigate with arrow keys
+  * help                  help about commands
 
 Launch 'fastify help [command]' to know more about the commands.
 
