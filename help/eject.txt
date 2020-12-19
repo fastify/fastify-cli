@@ -1,0 +1,3 @@
+Usage: fastify eject
+
+Turns your application into a standalone executable with a server.js file being added.
