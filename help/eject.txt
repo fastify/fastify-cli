@@ -1,0 +1,5 @@
+Usage: fastify eject
+
+Turns your application into a standalone executable with a server.js file being added.
+
+You can set the port to listen on with the PORT environment variable (default to 3000).
