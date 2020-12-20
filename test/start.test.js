@@ -26,6 +26,8 @@ const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')
 
 const onGithubAction = !!process.env.GITHUB_ACTION
+const writeFile = util.promisify(fs.writeFile)
+const readFile = util.promisify(fs.readFile)
 
 let _port = 3001
 
@@ -528,7 +530,6 @@ test('should start the server listening on 0.0.0.0 when runing in docker', async
 
 test('should start the server with watch options that the child process restart when directory changed', { skip: onGithubAction }, async (t) => {
   t.plan(4)
-  const writeFile = util.promisify(fs.writeFile)
   const tmpjs = path.resolve(baseFilename + '.js')
 
   await writeFile(tmpjs, 'hello world')
@@ -548,12 +549,54 @@ test('should start the server with watch options that the child process restart 
   await once(fastifyEmitter, 'ready')
   t.pass('should receive ready event')
 
-  await writeFile(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't caught change event in travis CI, but local test is all ok. you can remove annotation in local environment.
+  await writeFile(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't catch change event in CI, but local test is all ok. you can remove annotation in local environment.
   t.pass('change tmpjs')
 
   // this might happen more than once but does not matter in this context
   await once(fastifyEmitter, 'restart')
   t.pass('should receive restart event')
+})
+
+test('should reload the env on restart when watching', async (t) => {
+  const testdir = t.testdir({
+    '.env': 'GREETING=world',
+    'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
+  })
+
+  const cwd = process.cwd()
+
+  process.chdir(testdir)
+
+  const port = getPort()
+  const argv = ['-p', port, '-w', path.join(testdir, 'plugin.js')]
+  const fastifyEmitter = await start.start(argv)
+
+  t.tearDown(() => {
+    fastifyEmitter.emit('close')
+    process.chdir(cwd)
+  })
+
+  await once(fastifyEmitter, 'ready')
+
+  const r1 = await sget({
+    method: 'GET',
+    url: `http://localhost:${port}`
+  })
+
+  t.strictEqual(r1.response.statusCode, 200)
+  t.deepEqual(JSON.parse(r1.body), { hello: 'world' })
+
+  await writeFile(path.join(testdir, '.env'), 'GREETING=planet')
+
+  await once(fastifyEmitter, 'restart')
+
+  const r2 = await sget({
+    method: 'GET',
+    url: `http://localhost:${port}`
+  })
+
+  t.strictEqual(r2.response.statusCode, 200)
+  t.deepEqual(JSON.parse(r2.body), { hello: 'planet' })
 })
 
 test('crash on unhandled rejection', t => {

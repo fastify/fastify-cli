@@ -2,11 +2,14 @@
 
 'use strict'
 
-require('dotenv').config()
-
 const parseArgs = require('./args')
 const log = require('./log')
-const { exit, requireFastifyForModule, requireServerPluginFromPath, showHelpForCommand } = require('./util')
+const {
+  exit,
+  requireFastifyForModule,
+  requireServerPluginFromPath,
+  showHelpForCommand
+} = require('./util')
 
 let Fastify = null
 
@@ -38,6 +41,8 @@ function printRoutes (args) {
 }
 
 async function runFastify (opts) {
+  require('dotenv').config()
+
   let file = null
 
   try {
