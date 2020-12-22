@@ -3,8 +3,8 @@ import { test } from 'tap'
 const sgetOriginal = require('simple-get').concat
 
 import appDefault, { app } from '../../templates/app-ts/src/app'
+import {AddressInfo} from "net";
 
-const PORT = 3001;
 const sget = (opts: Record<string, any>): Record<string, any> => {
     return new Promise((resolve, reject) => {
         sgetOriginal(opts, (err: Error, response: any, body: any) => {
@@ -20,11 +20,11 @@ test('should print routes for TS app', async t => {
     const fastifyApp = fastify({}, );
     await app(fastifyApp, {});
     await fastifyApp.ready();
-    await fastifyApp.listen(PORT)
+    await fastifyApp.listen(0)
 
     const { response, body } = await sget({
         method: 'GET',
-        url: `http://localhost:${PORT}`
+        url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
     })
     t.strictEqual(response.statusCode, 200)
     t.strictEqual(response.headers['content-length'], '' + body.length)
@@ -40,11 +40,11 @@ test('should print routes for default TS app', async t => {
     const fastifyApp = fastify({}, );
     await appDefault(fastifyApp, {});
     await fastifyApp.ready();
-    await fastifyApp.listen(PORT)
+    await fastifyApp.listen(0)
 
     const { response, body } = await sget({
         method: 'GET',
-        url: `http://localhost:${PORT}`
+        url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
     })
     t.strictEqual(response.statusCode, 200)
     t.strictEqual(response.headers['content-length'], '' + body.length)
