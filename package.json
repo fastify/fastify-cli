@@ -9,9 +9,9 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "unit": "tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts templates/plugin/test/*.test.js",
+    "unit": "tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts templates/plugin/test/*.test.js test/templates/*.test.ts",
     "test": "npm run lint && npm run unit && npm run test:typescript",
-    "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json"
+    "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
   "keywords": [
     "fastify",
@@ -67,6 +67,7 @@
     "@types/node": "^14.14.14",
     "@types/tap": "^14.10.1",
     "concurrently": "^5.1.0",
+    "del-cli": "^3.0.1",
     "fastify-autoload": "^3.3.1",
     "fastify-plugin": "^3.0.0",
     "fastify-tsconfig": "^1.0.1",
