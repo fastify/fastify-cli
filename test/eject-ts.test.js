@@ -1,0 +1,94 @@
+'use strict'
+
+// bailout if a test is broken
+// so that the folder can be inspected
+process.env.TAP_BAIL = true
+
+const t = require('tap')
+const { readFileSync, readFile } = require('fs')
+const path = require('path')
+const rimraf = require('rimraf')
+const mkdirp = require('mkdirp')
+const walker = require('walker')
+const workdir = path.join(__dirname, 'workdir')
+const appTemplateDir = path.join(__dirname, '..', 'templates', 'eject-ts')
+const { eject } = require('../eject-ts')
+const expected = {};
+
+(function (cb) {
+  const files = []
+  walker(appTemplateDir)
+    .on('file', function (file) {
+      files.push(file)
+    })
+    .on('end', function () {
+      let count = 0
+      files.forEach(function (file) {
+        readFile(file, function (err, data) {
+          if (err) {
+            return cb(err)
+          }
+
+          expected[
+            file.replace(appTemplateDir, '').replace(/__/, '.')
+          ] = data.toString()
+
+          count++
+          if (count === files.length) {
+            cb(null)
+          }
+        })
+      })
+    })
+    .on('error', cb)
+})(function (err) {
+  t.error(err)
+  define(t)
+})
+
+function define (t) {
+  const { beforeEach, test } = t
+
+  beforeEach((cb) => {
+    rimraf(workdir, () => {
+      // skip any errors
+
+      mkdirp.sync(workdir)
+      cb()
+    })
+  })
+
+  test('should finish succesfully with template', async (t) => {
+    try {
+      await eject()
+      await verifyCopy(t, expected)
+    } catch (err) {
+      t.error(err)
+    }
+  })
+
+  function verifyCopy (t, expected) {
+    return new Promise((resolve, reject) => {
+      walker(workdir)
+        .on('file', function (file) {
+          try {
+            const data = readFileSync(file)
+            file = file.replace(workdir, '')
+            t.deepEqual(
+              data.toString().replace(/\r\n/g, '\n'),
+              expected[file],
+              file + ' matching'
+            )
+          } catch (err) {
+            reject(err)
+          }
+        })
+        .on('end', function () {
+          resolve()
+        })
+        .on('error', function (err, entry, stat) {
+          reject(err)
+        })
+    })
+  }
+}
