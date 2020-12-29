@@ -60,7 +60,7 @@ function define (t) {
 
   test('should finish succesfully with template', async (t) => {
     try {
-      await eject()
+      await eject(workdir)
       await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
@@ -69,8 +69,10 @@ function define (t) {
 
   function verifyCopy (t, expected) {
     return new Promise((resolve, reject) => {
+      let count = 0
       walker(workdir)
         .on('file', function (file) {
+          count++
           try {
             const data = readFileSync(file)
             file = file.replace(workdir, '')
@@ -84,6 +86,7 @@ function define (t) {
           }
         })
         .on('end', function () {
+          t.equal(Object.keys(expected).length, count)
           resolve()
         })
         .on('error', function (err, entry, stat) {

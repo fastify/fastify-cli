@@ -4,21 +4,21 @@ const path = require('path')
 const generify = require('generify')
 const log = require('./log')
 
-function eject () {
+function eject (dir) {
   return new Promise((resolve, reject) => {
-    generify(path.join(__dirname, 'templates', 'eject'), '.', {}, function (file) {
+    generify(path.join(__dirname, 'templates', 'eject'), dir, {}, function (file) {
       log('debug', `generated ${file}`)
-      resolve()
     }, function (err) {
       if (err) {
         return reject(err)
       }
+      resolve()
     })
   })
 }
 
 function cli () {
-  eject().catch(function (err) {
+  eject(process.cwd()).catch(function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
