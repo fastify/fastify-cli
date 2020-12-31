@@ -13,7 +13,7 @@ const app = Fastify({
 });
 
 // Register your application as a normal plugin.
-app.register(import("./app"));
+app.register(import("./src/app"));
 
 // Start listening.
 app.listen(process.env.PORT || 3000, (err: any) => {
