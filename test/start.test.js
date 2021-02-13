@@ -241,7 +241,7 @@ test('should error with a good timeout value', async t => {
   const start = proxyquire('../start', {
     assert: {
       ifError (err) {
-        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}`)
+        t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}. You may have forgotten to call 'done' function or to resolve a Promise`)
       }
     }
   })
@@ -250,7 +250,7 @@ test('should error with a good timeout value', async t => {
     const argv = ['-p', '3040', '-T', '100', './test/data/timeout-plugin.js']
     await start.start(argv)
   } catch (err) {
-    t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}`)
+    t.equal(err.message, `ERR_AVVIO_PLUGIN_TIMEOUT: plugin did not start in time: ${path.join(__dirname, 'data', 'timeout-plugin.js')}. You may have forgotten to call 'done' function or to resolve a Promise`)
   }
 })
 
