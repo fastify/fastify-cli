@@ -25,6 +25,7 @@ const javascriptTemplate = {
     fastify: cliPkg.dependencies.fastify,
     'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
     'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
+    'fastify-sensible': cliPkg.devDependencies['fastify-sensible'],
     'fastify-cli': '^' + cliPkg.version
   },
   devDependencies: {
@@ -53,6 +54,7 @@ const typescriptTemplate = {
     fastify: cliPkg.dependencies.fastify,
     'fastify-plugin': cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'],
     'fastify-autoload': cliPkg.devDependencies['fastify-autoload'],
+    'fastify-sensible': cliPkg.devDependencies['fastify-sensible'],
     'fastify-cli': '^' + cliPkg.version
   },
   devDependencies: {
