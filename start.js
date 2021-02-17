@@ -3,7 +3,6 @@
 'use strict'
 
 const assert = require('assert')
-const path = require('path')
 const split = require('split2')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
@@ -15,7 +14,8 @@ const {
   exit,
   requireFastifyForModule,
   requireServerPluginFromPath,
-  showHelpForCommand
+  showHelpForCommand,
+  requireModule
 } = require('./util')
 
 let Fastify = null
@@ -59,8 +59,16 @@ function stop (message) {
 
 async function runFastify (args) {
   require('dotenv').config()
-
   const opts = parseArgs(args)
+
+  if (opts.beforeModule) {
+    try {
+      await requireModule(opts.beforeModule)
+    } catch (e) {
+      return module.exports.stop(e)
+    }
+  }
+
   opts.port = opts.port || process.env.PORT || 3000
 
   loadModules(opts)
@@ -76,11 +84,7 @@ async function runFastify (args) {
   let logger
   if (opts.loggingModule) {
     try {
-      const moduleFilePath = path.resolve(opts.loggingModule)
-      const moduleFileExtension = path.extname(opts.loggingModule)
-      const modulePath = moduleFilePath.split(moduleFileExtension)[0]
-
-      logger = require(modulePath)
+      logger = await requireModule(opts.loggingModule)
     } catch (e) {
       module.exports.stop(e)
     }

@@ -18,6 +18,10 @@ OPTS
   [env: FASTIFY_LOG_LEVEL]
       Log level (default to fatal)
 
+  -b, --before-module
+  [env: FASTIFY_BEFORE_MODULE]
+      Path to module to run before anything else
+
   -L, --logging-module
   [env: FASTIFY_LOGGING_MODULE]
       Path to logging configuration module to use

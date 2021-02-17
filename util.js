@@ -47,7 +47,7 @@ function getScriptType (fname, packageType) {
   return (modulePattern.test(fname) ? 'module' : commonjsPattern.test(fname) ? 'commonjs' : packageType) || 'commonjs'
 }
 
-async function requireServerPluginFromPath (modulePath) {
+async function requireModule (modulePath) {
   const resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
   if (!fs.existsSync(resolvedModulePath)) {
@@ -62,11 +62,18 @@ async function requireServerPluginFromPath (modulePath) {
     if (moduleSupport) {
       serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href)).default
     } else {
-      throw new Error(`fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
+      throw new Error(`fastify-cli cannot import module at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
     }
   } else {
     serverPlugin = require(resolvedModulePath)
+    return serverPlugin
   }
+
+  return serverPlugin
+}
+
+async function requireServerPluginFromPath (modulePath) {
+  const serverPlugin = await requireModule(modulePath)
 
   if (isInvalidAsyncPlugin(serverPlugin)) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +
@@ -87,4 +94,4 @@ function showHelpForCommand (commandName) {
   }
 }
 
-module.exports = { exit, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
+module.exports = { exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }

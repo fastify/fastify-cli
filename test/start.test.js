@@ -679,7 +679,7 @@ test('should throw on logger configuration module not found', async t => {
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
   start.stop = function (err) {
-    t.ok(/Cannot find module/.test(err.message), err.message)
+    t.ok(/doesn't exist within/.test(err.message), err.message)
   }
 
   const argv = ['-L', './test/data/missing.js', './examples/plugin.js']
