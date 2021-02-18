@@ -12,10 +12,10 @@ const watch = require('./lib/watch')
 const parseArgs = require('./args')
 const {
   exit,
+  requirePath,
   requireFastifyForModule,
   requireServerPluginFromPath,
-  showHelpForCommand,
-  requireModule
+  showHelpForCommand
 } = require('./util')
 
 let Fastify = null
@@ -60,15 +60,13 @@ function stop (message) {
 async function runFastify (args) {
   require('dotenv').config()
   const opts = parseArgs(args)
-
-  if (opts.beforeModule) {
+  if (opts.require) {
     try {
-      await requireModule(opts.beforeModule)
+      requirePath(opts.require)
     } catch (e) {
-      return module.exports.stop(e)
+      module.exports.stop(e)
     }
   }
-
   opts.port = opts.port || process.env.PORT || 3000
 
   loadModules(opts)
@@ -84,7 +82,7 @@ async function runFastify (args) {
   let logger
   if (opts.loggingModule) {
     try {
-      logger = await requireModule(opts.loggingModule)
+      logger = requirePath(opts.loggingModule)
     } catch (e) {
       module.exports.stop(e)
     }

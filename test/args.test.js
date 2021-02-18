@@ -9,7 +9,7 @@ test('should parse args correctly', t => {
     '--port', '7777',
     '--address', 'fastify.io:9999',
     '--socket', 'fastify.io.socket:9999',
-    '--before-module', './before-module.js',
+    '--require', './require-module.js',
     '--log-level', 'info',
     '--pretty-logs', 'true',
     '--watch', 'true',
@@ -36,7 +36,7 @@ test('should parse args correctly', t => {
     port: 7777,
     address: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
-    beforeModule: './before-module.js',
+    require: './require-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
@@ -57,7 +57,7 @@ test('should parse args with = assignment correctly', t => {
     '--port=7777',
     '--address=fastify.io:9999',
     '--socket=fastify.io.socket:9999',
-    '--before-module', './before-module.js',
+    '--require', './require-module.js',
     '--log-level=info',
     '--pretty-logs=true',
     '--watch=true',
@@ -84,7 +84,7 @@ test('should parse args with = assignment correctly', t => {
     port: 7777,
     address: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
-    beforeModule: './before-module.js',
+    require: './require-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
@@ -104,7 +104,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PORT = '7777'
   process.env.FASTIFY_ADDRESS = 'fastify.io:9999'
   process.env.FASTIFY_SOCKET = 'fastify.io.socket:9999'
-  process.env.FASTIFY_BEFORE_MODULE = './before-module.js'
+  process.env.FASTIFY_REQUIRE = './require-module.js'
   process.env.FASTIFY_LOG_LEVEL = 'info'
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
@@ -122,7 +122,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PORT
     delete process.env.FASTIFY_ADDRESS
     delete process.env.FASTIFY_SOCKET
-    delete process.env.FASTIFY_BEFORE_MODULE
+    delete process.env.FASTIFY_REQUIRE
     delete process.env.FASTIFY_LOG_LEVEL
     delete process.env.FASTIFY_PRETTY_LOGS
     delete process.env.FASTIFY_WATCH
@@ -151,7 +151,7 @@ test('should parse env vars correctly', t => {
     port: 7777,
     prefix: 'FASTIFY_',
     socket: 'fastify.io.socket:9999',
-    beforeModule: './before-module.js',
+    require: './require-module.js',
     pluginTimeout: 500,
     pluginOptions: {},
     debug: true,
@@ -181,7 +181,7 @@ test('should respect default values', t => {
   t.is(parsedArgs.debug, false)
   t.is(parsedArgs.debugPort, 9320)
   t.is(parsedArgs.loggingModule, undefined)
-  t.is(parsedArgs.beforeModule, undefined)
+  t.is(parsedArgs.require, undefined)
 })
 
 test('should parse custom plugin options', t => {
@@ -191,7 +191,7 @@ test('should parse custom plugin options', t => {
     '--port', '7777',
     '--address', 'fastify.io:9999',
     '--socket', 'fastify.io.socket:9999',
-    '--before-module', './before-module.js',
+    '--require', './require-module.js',
     '--log-level', 'info',
     '--pretty-logs', 'true',
     '--watch', 'true',
@@ -225,7 +225,7 @@ test('should parse custom plugin options', t => {
     port: 7777,
     address: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
-    beforeModule: './before-module.js',
+    require: './require-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,

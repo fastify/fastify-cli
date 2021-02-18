@@ -187,7 +187,7 @@ test('should start fastify with custom plugin options with a typescript compiled
 test('should start the server at the given prefix', async t => {
   t.plan(4)
 
-  const argv = ['-p', getPort(), '-r', '/api/hello', './examples/plugin.js']
+  const argv = ['-p', getPort(), '-x', '/api/hello', './examples/plugin.js']
   const fastify = await start.start(argv)
 
   const { response, body } = await sget({
@@ -679,7 +679,7 @@ test('should throw on logger configuration module not found', async t => {
   const oldStop = start.stop
   t.tearDown(() => { start.stop = oldStop })
   start.stop = function (err) {
-    t.ok(/doesn't exist within/.test(err.message), err.message)
+    t.ok(/Cannot find module/.test(err.message), err.message)
   }
 
   const argv = ['-L', './test/data/missing.js', './examples/plugin.js']

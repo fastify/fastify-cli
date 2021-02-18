@@ -129,7 +129,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Port to listen on (default to 3000)                                                                                                     | `-p`          | `--port`           | `FASTIFY_PORT or PORT`   |
 | Address to listen on                                                                                                                    | `-a`          | `--address`        | `FASTIFY_ADDRESS`        |
 | Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
-| Path to module to run before anything else                                                                                              | `-b`          | `--before-module`  | `FASTIFY_BEFORE_MODULE`  |
+| Module to preload                                                                                                                       | `-r`          | `--require`        | `FASTIFY_REQUIRE`        |
 | Log level (default to fatal)                                                                                                            | `-l`          | `--log-level`      | `FASTIFY_LOG_LEVEL`      |
 | Start fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
 | Set the inspector port (default: 9320)                                                                                                  | `-I`          | `--debug-port`     | `FASTIFY_DEBUG_PORT`     |
@@ -138,7 +138,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.                                | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
-| Set the prefix                                                                                                                          | `-r`          | `--prefix`         | `FASTIFY_PREFIX`         |
+| Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
 | Defines the maximum payload, in bytes,<br>the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
 

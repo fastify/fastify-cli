@@ -9,7 +9,7 @@ module.exports = function parseArgs (args) {
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
     boolean: ['pretty-logs', 'options', 'watch', 'debug'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'before-module'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -18,8 +18,8 @@ module.exports = function parseArgs (args) {
       options: ['o'],
       address: ['a'],
       watch: ['w'],
-      prefix: ['r'],
-      'before-module': ['b'],
+      prefix: ['x'],
+      require: ['r'],
       debug: ['d'],
       'debug-port': ['I'],
       'log-level': ['l'],
@@ -60,7 +60,7 @@ module.exports = function parseArgs (args) {
     logLevel: parsedArgs.logLevel,
     address: parsedArgs.address,
     socket: parsedArgs.socket,
-    beforeModule: parsedArgs.beforeModule,
+    require: parsedArgs.require,
     prefix: parsedArgs.prefix,
     loggingModule: parsedArgs.loggingModule,
     lang: parsedArgs.lang
