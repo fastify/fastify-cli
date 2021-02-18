@@ -8,6 +8,7 @@ const split = require('split2')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
 const isDocker = require('is-docker')
+const closeWithGrace = require('close-with-grace')
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
@@ -125,6 +126,18 @@ async function runFastify (args) {
   }
 
   await fastify.register(file.default || file, opts.pluginOptions)
+
+  const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, err, manual }) {
+    if (err) {
+      fastify.log.error(err)
+    }
+    await fastify.close()
+  })
+
+  await fastify.addHook('onClose', (instance, done) => {
+    closeListeners.uninstall()
+    done()
+  })
 
   if (opts.address) {
     await fastify.listen(opts.port, opts.address)
