@@ -61,8 +61,19 @@ async function runFastify (args) {
   require('dotenv').config()
   const opts = parseArgs(args)
   if (opts.require) {
+    if (typeof opts.require === 'string') {
+      opts.require = [opts.require]
+    }
+
     try {
-      requirePath(opts.require)
+      opts.require.forEach(module => {
+        if (module) {
+          /* This check ensures we ignore `-r ""`, trailing `-r`, or
+           * other silly things the user might (inadvertently) be doing.
+           */
+          requirePath(module)
+        }
+      })
     } catch (e) {
       module.exports.stop(e)
     }

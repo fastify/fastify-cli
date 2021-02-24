@@ -1,3 +1,4 @@
+/* global GLOBAL_MODULE_1, GLOBAL_MODULE_2 */
 'use strict'
 
 const util = require('util')
@@ -660,6 +661,56 @@ test('boolean env are not overridden if no arguments are passed', async t => {
   } catch (e) {
     t.pass('Custom options')
   }
+})
+
+test('should support preloading custom module', async t => {
+  t.plan(2)
+
+  const argv = ['-r', './test/data/custom-require.js', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  t.ok(GLOBAL_MODULE_1)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
+test('should support preloading multiple custom modules', async t => {
+  t.plan(3)
+
+  const argv = ['-r', './test/data/custom-require.js', '-r', './test/data/custom-require2.js', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  t.ok(GLOBAL_MODULE_1)
+  t.ok(GLOBAL_MODULE_2)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
+test('preloading custom module with empty and trailing require flags should not throw', async t => {
+  t.plan(2)
+
+  const argv = ['-r', './test/data/custom-require.js', '-r', '', './examples/plugin.js', '-r']
+  const fastify = await start.start(argv)
+  t.ok(GLOBAL_MODULE_1)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
+test('preloading custom module that is not found should throw', async t => {
+  t.plan(2)
+
+  const oldStop = start.stop
+  t.tearDown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Cannot find module/.test(err.message), err.message)
+  }
+
+  const argv = ['-r', './test/data/require-missing.js', './examples/plugin.js']
+  const fastify = await start.start(argv)
+
+  await fastify.close()
+  t.pass('server closed')
 })
 
 test('should support custom logger configuration', async t => {
