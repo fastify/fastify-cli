@@ -713,6 +713,25 @@ test('preloading custom module that is not found should throw', async t => {
   t.pass('server closed')
 })
 
+test('preloading custom module should be done before starting server', async t => {
+  t.plan(4)
+
+  const argv = ['./examples/plugin-with-preloaded.js']
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.strictEqual(response.statusCode, 200)
+  t.strictEqual(response.headers['content-length'], '' + body.length)
+  t.deepEqual(JSON.parse(body), { hasPreloaded: true })
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
 test('should support custom logger configuration', async t => {
   t.plan(2)
 
