@@ -2,7 +2,7 @@
 import Fastify from 'fastify'
 import fp from 'fastify-plugin'
 import App from '../src/app'
-import tap from 'tap';
+import * as tap from 'tap';
 
 export type Test = typeof tap['Test']['prototype'];
 
