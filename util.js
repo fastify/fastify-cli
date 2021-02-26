@@ -19,6 +19,14 @@ function exit (message) {
   process.exit()
 }
 
+function requirePath (filePath) {
+  const moduleFilePath = path.resolve(filePath)
+  const moduleFileExtension = path.extname(filePath)
+  const modulePath = moduleFilePath.split(moduleFileExtension)[0]
+  const module = require(modulePath)
+  return module
+}
+
 function requireFastifyForModule (modulePath) {
   try {
     const basedir = path.resolve(process.cwd(), modulePath)
@@ -87,4 +95,4 @@ function showHelpForCommand (commandName) {
   }
 }
 
-module.exports = { exit, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
+module.exports = { exit, requirePath, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }

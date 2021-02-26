@@ -3,7 +3,6 @@
 'use strict'
 
 const assert = require('assert')
-const path = require('path')
 const split = require('split2')
 const PinoColada = require('pino-colada')
 const pump = require('pump')
@@ -14,6 +13,7 @@ const watch = require('./lib/watch')
 const parseArgs = require('./args')
 const {
   exit,
+  requirePath,
   requireFastifyForModule,
   requireServerPluginFromPath,
   showHelpForCommand
@@ -60,8 +60,25 @@ function stop (message) {
 
 async function runFastify (args) {
   require('dotenv').config()
-
   const opts = parseArgs(args)
+  if (opts.require) {
+    if (typeof opts.require === 'string') {
+      opts.require = [opts.require]
+    }
+
+    try {
+      opts.require.forEach(module => {
+        if (module) {
+          /* This check ensures we ignore `-r ""`, trailing `-r`, or
+           * other silly things the user might (inadvertently) be doing.
+           */
+          requirePath(module)
+        }
+      })
+    } catch (e) {
+      module.exports.stop(e)
+    }
+  }
   opts.port = opts.port || process.env.PORT || 3000
 
   loadModules(opts)
@@ -77,11 +94,7 @@ async function runFastify (args) {
   let logger
   if (opts.loggingModule) {
     try {
-      const moduleFilePath = path.resolve(opts.loggingModule)
-      const moduleFileExtension = path.extname(opts.loggingModule)
-      const modulePath = moduleFilePath.split(moduleFileExtension)[0]
-
-      logger = require(modulePath)
+      logger = requirePath(opts.loggingModule)
     } catch (e) {
       module.exports.stop(e)
     }

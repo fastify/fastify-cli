@@ -18,6 +18,10 @@ OPTS
   [env: FASTIFY_LOG_LEVEL]
       Log level (default to fatal)
 
+  -r, --require
+  [env: FASTIFY_REQUIRE]
+      Module to preload
+
   -L, --logging-module
   [env: FASTIFY_LOGGING_MODULE]
       Path to logging configuration module to use
@@ -34,7 +38,7 @@ OPTS
   [env: FASTIFY_WATCH]
       Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.
 
-  -r, --prefix
+  -x, --prefix
   [env: FASTIFY_PREFIX]
       Set the prefix
 
