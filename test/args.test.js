@@ -170,7 +170,7 @@ test('should parse env vars correctly', t => {
 })
 
 test('should respect default values', t => {
-  t.plan(11)
+  t.plan(12)
 
   const argv = [
     'app.js'
