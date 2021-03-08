@@ -14,6 +14,7 @@ test('should parse args correctly', t => {
     '--pretty-logs', 'true',
     '--watch', 'true',
     '--ignore-watch', 'ignoreme.js',
+    '--verbose-watch', 'true',
     '--options', 'true',
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
@@ -33,6 +34,7 @@ test('should parse args correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'ignoreme.js',
+    verboseWatch: true,
     port: 7777,
     address: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
@@ -62,6 +64,7 @@ test('should parse args with = assignment correctly', t => {
     '--pretty-logs=true',
     '--watch=true',
     '--ignore-watch=ignoreme.js',
+    '--verbose-watch=true',
     '--options=true',
     '--prefix=FASTIFY_',
     '--plugin-timeout=500',
@@ -81,6 +84,7 @@ test('should parse args with = assignment correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'ignoreme.js',
+    verboseWatch: true,
     port: 7777,
     address: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
@@ -109,6 +113,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
   process.env.FASTIFY_IGNORE_WATCH = 'ignoreme.js'
+  process.env.FASTIFY_VERBOSE_WATCH = 'true'
   process.env.FASTIFY_OPTIONS = 'true'
   process.env.FASTIFY_PREFIX = 'FASTIFY_'
   process.env.FASTIFY_BODY_LIMIT = '5242880'
@@ -127,6 +132,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PRETTY_LOGS
     delete process.env.FASTIFY_WATCH
     delete process.env.FASTIFY_IGNORE_WATCH
+    delete process.env.FASTIFY_VERBOSE_WATCH
     delete process.env.FASTIFY_OPTIONS
     delete process.env.FASTIFY_PREFIX
     delete process.env.FASTIFY_BODY_LIMIT
@@ -145,6 +151,7 @@ test('should parse env vars correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'ignoreme.js',
+    verboseWatch: true,
     address: 'fastify.io:9999',
     bodyLimit: 5242880,
     logLevel: 'info',
@@ -176,6 +183,7 @@ test('should respect default values', t => {
   t.is(parsedArgs.prettyLogs, false)
   t.is(parsedArgs.watch, false)
   t.is(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
+  t.is(parsedArgs.verboseWatch, false)
   t.is(parsedArgs.logLevel, 'fatal')
   t.is(parsedArgs.pluginTimeout, 10000)
   t.is(parsedArgs.debug, false)
@@ -196,6 +204,7 @@ test('should parse custom plugin options', t => {
     '--pretty-logs', 'true',
     '--watch', 'true',
     '--ignore-watch', 'ignoreme.js',
+    '--verbose-watch', 'true',
     '--options', 'true',
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
@@ -222,6 +231,7 @@ test('should parse custom plugin options', t => {
     options: true,
     watch: true,
     ignoreWatch: 'ignoreme.js',
+    verboseWatch: true,
     port: 7777,
     address: 'fastify.io:9999',
     socket: 'fastify.io.socket:9999',
