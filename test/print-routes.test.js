@@ -19,7 +19,7 @@ test('should print routes', async t => {
 
   await fastify.close()
   t.ok(spy.called)
-  t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
+  t.ok(spy.calledWithMatch('debug', '└── / (GET)\n    / (POST)\n'))
 })
 
 test('should print routes via cli', async t => {
@@ -32,7 +32,7 @@ test('should print routes via cli', async t => {
   await command.cli(['./examples/plugin.js'])
 
   t.ok(spy.called)
-  t.ok(spy.calledWithMatch('debug', '└── / (GET|POST)\n'))
+  t.ok(spy.calledWithMatch('debug', '└── / (GET)\n    / (POST)\n'))
 })
 
 test('should warn on file not found', t => {
