@@ -558,6 +558,35 @@ test('should start the server with watch options that the child process restart 
   t.pass('should receive restart event')
 })
 
+test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: onGithubAction }, async (t) => {
+  t.plan(4)
+  const tmpjs = path.resolve(baseFilename + '.js')
+
+  await writeFile(tmpjs, 'hello world')
+  const argv = ['-p', '4042', '-w', '--verbose-watch', './examples/plugin.js']
+  const fastifyEmitter = await start.start(argv)
+
+  t.tearDown(() => {
+    if (fs.existsSync(tmpjs)) {
+      fs.unlinkSync(tmpjs)
+    }
+    fastifyEmitter.emit('close')
+  })
+
+  await once(fastifyEmitter, 'start')
+  t.pass('should receive start event')
+
+  await once(fastifyEmitter, 'ready')
+  t.pass('should receive ready event')
+
+  await writeFile(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't catch change event in CI, but local test is all ok. you can remove annotation in local environment.
+  t.pass('change tmpjs')
+
+  // this might happen more than once but does not matter in this context
+  await once(fastifyEmitter, 'restart')
+  t.pass('should receive restart event')
+})
+
 test('should reload the env on restart when watching', async (t) => {
   const testdir = t.testdir({
     '.env': 'GREETING=world',
