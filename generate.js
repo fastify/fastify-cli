@@ -17,7 +17,7 @@ const javascriptTemplate = {
   dir: 'app',
   main: 'app.js',
   scripts: {
-    test: 'tap test/**/*.test.js',
+    test: 'tap "test/**/*.test.js"',
     start: 'fastify start -l info app.js',
     dev: 'fastify start -w -l info -P app.js'
   },
@@ -45,7 +45,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'npm run build:ts && tap test/**/*.test.ts',
+    test: 'npm run build:ts && tap "test/**/*.test.ts"',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"'
