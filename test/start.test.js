@@ -559,7 +559,19 @@ test('should start the server with watch options that the child process restart 
 })
 
 test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: onGithubAction }, async (t) => {
-  t.plan(4)
+  t.plan(5)
+
+  const spy = sinon.spy()
+  const watch = proxyquire('../lib/watch', {
+    './utils': {
+      logWatchVerbose: spy
+    }
+  })
+
+  const start = proxyquire('../start', {
+    './lib/watch': watch
+  })
+
   const tmpjs = path.resolve(baseFilename + '.js')
 
   await writeFile(tmpjs, 'hello world')
@@ -585,6 +597,8 @@ test('should start the server with watch and verbose-watch options that the chil
   // this might happen more than once but does not matter in this context
   await once(fastifyEmitter, 'restart')
   t.pass('should receive restart event')
+
+  t.ok(spy.calledOnce, 'should print a console message on file update')
 })
 
 test('should reload the env on restart when watching', async (t) => {
