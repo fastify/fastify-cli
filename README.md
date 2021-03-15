@@ -113,13 +113,17 @@ $ fastify start plugin.js -- --one
 
 Modules in EcmaScript Module format can be used on Node.js >= 14 or >= 12.17.0 but < 13.0.0'
 ```js
-// plugin.mjs
+// plugin.js
 export default async function plugin (fastify, options) {
   fastify.get('/', async function (req, reply) {
     return options
   })
 }
 ```
+
+This works with a `.js` extension if you are using Node.js >= 14 and the nearest parent `package.json` has `"type": "module"`
+([more info here](https://nodejs.medium.com/announcing-core-node-js-support-for-ecmascript-modules-c5d6dc29b663)).
+If your `package.json` does not have `"type": "module"`, use `.mjs` for the extension (`plugin.mjs` in the above example).
 
 #### Options
 You can pass the following options via cli arguments, every options has the corresponding environment variable:
