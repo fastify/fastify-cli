@@ -2,6 +2,8 @@
 
 'use strict'
 
+require('dotenv').config() // keep at top in order for watch env variable to be parsed before start
+
 const assert = require('assert')
 const split = require('split2')
 const PinoColada = require('pino-colada')
@@ -59,7 +61,6 @@ function stop (message) {
 }
 
 async function runFastify (args) {
-  require('dotenv').config()
   const opts = parseArgs(args)
   if (opts.require) {
     if (typeof opts.require === 'string') {
