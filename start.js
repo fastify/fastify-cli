@@ -61,6 +61,7 @@ function stop (message) {
 }
 
 async function runFastify (args) {
+  require('dotenv').config() //reload env when watch restarts the application #300
   const opts = parseArgs(args)
   if (opts.require) {
     if (typeof opts.require === 'string') {
