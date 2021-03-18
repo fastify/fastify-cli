@@ -2,6 +2,7 @@
 
 'use strict'
 
+require('dotenv').config()
 const assert = require('assert')
 const split = require('split2')
 const PinoColada = require('pino-colada')
@@ -59,7 +60,6 @@ function stop (message) {
 }
 
 async function runFastify (args) {
-  require('dotenv').config()
   const opts = parseArgs(args)
   if (opts.require) {
     if (typeof opts.require === 'string') {

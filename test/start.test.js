@@ -30,6 +30,11 @@ const onGithubAction = !!process.env.GITHUB_ACTION
 const writeFile = util.promisify(fs.writeFile)
 const readFile = util.promisify(fs.readFile)
 
+function requireUncached (module) {
+  delete require.cache[require.resolve(module)]
+  return require(module)
+}
+
 let _port = 3001
 
 function getPort () {
@@ -511,7 +516,7 @@ test('should start the server at the given prefix (using env var read from doten
   t.pass('server closed')
 })
 
-test('should start the server listening on 0.0.0.0 when runing in docker', async t => {
+test('should start the server listening on 0.0.0.0 when running in docker', async t => {
   t.plan(2)
   const isDocker = sinon.stub()
   isDocker.returns(true)
@@ -613,7 +618,7 @@ test('should reload the env on restart when watching', async (t) => {
 
   const port = getPort()
   const argv = ['-p', port, '-w', path.join(testdir, 'plugin.js')]
-  const fastifyEmitter = await start.start(argv)
+  const fastifyEmitter = await requireUncached('../start').start(argv)
 
   t.tearDown(() => {
     fastifyEmitter.emit('close')
@@ -641,6 +646,36 @@ test('should reload the env on restart when watching', async (t) => {
 
   t.strictEqual(r2.response.statusCode, 200)
   t.deepEqual(JSON.parse(r2.body), { hello: 'planet' })
+})
+
+test('should read env variables from .env file', async (t) => {
+  const port = getPort()
+
+  const testdir = t.testdir({
+    '.env': `FASTIFY_PORT=${port}`,
+    'plugin.js': await readFile(path.join(__dirname, '../examples/plugin.js'))
+  })
+
+  const cwd = process.cwd()
+
+  process.chdir(testdir)
+
+  t.tearDown(() => {
+    process.chdir(cwd)
+  })
+
+  const fastify = await requireUncached('../start').start([path.join(testdir, 'plugin.js')])
+  t.strictEqual(fastify.server.address().port, +port)
+
+  const res = await sget({
+    method: 'GET',
+    url: `http://localhost:${port}`
+  })
+
+  t.strictEqual(res.response.statusCode, 200)
+  t.deepEqual(JSON.parse(res.body), { hello: 'world' })
+
+  await fastify.close()
 })
 
 test('crash on unhandled rejection', t => {
