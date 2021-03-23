@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "unit": "tap test/*.test.js templates/app/test/*/*.test.js templates/app-ts/test/*/*.test.ts templates/plugin/test/*.test.js test/templates/*.test.ts",
+    "unit": "tap \"test/**/*.test.{js,ts}\" \"templates/**/*.test.{js,ts}\"",
     "test": "npm run lint && npm run unit && npm run test:typescript",
     "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
