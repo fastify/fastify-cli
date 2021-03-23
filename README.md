@@ -15,7 +15,7 @@ npm install fastify-cli --global
 
 ## Usage
 
-`fastify-cli` offers a single command line interface for your fastify
+`fastify-cli` offers a single command line interface for your Fastify
 project:
 
 ```bash
@@ -33,7 +33,7 @@ Fastify command line interface, available commands are:
   * readme                generate a README.md for the plugin
   * print-routes          prints the representation of the internal radix tree used by the router, useful for debugging.
   * version               the current fastify-cli version
-  * docs                  starts an interactive terminal session to view the fastify docs for the fastify version installed. navigate with arrow keys
+  * docs                  starts an interactive terminal session to view the Fastify docs for the Fastify version installed. navigate with arrow keys
   * help                  help about commands
 
 Launch 'fastify help [command]' to know more about the commands.
@@ -138,7 +138,7 @@ You can pass the following options via cli arguments, every options has the corr
 | Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
 | Module to preload                                                                                                                       | `-r`          | `--require`        | `FASTIFY_REQUIRE`        |
 | Log level (default to fatal)                                                                                                            | `-l`          | `--log-level`      | `FASTIFY_LOG_LEVEL`      |
-| Start fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
+| Start Fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
 | Set the inspector port (default: 9320)                                                                                                  | `-I`          | `--debug-port`     | `FASTIFY_DEBUG_PORT`     |
 | Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
@@ -220,7 +220,7 @@ You will find three different folders:
 - `services`: the folder where you will declare all your endpoints
 - `test`: the folder where you will declare all your test
 
-Finally there will be an `app.js` file, which is your entry point.
+Finally, there will be an `app.js` file, which is your entry point.
 It is a standard Fastify plugin and you will not need to add the `listen` method to run the server, just run it with one of the scripts above.
 
 Normally if the target directory exists generate will fail. Unless the target directory is `.`, as in the current directory.
@@ -263,7 +263,7 @@ To use it:
 1. `cd yourplugin`
 2. `fastify readme <path-to-your-plugin-file>`
 
-Finally there will be a new `README.md` file, which provides internal informations about your plugin e.g:
+Finally, there will be a new `README.md` file, which provides internal informations about your plugin e.g:
 
 * Install instructions
 * Example usage
@@ -292,7 +292,7 @@ Finally there will be a new `README.md` file, which provides internal informatio
 
 ### docs
 
-`fastify-cli` allows you to view the documentation for fastify in your terminal. By default, fastify-cli attempts to render the documentation for the fastify version installed in the current working directory node_modules folder, however, if none are found, it should fall back to rendering the documentation for the version that fastify-cli depends on.
+`fastify-cli` allows you to view the documentation for Fastify in your terminal. By default, fastify-cli attempts to render the documentation for the Fastify version installed in the current working directory node_modules folder, however, if none are found, it should fall back to rendering the documentation for the version that fastify-cli depends on.
 
 The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys by pressing the enter key to select documentation to view.
 
