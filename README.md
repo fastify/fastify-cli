@@ -1,6 +1,9 @@
 # fastify-cli
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/) ![Tests](https://github.com/fastify/fastify-cli/workflows/Tests/badge.svg)
+![CI](https://github.com/fastify/fastify-cli/workflows/CI/badge.svg)
+[![NPM version](https://img.shields.io/npm/v/fastify-cli.svg?style=flat)](https://www.npmjs.com/package/fastify-cli)
+[![Known Vulnerabilities](https://snyk.io/test/github/fastify/fastify-cli/badge.svg)](https://snyk.io/test/github/fastify/fastify-cli)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
 Command line tools for [Fastify](https://github.com/fastify/fastify).
 Generate, write and run an application with one single command!
