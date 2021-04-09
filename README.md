@@ -217,7 +217,7 @@ The sample code offers you four npm tasks:
 
 You will find three different folders:
 - `plugins`: the folder where you will place all your custom plugins
-- `services`: the folder where you will declare all your endpoints
+- `routes`: the folder where you will declare all your endpoints
 - `test`: the folder where you will declare all your test
 
 Finally, there will be an `app.js` file, which is your entry point.
