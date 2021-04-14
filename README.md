@@ -245,7 +245,7 @@ it will be overwritten. Use the `--integrate` flag with care.
 
 `fastify-cli` can help you improve your plugin development by generating a scaffolding project:
 
-1. `fastify generate <yourplugin>`
+1. `fastify generate-plugin <yourplugin>`
 2. `cd yourplugin`
 3. `npm install`
 
