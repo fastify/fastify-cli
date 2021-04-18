@@ -15,7 +15,10 @@ function renderDocs () {
 
   const fileContents = []
   for (const fileName of fileNames) {
-    fileContents.push((fs.readFileSync(path.join(docsBase, fileName))).toString('utf8'))
+    const fullFilePath = path.join(docsBase, fileName)
+    if (fs.lstatSync(fullFilePath).isFile()) {
+      fileContents.push((fs.readFileSync(fullFilePath)).toString('utf8'))
+    }
   }
 
   const screen = blessed.screen({
