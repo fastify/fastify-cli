@@ -129,7 +129,7 @@ This works with a `.js` extension if you are using Node.js >= 14 and the nearest
 If your `package.json` does not have `"type": "module"`, use `.mjs` for the extension (`plugin.mjs` in the above example).
 
 #### Options
-You can pass the following options via CLI arguments, every options has the corresponding environment variable:
+You can pass the following options via CLI arguments. Every option has a corresponding environment variable:
 
 | Description                                                                                                                             | Short command | Full command       | Environment variable     |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------------------ |
