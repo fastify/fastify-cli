@@ -6,7 +6,7 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
 
 Command line tools for [Fastify](https://github.com/fastify/fastify).
-Generate, write and run an application with one single command!
+Generate, write, and run an application with one single command!
 
 ## Install
 ```bash
@@ -129,7 +129,7 @@ This works with a `.js` extension if you are using Node.js >= 14 and the nearest
 If your `package.json` does not have `"type": "module"`, use `.mjs` for the extension (`plugin.mjs` in the above example).
 
 #### Options
-You can pass the following options via cli arguments, every options has the corresponding environment variable:
+You can pass the following options via CLI arguments, every options has the corresponding environment variable:
 
 | Description                                                                                                                             | Short command | Full command       | Environment variable     |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------------------ |
@@ -142,13 +142,13 @@ You can pass the following options via cli arguments, every options has the corr
 | Set the inspector port (default: 9320)                                                                                                  | `-I`          | `--debug-port`     | `FASTIFY_DEBUG_PORT`     |
 | Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
-| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.                                | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
+| Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload                                 | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
 | Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |               | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
-| Defines the maximum payload, in bytes,<br>the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
+| Defines the maximum payload, in bytes,<br>that the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 
@@ -196,7 +196,7 @@ app.listen(process.env.PORT || 3000, (err) => {
 #### Unhandled rejections
 
 fastify-cli uses [make-promises-safe](https://github.com/mcollina/make-promises-safe) to avoid memory leaks
-in case of a `'unhandledRejection'`.
+in case of an `'unhandledRejection'`.
 
 ### generate
 
@@ -223,15 +223,15 @@ You will find three different folders:
 Finally, there will be an `app.js` file, which is your entry point.
 It is a standard Fastify plugin and you will not need to add the `listen` method to run the server, just run it with one of the scripts above.
 
-Normally if the target directory exists generate will fail. Unless the target directory is `.`, as in the current directory.
+If the target directory exists `fastify generate` will fail unless the target directory is `.`, as in the current directory.
 
-If the target directory is the current directory (`.`) and it already contains a `package.json` file, generate will normally fail. This can
+If the target directory is the current directory (`.`) and it already contains a `package.json` file, `fastify generate` will fail. This can
 be overidden with the `--integrate` flag:
 
 `fastify generate . --integrate`
 
 This will add or alter the `main`, `scripts`, `dependencies` and `devDependencies` fields on the `package.json`. In cases of file name collisions
-for any files being added, the file will be overwritten with the new file added by generate. So if there is an existing `app.js` in this scenario,
+for any files being added, the file will be overwritten with the new file added by `fastify generate`. If there is an existing `app.js` in this scenario,
 it will be overwritten. Use the `--integrate` flag with care.
 
 #### Options
@@ -249,7 +249,7 @@ it will be overwritten. Use the `--integrate` flag with care.
 2. `cd yourplugin`
 3. `npm install`
 
-Your boilerplate will provide you some useful npm scripts:
+The boilerplate provides some useful npm scripts:
 * `npm run unit`: runs all unit tests
 * `npm run lint`: to check your project's code style
 * `npm run test:typescript`: runs types tests
@@ -257,19 +257,19 @@ Your boilerplate will provide you some useful npm scripts:
 
 ### readme
 
-`fastify-cli` can also help with generating a concise and informative readme for your plugin. If no `package.json` was provided a new one is generated automatically.
+`fastify-cli` can also help with generating a concise and informative readme for your plugin. If no `package.json` is provided a new one is generated automatically.
 To use it:
 
 1. `cd yourplugin`
 2. `fastify readme <path-to-your-plugin-file>`
 
-Finally, there will be a new `README.md` file, which provides internal informations about your plugin e.g:
+Finally, there will be a new `README.md` file, which provides internal information about your plugin e.g:
 
 * Install instructions
 * Example usage
 * Plugin dependencies
 * Exposed decorators
-* Encapsulation semantic
+* Encapsulation semantics
 * Compatible Fastify version
 
 ### linting
@@ -292,21 +292,14 @@ Finally, there will be a new `README.md` file, which provides internal informati
 
 ### docs
 
-`fastify-cli` allows you to view the documentation for Fastify in your terminal. By default, fastify-cli attempts to render the documentation for the Fastify version installed in the current working directory node_modules folder, however, if none are found, it should fall back to rendering the documentation for the version that fastify-cli depends on.
+`fastify-cli` allows you to view the documentation for Fastify in your terminal. By default, fastify-cli attempts to render the documentation for the Fastify version installed in the current working directory node_modules folder. However, if none are found it should fall back to rendering the documentation for the version that fastify-cli depends on.
 
-The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys by pressing the enter key to select documentation to view.
+The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys and pressing the enter key to select documentation to view.
 
 run `fastify docs` to get started.
 
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
 
-The code follows the Standard code style.
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
-
 ## License
 **[MIT](https://github.com/fastify/fastify-cli/blob/master/LICENSE)**
-
-*The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and non infringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.*
-
-Copyright © 2016-2018 Fastify Team
