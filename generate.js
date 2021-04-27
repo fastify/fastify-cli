@@ -48,7 +48,7 @@ const typescriptTemplate = {
     test: 'npm run build:ts && tsc -p test/tsconfig.test.json && tap test/**/*.test.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
-    dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold"  "tsc -w" "fastify start -w -l info -P dist/app.js"'
+    dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "tsc -w" "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"'
   },
   dependencies: {
     fastify: cliPkg.dependencies.fastify,
