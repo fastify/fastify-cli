@@ -223,7 +223,7 @@ kickstart the development of your next Fastify application. To use it:
 2. `cd yourapp`
 3. `npm install`
 
-The sample code offers you four npm tasks:
+The sample code offers you the following npm tasks:
 
 * `npm start` - starts the application
 * `npm run dev` - starts the application with
