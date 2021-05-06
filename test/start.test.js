@@ -821,6 +821,24 @@ test('should support custom logger configuration', async t => {
   t.pass('server closed')
 })
 
+test('preloading a built-in module works', async t => {
+  t.plan(1)
+
+  const argv = ['-r', 'path', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  await fastify.close()
+  t.pass('server closed')
+})
+
+test('preloading a module in node_modules works', async t => {
+  t.plan(1)
+
+  const argv = ['-r', 'tap', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  await fastify.close()
+  t.pass('server closed')
+})
+
 test('should throw on logger configuration module not found', async t => {
   t.plan(2)
 

@@ -14,7 +14,7 @@ const watch = require('./lib/watch')
 const parseArgs = require('./args')
 const {
   exit,
-  requirePath,
+  requireModule,
   requireFastifyForModule,
   requireServerPluginFromPath,
   showHelpForCommand
@@ -72,7 +72,7 @@ async function runFastify (args) {
           /* This check ensures we ignore `-r ""`, trailing `-r`, or
            * other silly things the user might (inadvertently) be doing.
            */
-          requirePath(module)
+          requireModule(module)
         }
       })
     } catch (e) {
@@ -94,7 +94,7 @@ async function runFastify (args) {
   let logger
   if (opts.loggingModule) {
     try {
-      logger = requirePath(opts.loggingModule)
+      logger = requireModule(opts.loggingModule)
     } catch (e) {
       module.exports.stop(e)
     }

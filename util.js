@@ -19,12 +19,15 @@ function exit (message) {
   process.exit()
 }
 
-function requirePath (filePath) {
-  const moduleFilePath = path.resolve(filePath)
-  const moduleFileExtension = path.extname(filePath)
-  const modulePath = moduleFilePath.split(moduleFileExtension)[0]
-  const module = require(modulePath)
-  return module
+function requireModule (moduleName) {
+  if (fs.existsSync(moduleName)) {
+    const moduleFilePath = path.resolve(moduleName)
+    const moduleFileExtension = path.extname(moduleName)
+    const modulePath = moduleFilePath.split(moduleFileExtension)[0]
+    return require(modulePath)
+  } else {
+    return require(moduleName)
+  }
 }
 
 function requireFastifyForModule (modulePath) {
@@ -95,4 +98,4 @@ function showHelpForCommand (commandName) {
   }
 }
 
-module.exports = { exit, requirePath, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
+module.exports = { exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
