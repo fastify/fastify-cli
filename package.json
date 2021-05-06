@@ -50,7 +50,7 @@
     "chokidar": "^3.3.1",
     "close-with-grace": "^1.0.0",
     "commist": "^1.0.0",
-    "dotenv": "^8.2.0",
+    "dotenv": "^9.0.0",
     "fastify": "^3.0.0",
     "generify": "^4.0.0",
     "help-me": "^2.0.0",
