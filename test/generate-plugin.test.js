@@ -66,40 +66,40 @@ function define (t) {
   test('errors if directory exists', (t) => {
     t.plan(2)
     exec('node generate-plugin.js ./test/workdir', (err, stdout) => {
-      t.is('directory ./test/workdir already exists', strip(stdout.toString().trim()))
-      t.is(1, err.code)
+      t.equal('directory ./test/workdir already exists', strip(stdout.toString().trim()))
+      t.equal(1, err.code)
     })
   })
 
   test('errors if generate doesn\'t have <folder> arguments', (t) => {
     t.plan(2)
     exec('node generate-plugin.js', (err, stdout) => {
-      t.is('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
-      t.is(1, err.code)
+      t.equal('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
+      t.equal(1, err.code)
     })
   })
 
   test('errors if package.json exists when use generate .', (t) => {
     t.plan(2)
     exec('node generate-plugin.js .', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
-      t.is(1, err.code)
+      t.equal('a package.json file already exists in target directory', strip(stdout.toString().trim()))
+      t.equal(1, err.code)
     })
   })
 
   test('errors if package.json exists when use generate ./', (t) => {
     t.plan(2)
     exec('node generate-plugin.js ./', (err, stdout) => {
-      t.is('a package.json file already exists in target directory', strip(stdout.toString().trim()))
-      t.is(1, err.code)
+      t.equal('a package.json file already exists in target directory', strip(stdout.toString().trim()))
+      t.equal(1, err.code)
     })
   })
 
   test('errors if folder exists', (t) => {
     t.plan(2)
     exec('node generate-plugin.js test', (err, stdout) => {
-      t.is('directory test already exists', strip(stdout.toString().trim()))
-      t.is(1, err.code)
+      t.equal('directory test already exists', strip(stdout.toString().trim()))
+      t.equal(1, err.code)
     })
   })
 
@@ -140,7 +140,7 @@ function define (t) {
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.tsd, cliPkg.devDependencies.tsd)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
-        t.deepEqual(pkg.tsd, pluginTemplate.tsd)
+        t.same(pkg.tsd, pluginTemplate.tsd)
 
         const testGlob = pkg.scripts.unit.split(' ')[1]
         t.equal(minimatch.match(['test/more/test/here/ok.test.js'], testGlob).length, 1)
@@ -161,7 +161,7 @@ function define (t) {
           try {
             const data = readFileSync(file)
             file = file.replace(workdir, '')
-            t.deepEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
+            t.same(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
           } catch (err) {
             reject(err)
           }

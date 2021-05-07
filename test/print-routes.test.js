@@ -39,7 +39,7 @@ test('should warn on file not found', t => {
   t.plan(1)
 
   const oldStop = printRoutes.stop
-  t.tearDown(() => { printRoutes.stop = oldStop })
+  t.teardown(() => { printRoutes.stop = oldStop })
   printRoutes.stop = function (message) {
     t.ok(/.*not-found.js doesn't exist within/.test(message), message)
   }
@@ -52,7 +52,7 @@ test('should throw on package not found', t => {
   t.plan(1)
 
   const oldStop = printRoutes.stop
-  t.tearDown(() => { printRoutes.stop = oldStop })
+  t.teardown(() => { printRoutes.stop = oldStop })
   printRoutes.stop = function (err) {
     t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
   }
@@ -65,7 +65,7 @@ test('should throw on parsing error', t => {
   t.plan(1)
 
   const oldStop = printRoutes.stop
-  t.tearDown(() => { printRoutes.stop = oldStop })
+  t.teardown(() => { printRoutes.stop = oldStop })
   printRoutes.stop = function (err) {
     t.equal(err.constructor, SyntaxError)
   }
@@ -78,7 +78,7 @@ test('should exit without error on help', t => {
   const exit = process.exit
   process.exit = sinon.spy()
 
-  t.tearDown(() => {
+  t.teardown(() => {
     process.exit = exit
   })
 

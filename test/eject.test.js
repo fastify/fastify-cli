@@ -77,7 +77,7 @@ function define (t) {
           try {
             const data = readFileSync(file)
             file = file.replace(workdir, '')
-            t.deepEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
+            t.same(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
           } catch (err) {
             reject(err)
           }

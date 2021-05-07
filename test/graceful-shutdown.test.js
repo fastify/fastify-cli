@@ -35,11 +35,11 @@ t.afterEach(async (done, t) => {
 test('should add and remove SIGINT listener as expected ', async t => {
   t.plan(2)
 
-  t.strictEqual(process.listenerCount('SIGINT'), signalCounter + 1)
+  t.equal(process.listenerCount('SIGINT'), signalCounter + 1)
 
   await fastify.close()
 
-  t.strictEqual(process.listenerCount('SIGINT'), signalCounter)
+  t.equal(process.listenerCount('SIGINT'), signalCounter)
 
   t.end()
 })
