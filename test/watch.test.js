@@ -11,5 +11,5 @@ test('should equal expect RegExp', t => {
   const expectRegExp = /(node_modules|build|dist|\.git|bower_components|logs)/
   const regExp = arrayToRegExp(['node_modules', 'build', 'dist', '.git', 'bower_components', 'logs'])
 
-  t.deepEqual(regExp, expectRegExp)
+  t.same(regExp, expectRegExp)
 })

@@ -26,9 +26,9 @@ test('should print routes for TS app', async t => {
         method: 'GET',
         url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
     })
-    t.strictEqual(response.statusCode, 200)
-    t.strictEqual(response.headers['content-length'], '' + body.length)
-    t.deepEqual(JSON.parse(body), { root: true })
+    t.equal(response.statusCode, 200)
+    t.equal(response.headers['content-length'], '' + body.length)
+    t.same(JSON.parse(body), { root: true })
 
     await fastifyApp.close();
     t.pass('server closed')
@@ -46,9 +46,9 @@ test('should print routes for default TS app', async t => {
         method: 'GET',
         url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
     })
-    t.strictEqual(response.statusCode, 200)
-    t.strictEqual(response.headers['content-length'], '' + body.length)
-    t.deepEqual(JSON.parse(body), { root: true })
+    t.equal(response.statusCode, 200)
+    t.equal(response.headers['content-length'], '' + body.length)
+    t.same(JSON.parse(body), { root: true })
 
     await fastifyApp.close();
     t.pass('server closed')

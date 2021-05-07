@@ -9,5 +9,5 @@ test('should register the correct decorator', async t => {
 
   await app.ready()
 
-  t.deepEqual(app.exampleDecorator(), 'decorated')
+  t.same(app.exampleDecorator(), 'decorated')
 })

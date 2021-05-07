@@ -24,7 +24,7 @@ async function build (t: Test) {
   await app.ready();
 
   // Tear down our app after we are done
-  t.tearDown(() => void app.close())
+  t.teardown(() => void app.close())
 
   return app
 }

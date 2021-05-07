@@ -27,7 +27,7 @@ test('should parse args correctly', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictDeepEqual(parsedArgs, {
+  t.strictSame(parsedArgs, {
     _: ['app.js'],
     '--': [],
     prettyLogs: true,
@@ -77,7 +77,7 @@ test('should parse args with = assignment correctly', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictDeepEqual(parsedArgs, {
+  t.strictSame(parsedArgs, {
     _: ['app.js'],
     '--': [],
     prettyLogs: true,
@@ -144,7 +144,7 @@ test('should parse env vars correctly', t => {
 
   const parsedArgs = parseArgs([])
 
-  t.strictDeepEqual(parsedArgs, {
+  t.strictSame(parsedArgs, {
     _: [],
     '--': [],
     prettyLogs: true,
@@ -178,18 +178,18 @@ test('should respect default values', t => {
 
   const parsedArgs = parseArgs(argv)
 
-  t.is(parsedArgs._[0], 'app.js')
-  t.is(parsedArgs.options, false)
-  t.is(parsedArgs.prettyLogs, false)
-  t.is(parsedArgs.watch, false)
-  t.is(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
-  t.is(parsedArgs.verboseWatch, false)
-  t.is(parsedArgs.logLevel, 'fatal')
-  t.is(parsedArgs.pluginTimeout, 10000)
-  t.is(parsedArgs.debug, false)
-  t.is(parsedArgs.debugPort, 9320)
-  t.is(parsedArgs.loggingModule, undefined)
-  t.is(parsedArgs.require, undefined)
+  t.equal(parsedArgs._[0], 'app.js')
+  t.equal(parsedArgs.options, false)
+  t.equal(parsedArgs.prettyLogs, false)
+  t.equal(parsedArgs.watch, false)
+  t.equal(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
+  t.equal(parsedArgs.verboseWatch, false)
+  t.equal(parsedArgs.logLevel, 'fatal')
+  t.equal(parsedArgs.pluginTimeout, 10000)
+  t.equal(parsedArgs.debug, false)
+  t.equal(parsedArgs.debugPort, 9320)
+  t.equal(parsedArgs.loggingModule, undefined)
+  t.equal(parsedArgs.require, undefined)
 })
 
 test('should parse custom plugin options', t => {
@@ -220,7 +220,7 @@ test('should parse custom plugin options', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictDeepEqual(parsedArgs, {
+  t.strictSame(parsedArgs, {
     _: ['app.js'],
     '--': [
       '-abc',
