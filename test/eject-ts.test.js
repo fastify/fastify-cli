@@ -49,13 +49,9 @@ const expected = {};
 function define (t) {
   const { beforeEach, test } = t
 
-  beforeEach((cb) => {
-    rimraf(workdir, () => {
-      // skip any errors
-
-      mkdirp.sync(workdir)
-      cb()
-    })
+  beforeEach(() => {
+    rimraf.sync(workdir)
+    mkdirp.sync(workdir)
   })
 
   test('should finish succesfully with template', async (t) => {

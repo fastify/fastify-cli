@@ -17,19 +17,16 @@ let fastify = null
 let signalCounter = null
 const sandbox = sinon.createSandbox()
 
-t.beforeEach(async (done, t) => {
+t.beforeEach(async () => {
   signalCounter = process.listenerCount('SIGINT')
 
   const argv = ['-p', getPort(), './examples/plugin.js']
   fastify = await start.start(argv)
   spy = sinon.spy(fastify, 'close')
-
-  done()
 })
 
-t.afterEach(async (done, t) => {
+t.afterEach(async () => {
   sandbox.restore()
-  done()
 })
 
 test('should add and remove SIGINT listener as expected ', async t => {
