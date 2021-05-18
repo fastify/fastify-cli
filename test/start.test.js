@@ -621,8 +621,8 @@ test('should reload the env on restart when watching', async (t) => {
   const fastifyEmitter = await requireUncached('../start').start(argv)
 
   t.teardown(async () => {
-    await fastifyEmitter.emit('close')
-    await process.chdir(cwd)
+    await fastifyEmitter.stop()
+    process.chdir(cwd)
   })
 
   await once(fastifyEmitter, 'ready')
