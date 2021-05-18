@@ -542,11 +542,11 @@ test('should start the server with watch options that the child process restart 
   const argv = ['-p', '4042', '-w', './examples/plugin.js']
   const fastifyEmitter = await start.start(argv)
 
-  t.teardown(() => {
+  t.teardown(async () => {
     if (fs.existsSync(tmpjs)) {
       fs.unlinkSync(tmpjs)
     }
-    fastifyEmitter.emit('close')
+    await fastifyEmitter.stop()
   })
 
   await once(fastifyEmitter, 'start')
@@ -583,11 +583,11 @@ test('should start the server with watch and verbose-watch options that the chil
   const argv = ['-p', '4042', '-w', '--verbose-watch', './examples/plugin.js']
   const fastifyEmitter = await start.start(argv)
 
-  t.teardown(() => {
+  t.teardown(async () => {
     if (fs.existsSync(tmpjs)) {
       fs.unlinkSync(tmpjs)
     }
-    fastifyEmitter.emit('close')
+    await fastifyEmitter.stop()
   })
 
   await once(fastifyEmitter, 'start')
