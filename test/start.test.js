@@ -606,7 +606,7 @@ test('should start the server with watch and verbose-watch options that the chil
   t.ok(spy.calledOnce, 'should print a console message on file update')
 })
 
-test('should reload the env on restart when watching', async (t) => {
+test('should reload the env on restart when watching', { skip: onGithubAction }, async (t) => {
   const testdir = t.testdir({
     '.env': 'GREETING=world',
     'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
@@ -620,8 +620,7 @@ test('should reload the env on restart when watching', async (t) => {
   const argv = ['-p', port, '-w', path.join(testdir, 'plugin.js')]
   const fastifyEmitter = await requireUncached('../start').start(argv)
 
-  t.teardown(async () => {
-    await fastifyEmitter.stop()
+  t.teardown(() => {
     process.chdir(cwd)
   })
 
@@ -646,6 +645,8 @@ test('should reload the env on restart when watching', async (t) => {
 
   t.equal(r2.response.statusCode, 200)
   t.same(JSON.parse(r2.body), { hello: 'planet' })
+
+  await fastifyEmitter.stop()
 })
 
 test('should read env variables from .env file', async (t) => {
