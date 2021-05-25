@@ -100,7 +100,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(22 + Object.keys(expected).length)
+    t.plan(23 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -125,7 +125,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.test.json && cross-env TS_NODE_FILES=true tap test/**/*.test.ts')
+        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.test.json && cross-env TS_NODE_FILES=true tap --ts test/**/*.test.ts')
         t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts.dev, 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "tsc -w" "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"')
@@ -135,11 +135,12 @@ function define (t) {
         t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
         t.equal(pkg.dependencies['fastify-sensible'], cliPkg.devDependencies['fastify-sensible'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
+        t.equal(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
-        const testGlob = pkg.scripts.test.split(' ')[11]
+        const testGlob = pkg.scripts.test.split(' ')[12]
 
         t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()

@@ -45,7 +45,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'npm run build:ts && tsc -p test/tsconfig.test.json && cross-env TS_NODE_FILES=true tap test/**/*.test.ts',
+    test: 'npm run build:ts && tsc -p test/tsconfig.test.json && cross-env TS_NODE_FILES=true tap --ts test/**/*.test.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     dev: 'tsc && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "tsc -w" "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"'
@@ -60,6 +60,7 @@ const typescriptTemplate = {
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
     '@types/tap': cliPkg.devDependencies['@types/tap'],
+    'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'cross-env': cliPkg.devDependencies['cross-env'],
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
