@@ -11,12 +11,13 @@ function renderDocs () {
   if (!docsBase) return console.error('Something went wrong finding docs... please report a bug! https://github.com/fastify/fastify-cli')
 
   const fileNames = fs.readdirSync(docsBase)
-  const docNames = fileNames.map(fileName => fileName.replace(/-/g, ' ').replace(/\.md$/, ''))
+  let docNames = []
 
   const fileContents = []
   for (const fileName of fileNames) {
     const fullFilePath = path.join(docsBase, fileName)
     if (fs.lstatSync(fullFilePath).isFile()) {
+      docNames.push(fileName.replace(/-/g, ' ').replace(/\.md$/, ''))
       fileContents.push((fs.readFileSync(fullFilePath)).toString('utf8'))
     }
   }
