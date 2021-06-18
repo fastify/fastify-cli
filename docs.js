@@ -11,7 +11,7 @@ function renderDocs () {
   if (!docsBase) return console.error('Something went wrong finding docs... please report a bug! https://github.com/fastify/fastify-cli')
 
   const fileNames = fs.readdirSync(docsBase)
-  let docNames = []
+  const docNames = []
 
   const fileContents = []
   for (const fileName of fileNames) {
