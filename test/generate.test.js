@@ -138,7 +138,7 @@ function define (t) {
         t.equal(pkg.name, 'workdir')
         // we are not checking author because it depends on global npm configs
         t.equal(pkg.version, '1.0.0')
-        t.equal(pkg.description, '')
+        t.equal(pkg.description, 'This project was bootstrapped with Fastify-CLI.')
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
