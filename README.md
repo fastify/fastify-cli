@@ -157,11 +157,11 @@ By default `--ignore-watch` flag is set to ignore `node_modules build dist .git 
 
 #### Containerization
 
-When deploying to a Docker, and potentially other, containers, it is advisable to set a fastify address of 0.0.0.0 because these containers do not default to exposing mapped ports to localhost. 
+When deploying to a Docker, and potentially other, containers, it is advisable to set a fastify address of `0.0.0.0` because these containers do not default to exposing mapped ports to localhost. 
 
-For containers built and run specifically by the Docker Daemon, fastify-cli is able to detect that the server process is running within a Docker container and the 0.0.0.0 listen address is set automatically.
+For containers built and run specifically by the Docker Daemon, fastify-cli is able to detect that the server process is running within a Docker container and the `0.0.0.0` listen address is set automatically.
 
-Other containerization tools (eg. Buildah and Podman) are not detected automatically, so the 0.0.0.0 listen address must be set explicitly with either the `--address` flag or the `FASTIFY_ADDRESS` environment variable.
+Other containerization tools (eg. Buildah and Podman) are not detected automatically, so the `0.0.0.0` listen address must be set explicitly with either the `--address` flag or the `FASTIFY_ADDRESS` environment variable.
 
 #### Fastify version discovery
 
