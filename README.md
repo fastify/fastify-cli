@@ -138,6 +138,7 @@ You can pass the following options via CLI arguments. Every option has a corresp
 | Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
 | Module to preload                                                                                                                       | `-r`          | `--require`        | `FASTIFY_REQUIRE`        |
 | Log level (default to fatal)                                                                                                            | `-l`          | `--log-level`      | `FASTIFY_LOG_LEVEL`      |
+| Path to logging configuration module to use                                                                                             | `-L`          | `--logging-module  | `FASTIFY_LOGGING_MODULE` |
 | Start Fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
 | Set the inspector port (default: 9320)                                                                                                  | `-I`          | `--debug-port`     | `FASTIFY_DEBUG_PORT`     |
 | Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
