@@ -8,7 +8,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/app.ts",
+            "program": "${workspaceRoot}/node_modules/.bin/fastify",
+            "args": ["start", "-l", "info", "./dist/app.js"],
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"

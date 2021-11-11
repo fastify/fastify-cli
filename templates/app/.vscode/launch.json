@@ -8,7 +8,8 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/app.js"
+            "program": "${workspaceRoot}/node_modules/.bin/fastify",
+            "args": ["start", "-l", "info", "app.js"]
         }
     ]
 }
