@@ -63,8 +63,13 @@ const typescriptTemplate = {
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
+    nodemon: '^2.0.15',
     tap: cliPkg.devDependencies.tap,
     typescript: cliPkg.devDependencies.typescript
+  },
+  nodemonConfig: {
+    watch: ['src/'],
+    ignore: ['dist/*']
   },
   logInstructions: function (pkg) {
     log('debug', 'saved package.json')
