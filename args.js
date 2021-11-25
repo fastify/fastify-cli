@@ -47,6 +47,9 @@ module.exports = function parseArgs (args) {
   const ignoreWatchArg = parsedArgs.ignoreWatch || ''
 
   let ignoreWatch = `${DEFAULT_IGNORE} ${ignoreWatchArg}`.trim()
+  if (ignoreWatchArg.includes('.ts$')) {
+    ignoreWatch = ignoreWatch.replace('dist', '')
+  }
 
   return {
     _: parsedArgs._,
