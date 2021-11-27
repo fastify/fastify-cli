@@ -2,6 +2,8 @@
 
 const argv = require('yargs-parser')
 
+const DEFAULT_IGNORE = 'node_modules build dist .git bower_components logs .swp .nyc_output'
+
 module.exports = function parseArgs (args) {
   const parsedArgs = argv(args, {
     configuration: {
@@ -34,7 +36,6 @@ module.exports = function parseArgs (args) {
       verboseWatch: false,
       debug: false,
       debugPort: 9320,
-      'ignore-watch': 'node_modules build dist .git bower_components logs .swp .nyc_output',
       options: false,
       'plugin-timeout': 10 * 1000, // everything should load in 10 seconds
       lang: 'js'
@@ -43,6 +44,12 @@ module.exports = function parseArgs (args) {
 
   const additionalArgs = parsedArgs['--'] || []
   const { _, ...pluginOptions } = argv(additionalArgs)
+  const ignoreWatchArg = parsedArgs.ignoreWatch || ''
+
+  let ignoreWatch = `${DEFAULT_IGNORE} ${ignoreWatchArg}`.trim()
+  if (ignoreWatchArg.includes('.ts$')) {
+    ignoreWatch = ignoreWatch.replace('dist', '')
+  }
 
   return {
     _: parsedArgs._,
@@ -57,7 +64,7 @@ module.exports = function parseArgs (args) {
     debug: parsedArgs.debug,
     debugPort: parsedArgs.debugPort,
     debugHost: parsedArgs.debugHost,
-    ignoreWatch: parsedArgs.ignoreWatch,
+    ignoreWatch,
     verboseWatch: parsedArgs.verboseWatch,
     logLevel: parsedArgs.logLevel,
     address: parsedArgs.address,
