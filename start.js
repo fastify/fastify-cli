@@ -59,7 +59,7 @@ function stop (message) {
   exit(message)
 }
 
-async function runFastify (args) {
+async function runFastify (args, additionalOptions) {
   const opts = parseArgs(args)
   if (opts.require) {
     if (typeof opts.require === 'string') {
@@ -138,7 +138,8 @@ async function runFastify (args) {
     opts.pluginOptions.prefix = opts.prefix
   }
 
-  await fastify.register(file.default || file, opts.pluginOptions)
+  const appConfig = Object.assign({}, opts.pluginOptions, additionalOptions)
+  await fastify.register(file.default || file, appConfig)
 
   const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, err, manual }) {
     if (err) {
@@ -152,7 +153,9 @@ async function runFastify (args) {
     done()
   })
 
-  if (opts.address) {
+  if (additionalOptions && additionalOptions.ready) {
+    await fastify.ready()
+  } else if (opts.address) {
     await fastify.listen(opts.port, opts.address)
   } else if (opts.socket) {
     await fastify.listen(opts.socket)
