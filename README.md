@@ -346,7 +346,7 @@ const { build, listen } = require('fastify-cli/helper')
 const { test } = require('tap')
 test('test my application', async t => {
   const argv = ['app.js']
-  const app = await helper.build(argv, {
+  const app = await build(argv, {
     extraParam: 'foo'
   })
   t.teardown(() => app.close())

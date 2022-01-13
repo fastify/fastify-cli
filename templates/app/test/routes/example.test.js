@@ -1,10 +1,10 @@
 'use strict'
 
 const { test } = require('tap')
-const { build } = require('../helper')
+const { buildApplication } = require('../helper')
 
 test('example is loaded', async (t) => {
-  const app = build(t)
+  const app = await buildApplication(t)
 
   const res = await app.inject({
     url: '/example'
@@ -16,7 +16,7 @@ test('example is loaded', async (t) => {
 //
 // test('example is loaded', (t) => {
 //   t.plan(2)
-//   const app = build(t)
+//   const app = await buildApplication(t)
 //
 //   app.inject({
 //     url: '/example'
