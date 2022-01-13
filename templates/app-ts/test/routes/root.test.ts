@@ -1,8 +1,8 @@
 import { test } from 'tap'
-import { build } from '../helper'
+import { buildApplication } from '../helper'
 
 test('default root route', async (t) => {
-  const app = await build(t)
+  const app = await buildApplication(t)
 
   const res = await app.inject({
     url: '/'

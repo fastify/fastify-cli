@@ -1,8 +1,8 @@
 // This file contains code that we reuse between our tests.
-import Fastify from 'fastify'
-import fp from 'fastify-plugin'
-import App from '../src/app'
-import * as tap from 'tap';
+import * as tap from 'tap'
+import { build } from 'fastify-cli/helper'
+
+const AppPath = './src/app.ts'
 
 export type Test = typeof tap['Test']['prototype'];
 
@@ -13,15 +13,14 @@ async function config () {
 }
 
 // Automatically build and tear down our instance
-async function build (t: Test) {
-  const app = Fastify()
+async function buildApplication (t: Test) {
+  // you can set all the options supported by the fastify CLI command
+  const argv = [AppPath]
 
   // fastify-plugin ensures that all decorators
   // are exposed for testing purposes, this is
   // different from the production setup
-  void app.register(fp(App), await config())
-
-  await app.ready();
+  const app = await build(argv, config())
 
   // Tear down our app after we are done
   t.teardown(() => void app.close())
@@ -31,5 +30,5 @@ async function build (t: Test) {
 
 export {
   config,
-  build
+  buildApplication
 }
