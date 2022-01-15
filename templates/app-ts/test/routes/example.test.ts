@@ -1,8 +1,8 @@
 import { test } from 'tap'
-import { buildApplication } from '../helper'
+import { build } from '../helper'
 
 test('example is loaded', async (t) => {
-  const app = await buildApplication(t)
+  const app = await build(t)
 
   const res = await app.inject({
     url: '/example'
