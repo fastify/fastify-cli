@@ -82,6 +82,17 @@ test('setting plugin options, extra has priority', async t => {
   })
 })
 
+test('setting plugin options, extra has priority', async t => {
+  const args = './examples/plugin-with-custom-options.js -- --hello world --from args'
+  const app = await helper.build(args, { hello: 'planet' })
+  t.teardown(() => app.close())
+  const res = await app.inject('/')
+  t.same(res.json(), {
+    hello: 'planet',
+    from: 'args'
+  })
+})
+
 test('should start fastify', async t => {
   const argv = ['./examples/plugin.js']
   const app = await helper.listen(argv, {})
