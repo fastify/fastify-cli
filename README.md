@@ -325,8 +325,9 @@ run `fastify docs` to get started.
 
 ## Test helpers
 
-When you use `fastify-cli` to run your project you need a way to test your application.
+When you use `fastify-cli` to run your project you need a way to load your application because you can run the CLI command.
 To do so, you can use the this module to load your application and give you the control to write your assertions.
+These utilities are async functions that you may use with the [`node-tap`](https://www.npmjs.com/package/tap) testing framework.
 
 There are two utilities provided:
 
@@ -335,7 +336,7 @@ There are two utilities provided:
 
 Both of these utilities have the `function(arg, pluginOptions)` parameters:
 
-- `arg`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
+- `cliArgs`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
 - `pluginOptions`: is an object containing the options provided to the started plugin (eg: `app.js`).
 
 ```js
