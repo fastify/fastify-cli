@@ -6,12 +6,12 @@ process.env.TAP_BAIL = true
 
 const t = require('tap')
 const {
+  mkdirSync,
   readFileSync,
   readFile
 } = require('fs')
 const path = require('path')
 const rimraf = require('rimraf')
-const mkdirp = require('mkdirp')
 const walker = require('walker')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'eject')
@@ -52,7 +52,7 @@ function define (t) {
 
   beforeEach(() => {
     rimraf.sync(workdir)
-    mkdirp.sync(workdir)
+    mkdirSync(workdir, { recursive: true })
   })
 
   test('should finish succesfully with template', async (t) => {
