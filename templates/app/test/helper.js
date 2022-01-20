@@ -3,9 +3,9 @@
 // This file contains code that we reuse
 // between our tests.
 
-const Fastify = require('fastify')
-const fp = require('fastify-plugin')
-const App = require('../app')
+const { build: buildApplication } = require('fastify-cli/helper')
+const path = require('path')
+const AppPath = path.join(__dirname, '..', 'app.js')
 
 // Fill in this config with all the configurations
 // needed for testing the application
@@ -14,13 +14,14 @@ function config () {
 }
 
 // automatically build and tear down our instance
-function build (t) {
-  const app = Fastify()
+async function build (t) {
+  // you can set all the options supported by the fastify CLI command
+  const argv = [AppPath]
 
   // fastify-plugin ensures that all decorators
   // are exposed for testing purposes, this is
   // different from the production setup
-  app.register(fp(App), config())
+  const app = await buildApplication(argv, config())
 
   // tear down our app after we are done
   t.teardown(app.close.bind(app))

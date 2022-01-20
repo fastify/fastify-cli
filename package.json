@@ -10,6 +10,7 @@
     "lint": "standard",
     "lint:fix": "standard --fix",
     "unit": "tap \"test/**/*.test.{js,ts}\" \"templates/**/*.test.{js,ts}\"",
+    "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
     "test": "npm run lint && npm run unit && npm run test:typescript",
     "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },

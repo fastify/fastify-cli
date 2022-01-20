@@ -323,6 +323,42 @@ The documentation is rendered using an interactive terminal session that you can
 
 run `fastify docs` to get started.
 
+## Test helpers
+
+When you use `fastify-cli` to run your project you need a way to load your application because you can run the CLI command.
+To do so, you can use the this module to load your application and give you the control to write your assertions.
+These utilities are async functions that you may use with the [`node-tap`](https://www.npmjs.com/package/tap) testing framework.
+
+There are two utilities provided:
+
+- `build`: builds your application and returns the `fastify` instance without calling the `listen` method.
+- `listen`: starts your application and returns the `fastify` instance listening on the configured port.
+
+Both of these utilities have the `function(arg, pluginOptions)` parameters:
+
+- `cliArgs`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
+- `pluginOptions`: is an object containing the options provided to the started plugin (eg: `app.js`).
+
+```js
+// load the utility helper functions
+const { build, listen } = require('fastify-cli/helper')
+
+// write a test
+const { test } = require('tap')
+test('test my application', async t => {
+  const argv = ['app.js']
+  const app = await build(argv, {
+    extraParam: 'foo'
+  })
+  t.teardown(() => app.close())
+  
+  // test your application here:
+  const res = await app.inject('/')
+  t.same(res.json(), { hello: 'one' })
+})
+```
+
+
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
 
