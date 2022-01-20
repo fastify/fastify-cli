@@ -1,4 +1,4 @@
-import { FastifyPlugin } from 'fastify'
+import { FastifyPluginCallback } from 'fastify'
 
 declare module 'fastify' {
   export interface FastifyInstance {
@@ -7,5 +7,7 @@ declare module 'fastify' {
   }
 }
 
-declare const example: FastifyPlugin<() => string>
+declare const example: FastifyPluginCallback<() => string>
+
+export { example }
 export default example
