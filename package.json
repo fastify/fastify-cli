@@ -51,7 +51,7 @@
     "chokidar": "^3.5.2",
     "close-with-grace": "^1.1.0",
     "commist": "^2.0.0",
-    "dotenv": "^14.2.0",
+    "dotenv": "^16.0.0",
     "fastify": "^3.0.0",
     "generify": "^4.0.0",
     "help-me": "^3.0.0",
