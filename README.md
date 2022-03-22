@@ -362,7 +362,7 @@ test('test my application', async t => {
 ## Contributing
 If you feel you can help in any way, be it with examples, extra testing, or new features please open a pull request or open an issue.
 
-### How to rebuild the project:
+### How to execute the CLI
 Instead of using the `fastify` keyword before each command, use `node cli.js`
 <br/>Example: replace `fastify start` with `node cli.js start`
 
