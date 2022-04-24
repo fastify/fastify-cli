@@ -1,5 +1,3 @@
-"use strict";
-
 // Read the .env file.
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -24,7 +22,7 @@ const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, 
     app.log.error(err)
   }
   await app.close()
-})
+} as closeWithGrace.CloseWithGraceAsyncCallback)
 
 app.addHook('onClose', async (instance, done) => {
   closeListeners.uninstall()
