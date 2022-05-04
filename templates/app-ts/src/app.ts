@@ -1,5 +1,5 @@
 import { join } from 'path';
-import AutoLoad, {AutoloadPluginOptions} from 'fastify-autoload';
+import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
 import { FastifyPluginAsync } from 'fastify';
 
 export type AppOptions = {
