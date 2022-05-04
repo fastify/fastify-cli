@@ -33,7 +33,6 @@ Fastify command line interface, available commands are:
   * readme                generate a README.md for the plugin
   * print-routes          prints the representation of the internal radix tree used by the router, useful for debugging.
   * version               the current fastify-cli version
-  * docs                  starts an interactive terminal session to view the Fastify docs for the Fastify version installed. navigate with arrow keys
   * help                  help about commands
 
 Launch 'fastify help [command]' to know more about the commands.
@@ -158,7 +157,7 @@ By default `--ignore-watch` flag is set to ignore `node_modules build dist .git 
 
 #### Containerization
 
-When deploying to a Docker, and potentially other, containers, it is advisable to set a fastify address of `0.0.0.0` because these containers do not default to exposing mapped ports to localhost. 
+When deploying to a Docker, and potentially other, containers, it is advisable to set a fastify address of `0.0.0.0` because these containers do not default to exposing mapped ports to localhost.
 
 For containers built and run specifically by the Docker Daemon, fastify-cli is able to detect that the server process is running within a Docker container and the `0.0.0.0` listen address is set automatically.
 
@@ -315,14 +314,6 @@ Finally, there will be a new `README.md` file, which provides internal informati
 },
 ```
 
-### docs
-
-`fastify-cli` allows you to view the documentation for Fastify in your terminal. By default, fastify-cli attempts to render the documentation for the Fastify version installed in the current working directory node_modules folder. However, if none are found it should fall back to rendering the documentation for the version that fastify-cli depends on.
-
-The documentation is rendered using an interactive terminal session that you can navigate with your arrow keys and pressing the enter key to select documentation to view.
-
-run `fastify docs` to get started.
-
 ## Test helpers
 
 When you use `fastify-cli` to run your project you need a way to load your application because you can run the CLI command.
@@ -351,7 +342,7 @@ test('test my application', async t => {
     extraParam: 'foo'
   })
   t.teardown(() => app.close())
-  
+
   // test your application here:
   const res = await app.inject('/')
   t.same(res.json(), { hello: 'one' })
