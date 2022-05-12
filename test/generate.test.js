@@ -148,8 +148,8 @@ function define (t) {
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)
         t.equal(pkg.dependencies.fastify, cliPkg.dependencies.fastify)
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
-        t.equal(pkg.dependencies['fastify-autoload'], cliPkg.devDependencies['fastify-autoload'])
-        t.equal(pkg.dependencies['fastify-sensible'], cliPkg.devDependencies['fastify-sensible'])
+        t.equal(pkg.dependencies['@fastify/autoload'], cliPkg.devDependencies['@fastify/autoload'])
+        t.equal(pkg.dependencies['@fastify/sensible'], cliPkg.devDependencies['@fastify/sensible'])
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
 
         const testGlob = pkg.scripts.test.split(' ')[1].replace(/"/g, '')
