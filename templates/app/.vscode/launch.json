@@ -2,14 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
-            "request": "launch",
+            "type": "node",
             "name": "Launch Fastify",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceRoot}/node_modules/.bin/fastify",
-            "args": ["start", "-l", "info", "app.js"]
+            "console": "integratedTerminal"
         }
     ]
 }
