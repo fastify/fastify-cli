@@ -2,18 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
-            "request": "launch",
+            "type": "node",
             "name": "Launch Fastify",
+            "request": "launch",
+            "runtimeArgs": [
+                "run",
+                "dev:start"
+            ],
+            "runtimeExecutable": "npm",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceRoot}/node_modules/.bin/nodemon",
-            "args": ["--exec", "npm", "run", "dev"],
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ]
+            "console": "integratedTerminal",
+            "preLaunchTask": "npm: watch:ts"
         }
     ]
 }
