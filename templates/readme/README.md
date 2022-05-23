@@ -14,7 +14,7 @@ yarn add __packageName__
 ```js
 const fastify = require('fastify')()
 fastify.register(require('__packageName__'))
-fastify.listen(3000)
+fastify.listen({ port: 3000 })
 ```
 
 You can also start any Fastify plugin with the [Fastify-cli](https://github.com/fastify/fastify-cli):

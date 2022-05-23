@@ -202,13 +202,13 @@ const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, 
   await app.close()
 })
 
-app.addHook('onClose', async (instance, done) => {
+app.addHook('onClose', (instance, done) => {
   closeListeners.uninstall()
   done()
 })
 
 // Start listening.
-app.listen(process.env.PORT || 3000, (err) => {
+app.listen({ port: process.env.PORT || 3000 }, (err) => {
   if (err) {
     app.log.error(err)
     process.exit(1)

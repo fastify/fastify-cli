@@ -3,7 +3,7 @@
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](http://standardjs.com/)  ![CI workflow](__MY_PLUGIN_URL__
 /workflows/CI%20workflow/badge.svg)
 
-Supports Fastify versions `3.x`
+Supports Fastify versions `4.x`
 
 ## Install
 ```
@@ -19,7 +19,7 @@ fastify.register(require('__MY_PLUGIN__'), {
   // put your options here
 })
 
-fastify.listen(3000)
+fastify.listen({ port: 3000 })
 ```
 
 ## Acknowledgements
