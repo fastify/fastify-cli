@@ -20,7 +20,7 @@ test('should print routes for TS app', async t => {
     const fastifyApp = fastify({}, );
     await app(fastifyApp, {});
     await fastifyApp.ready();
-    await fastifyApp.listen(0)
+    await fastifyApp.listen({ port: 3000 })
 
     const { response, body } = await sget({
         method: 'GET',
@@ -40,7 +40,7 @@ test('should print routes for default TS app', async t => {
     const fastifyApp = fastify({}, );
     await appDefault(fastifyApp, {});
     await fastifyApp.ready();
-    await fastifyApp.listen(0)
+    await fastifyApp.listen({ port: 3000 })
 
     const { response, body } = await sget({
         method: 'GET',
