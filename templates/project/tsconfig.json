@@ -3,7 +3,6 @@
     "lib": ["ESNext"],
     "module": "CommonJS",
     "target": "ES2018",
-    "importHelpers": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "removeComments": true,
@@ -15,9 +14,7 @@
     "noImplicitThis": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "rootDir": "src",
-    "outDir": "dist"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/**/*"],
   "exclude": ["node_modules"]
 }

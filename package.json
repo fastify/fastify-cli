@@ -1,18 +1,28 @@
 {
   "name": "fastify-cli",
-  "version": "4.0.0",
+  "version": "3.1.0",
   "description": "Run a fastify route with one command!",
-  "main": "cli.js",
+  "main": "dist/index.js",
   "bin": {
-    "fastify": "cli.js"
+    "fastify": "./bin/run"
   },
+  "files": [
+    "/bin",
+    "/dist",
+    "/templates",
+    "/oclif.manifest.json"
+  ],
   "scripts": {
-    "lint": "standard",
-    "lint:fix": "standard --fix",
-    "unit": "tap \"test/**/*.test.{js,ts}\" \"templates/**/*.test.{js,ts}\"",
-    "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test": "npm run lint && npm run unit && npm run test:typescript",
-    "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
+    "build": "shx rm -rf dist && tsc -p tsconfig.json",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "npm run lint --fix",
+    "prepack": "npm run build",
+    "pack": "oclif manifest && oclif readme",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "preunit": "npm run pack",
+    "unit": "tap \"test/**/*.test.ts\"",
+    "test": "npm run lint && npm run unit",
+    "snap": "TAP_SNAPSHOT=1 && npm run unit"
   },
   "keywords": [
     "fastify",
@@ -36,58 +46,74 @@
   },
   "homepage": "https://github.com/fastify/fastify-cli#readme",
   "engines": {
-    "node": ">= 10"
-  },
-  "standard": {
-    "ignore": [
-      "test/data/parsing-error.js",
-      "test/data/undefinedVariable.js"
-    ]
+    "node": ">= 12"
   },
   "dependencies": {
-    "chalk": "^4.1.2",
-    "chokidar": "^3.5.2",
-    "close-with-grace": "^1.1.0",
-    "commist": "^2.0.0",
-    "dotenv": "^16.0.0",
+    "@fastify/autoload": "^5.0.0",
+    "@fastify/sensible": "^5.0.0",
+    "@oclif/core": "^1.8.2",
+    "@oclif/plugin-help": "^5.1.12",
+    "ansi-colors": "^4.1.3",
+    "chokidar": "^3.5.3",
+    "ejs": "^3.1.8",
     "fastify": "^4.0.0-rc.2",
-    "generify": "^4.0.0",
-    "help-me": "^4.0.0",
-    "is-docker": "^2.0.0",
-    "make-promises-safe": "^5.1.0",
-    "pino-colada": "^2.2.2",
-    "pkg-up": "^3.1.0",
-    "pump": "^3.0.0",
+    "fastify-plugin": "^3.0.0",
+    "inquirer": "^8.2.4",
+    "is-docker": "^3.0.0",
+    "pkg-up": "^4.0.0",
     "resolve-from": "^5.0.0",
-    "semver": "^7.3.5",
-    "split2": "^4.1.0",
-    "yargs-parser": "^21.0.1"
+    "semver": "^7.3.7",
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
-    "@fastify/autoload": "^5.0.0",
-    "@fastify/sensible": "^4.1.0",
-    "@types/node": "^17.0.8",
-    "@types/tap": "^15.0.5",
-    "concurrently": "^7.0.0",
-    "del-cli": "^4.0.1",
-    "fastify-plugin": "^3.0.0",
-    "fastify-tsconfig": "^1.0.1",
-    "minimatch": "^5.1.0",
-    "pre-commit": "^1.2.2",
-    "proxyquire": "^2.1.3",
-    "rimraf": "^3.0.2",
-    "simple-get": "^4.0.0",
-    "sinon": "^14.0.0",
-    "standard": "^17.0.0",
-    "strip-ansi": "^6.0.1",
-    "tap": "^16.1.0",
-    "ts-node": "^10.4.0",
-    "ts-standard": "^11.0.0",
-    "tsd": "^0.16.0",
-    "typescript": "^4.5.4",
-    "walker": "^1.0.8"
+    "@types/ejs": "^3.1.1",
+    "@types/inquirer": "^8.2.1",
+    "@types/node": "^17.0.0",
+    "@types/semver": "^7.3.9",
+    "@types/tap": "^15.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.0.1",
+    "eslint": "^7.12.1",
+    "eslint-config-standard-with-typescript": "^21.0.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.0.0",
+    "oclif": "^3.0.1",
+    "pino-pretty": "^7.6.1",
+    "shx": "^0.3.4",
+    "tap": "^16.2.0",
+    "ts-node": "^10.7.0",
+    "typescript": "~4.4.0"
   },
-  "tsd": {
-    "directory": "test"
+  "oclif": {
+    "bin": "fastify",
+    "dirname": "fastify",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "generate": {
+        "description": "Generate boilerplate"
+      }
+    }
+  },
+  "eslintConfig": {
+    "extends": "standard-with-typescript",
+    "parserOptions": {
+      "project": "./tsconfig.eslint.json"
+    },
+    "overrides": [
+      {
+        "files": [
+          "templates/**/*.test.ts",
+          "test/**/*.test.ts"
+        ],
+        "rules": {
+          "@typescript-eslint/no-floating-promises": "off"
+        }
+      }
+    ],
+    "ignorePatterns": "src/utils/command/*.ts"
   }
 }

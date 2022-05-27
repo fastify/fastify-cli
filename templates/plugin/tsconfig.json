@@ -1,9 +1,0 @@
-{
-    "extends": "fastify-tsconfig",
-    "compilerOptions": {
-      "noEmit": true
-    },
-    "include": [
-        "**/*.ts"
-    ]
-}

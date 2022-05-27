@@ -14,10 +14,8 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "rootDir": "src",
-    "outDir": "dist"
+    "esModuleInterop": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/**/*", "templates/**/*"],
   "exclude": ["node_modules"]
 }
