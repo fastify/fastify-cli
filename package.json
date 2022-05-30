@@ -61,7 +61,7 @@
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
     "split2": "^4.1.0",
-    "yargs-parser": "^20.0.0"
+    "yargs-parser": "^21.0.1"
   },
   "devDependencies": {
     "@fastify/autoload": "^5.0.0",
