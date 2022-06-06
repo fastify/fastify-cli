@@ -1,0 +1,13 @@
+import { FastifyPluginAsync } from 'fastify'
+
+declare module 'fastify' {
+  export interface FastifyInstance {
+    // This is an example decorator type added to fastify
+    exampleDecorator: () => string
+  }
+}
+
+declare const <%= camelCaseName %>: FastifyPluginAsync<() => string>
+
+export { <%= camelCaseName %> }
+export default <%= camelCaseName %>

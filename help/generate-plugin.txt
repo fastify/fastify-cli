@@ -1,5 +1,0 @@
-Usage: fastify generate-plugin <FOLDER>
-
-Sets up plugin project with `npm init -y` and
-generates a sample Fastify plugin project
-in the <FOLDER>. Specify `.` to create files in the current working directory.

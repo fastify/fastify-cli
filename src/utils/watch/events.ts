@@ -1,0 +1,2 @@
+export const GRACEFUL_SHUTDOWN = 'GRACEFUL SHUTDOWN'
+export const READY = 'READY'

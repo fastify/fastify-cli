@@ -1,13 +1,8 @@
-import fastify from 'fastify'
-import example from '..'
+import Fastify from 'fastify'
 import { expectType } from 'tsd'
+import plugin from '..'
 
-let app
-try {
-  app = fastify()
-  await app.ready()
-  app.register(example)
-  expectType<() => string>(app.exampleDecorator)
-} catch (err) {
-  console.error(err)
-}
+const fastify = Fastify()
+void fastify.register(plugin)
+
+expectType<() => string>(fastify.exampleDecorator)

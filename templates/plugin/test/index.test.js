@@ -1,13 +1,14 @@
 const { test } = require('tap')
+const Fastify = require('fastify')
 
-test('should register the correct decorator', async t => {
+test('should register the correct decorator', async function (t) {
   t.plan(1)
 
-  const app = require('fastify')()
+  const fastify = Fastify()
 
-  app.register(require('..'))
+  fastify.register(require('..'))
 
-  await app.ready()
+  await fastify.ready()
 
-  t.same(app.exampleDecorator(), 'decorated')
+  t.same(fastify.exampleDecorator(), 'decorated')
 })

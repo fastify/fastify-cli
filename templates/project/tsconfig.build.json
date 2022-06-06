@@ -3,7 +3,6 @@
     "lib": ["ESNext"],
     "module": "CommonJS",
     "target": "ES2018",
-    "importHelpers": true,
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "removeComments": true,
