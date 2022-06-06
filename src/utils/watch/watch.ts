@@ -1,5 +1,5 @@
-import C from 'ansi-colors'
 import { ChildProcess, fork } from 'child_process'
+import { gray, red } from 'colorette'
 import EventEmitter from 'events'
 import { join, relative } from 'path'
 import { normalizeStartOptions, StartOption } from '../start'
@@ -25,7 +25,7 @@ export async function watch (_o?: Partial<StartOption>): Promise<EventEmitter & 
     childs = []
 
     if (err !== undefined) {
-      console.log(C.red(err))
+      console.log(red(err))
     }
 
     if (watcher !== undefined) {
@@ -83,7 +83,7 @@ export async function watch (_o?: Partial<StartOption>): Promise<EventEmitter & 
     watcher.on('all', function (event, path) {
       console.log('watcher', event, path)
       if (options.watchVerbose) {
-        console.log(C.gray(`[fastify-cli] watch - '${event}' occurred on '${relative(process.cwd(), path)}'`))
+        console.log(gray(`[fastify-cli] watch - '${event}' occurred on '${relative(process.cwd(), path)}'`))
       }
 
       try {
@@ -91,7 +91,7 @@ export async function watch (_o?: Partial<StartOption>): Promise<EventEmitter & 
         child?.send(GRACEFUL_SHUTDOWN)
       } catch (err: any) {
         if (childs.length !== 0) {
-          console.log(C.red(err))
+          console.log(red(err))
           stop(watcher, err)
         }
         childs.push(run('restart'))

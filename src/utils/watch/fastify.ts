@@ -1,11 +1,11 @@
-import C from 'ansi-colors'
+import { red } from 'colorette'
 import { FastifyInstance } from 'fastify'
 import { start, stop } from '../start'
 import { TIMEOUT } from './constants'
 import { GRACEFUL_SHUTDOWN, READY } from './events'
 
 function exit (this: any): void {
-  if (this as boolean) { console.log(C.red('[fastify-cli] process forced end')) }
+  if (this as boolean) { console.log(red('[fastify-cli] process forced end')) }
   process.exit(1)
 }
 
@@ -15,7 +15,7 @@ let fastify: null | FastifyInstance = null
 process.on('message', function (event) {
   console.log('message', event)
   if (event === GRACEFUL_SHUTDOWN) {
-    const message = C.red('[fastify-cli] process forced end')
+    const message = red('[fastify-cli] process forced end')
     setTimeout(exit.bind({ message }), TIMEOUT).unref()
     if (fastify !== null) {
       fastify.close(function () {
@@ -28,8 +28,8 @@ process.on('message', function (event) {
 })
 
 process.on('uncaughtException', function (err) {
-  console.log(C.red(err as never as string))
-  const message = C.red('[fastify-cli] app crashed - waiting for file changes before starting...')
+  console.log(red(err as never as string))
+  const message = red('[fastify-cli] app crashed - waiting for file changes before starting...')
   exit.bind({ message })()
 })
 
