@@ -52,7 +52,7 @@
     "dotenv": "^16.0.0",
     "fastify": "^4.0.0-rc.2",
     "generify": "^4.0.0",
-    "help-me": "^3.0.0",
+    "help-me": "^4.0.0",
     "is-docker": "^2.0.0",
     "make-promises-safe": "^5.1.0",
     "pino-colada": "^2.2.2",
