@@ -1,0 +1,30 @@
+# <%= name %>
+
+![CI](<%= repo %>/workflows/CI/badge.svg)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
+
+Supports Fastify versions `4.x`
+
+## Install
+```
+npm i <%= name %>
+```
+
+## Usage
+Require `<%= name %>` and register.
+```js
+const fastify = require('fastify')()
+const <%= camelCaseName %> = require('<%= name %>')
+
+fastify.register(<%= camelCaseName %>, {
+  // put your options here
+})
+
+fastify.listen({ port: 3000 })
+```
+
+## Acknowledgements
+
+## License
+
+Licensed under [MIT](./LICENSE).<br/>

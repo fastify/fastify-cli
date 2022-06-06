@@ -1,3 +1,4 @@
+import closeWithGrace from 'close-with-grace'
 import { FastifyInstance } from 'fastify'
 import { constants } from 'fs'
 import { access } from 'fs/promises'
@@ -93,6 +94,18 @@ export async function start (_o?: Partial<StartOption>): Promise<FastifyInstance
   const fastify = Fastify(fastifyOptions)
 
   await fastify.register(entryPlugin, { prefix: options.prefix })
+
+  const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, err, manual }: any) {
+    if (err as boolean) {
+      fastify.log.error(err)
+    }
+    await fastify.close()
+  })
+
+  fastify.addHook('onClose', function (instance, done) {
+    closeListeners.uninstall()
+    done()
+  })
 
   await fastify.listen({ port: options.port, host: options.address })
 

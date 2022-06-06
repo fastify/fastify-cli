@@ -20,9 +20,35 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
+* [`fastify generate plugin [NAME]`](#fastify-generate-plugin-name)
 * [`fastify generate project [NAME]`](#fastify-generate-project-name)
 * [`fastify help [COMMAND]`](#fastify-help-command)
 * [`fastify start ENTRY`](#fastify-start-entry)
+
+## `fastify generate plugin [NAME]`
+
+Generate fastify plugin
+
+```
+USAGE
+  $ fastify generate plugin [NAME] [--location <value>] [--overwrite] [--repo <value>] [--language <value>] [--lint
+    <value>] [--test <value>] [--help]
+
+ARGUMENTS
+  NAME  Name of the plugin
+
+FLAGS
+  --help              Show CLI help.
+  --language=<value>  Programming Language you would like to use in this project.
+  --lint=<value>      Lint Tools you would like to use in this project.
+  --location=<value>  Location to place the project.
+  --overwrite         Force to overwrite the project location when it exist.
+  --repo=<value>      Git repository url of the project.
+  --test=<value>      Test Framework you would like to use in this project.
+
+DESCRIPTION
+  Generate fastify plugin
+```
 
 ## `fastify generate project [NAME]`
 

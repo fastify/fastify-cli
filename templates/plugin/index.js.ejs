@@ -1,0 +1,14 @@
+'use strict'
+
+const fp = require('fastify-plugin')
+
+async function <%= camelCaseName %> (fastify, opts) {
+  fastify.decorate('exampleDecorator', function () {
+    return 'decorated'
+  })
+}
+
+module.exports = fp(<%= camelCaseName %>, {
+  name: '<%= name %>',
+  fastify: '4.x'
+})

@@ -5,18 +5,20 @@ import { access, mkdir, readFile, rm, stat, writeFile } from 'fs/promises'
 import { prompt } from 'inquirer'
 import { basename, dirname, join, resolve } from 'path'
 import { Command } from '../../utils/command/command'
-import { computePackageJSON } from '../../utils/package-json/project'
+import { computePackageJSON } from '../../utils/package-json/plugin'
+import { toCamelCase } from '../../utils/string'
 
-export default class Project extends Command {
-  static description = 'Generate fastify project'
+export default class Plugin extends Command {
+  static description = 'Generate fastify plugin'
 
   static args = [
-    { name: 'name', required: false, description: 'Name of the project.' }
+    { name: 'name', required: false, description: 'Name of the plugin' }
   ]
 
   static flags = {
     location: Flags.string({ description: 'Location to place the project.' }),
     overwrite: Flags.boolean({ description: 'Force to overwrite the project location when it exist.', default: false }),
+    repo: Flags.string({ description: 'Git repository url of the project.' }),
     language: Flags.string({ description: 'Programming Language you would like to use in this project.' }),
     lint: Flags.string({ description: 'Lint Tools you would like to use in this project.' }),
     test: Flags.string({ description: 'Test Framework you would like to use in this project.' }),
@@ -26,7 +28,7 @@ export default class Project extends Command {
   shouldOverwrite = false
 
   async run (): Promise<void> {
-    const { args, flags } = await this.parse(Project)
+    const { args, flags } = await this.parse(Plugin)
 
     // validate
     if (flags.language !== undefined) this.corceLanguage(flags.language)
@@ -46,14 +48,18 @@ export default class Project extends Command {
     if (this.shouldOverwrite) this.questionOverwriteValidate(answer.overwrite)
 
     Object.assign(answer, await prompt([
-      { type: 'list', name: 'language', message: 'Which language will you use?', default: 'JavaScript', choices: ['JavaScript', 'TypeScript'] },
+      { type: 'input', name: 'repo', message: 'What is the repo url?' },
+      { type: 'list', name: 'language', message: 'Which language will you use?', default: 'JavaScript', choices: ['JavaScript'] },
       { type: 'list', name: 'lint', message: 'Which linter would you like to use?', default: this.questionLintDefault, choices: this.questionLintChoices },
       { type: 'list', name: 'test', message: 'Which test framework would you like to use?', default: 'tap', choices: ['tap'] }
     ], {
+      repo: flags.repo,
       language: flags.language,
       lint: flags.lint,
       test: flags.test
     }))
+
+    answer.camelCaseName = toCamelCase(answer.name)
 
     const fileList = await this.computeFileList(answer)
     const files = await this.prepareFiles(fileList, answer)
@@ -88,8 +94,6 @@ export default class Project extends Command {
     switch (this.corceLanguage(answer.language)) {
       case 'JavaScript':
         return 'standard'
-      case 'TypeScript':
-        return 'ts-standard'
     }
   }
 
@@ -97,21 +101,16 @@ export default class Project extends Command {
     switch (this.corceLanguage(answer.language)) {
       case 'JavaScript':
         return ['standard', 'eslint', 'eslint + standard']
-      case 'TypeScript':
-        return ['ts-standard', 'eslint', 'eslint + ts-standard']
     }
   }
 
-  corceLanguage (str: string): 'JavaScript' | 'TypeScript' {
+  corceLanguage (str: string): 'JavaScript' {
     switch (str.trim().toLowerCase()) {
       case 'js':
       case 'javascript':
         return 'JavaScript'
-      case 'ts':
-      case 'typescript':
-        return 'TypeScript'
       default:
-        throw new Error(`Programming Language expected to be "JavaScript" or "TypeScript", but recieved "${str}"`)
+        throw new Error(`Programming Language expected to be "JavaScript", but recieved "${str}"`)
     }
   }
 
@@ -142,39 +141,18 @@ export default class Project extends Command {
     // we do not add .ejs in here
     // we should find the file if .ejs exist first and then compile to the destination
     const files: string[] = [
-      '.vscode/settings.json',
       'README.md',
-      '__gitignore'
+      '__gitignore',
+      '.github/dependabot.yml',
+      '.github/workflows/ci.yml'
     ]
 
     if (answer.language === 'JavaScript') {
-      files.push('app.js')
-      files.push('plugins/README.md')
-      files.push('plugins/sensible.js')
-      files.push('plugins/support.js')
-      files.push('routes/README.md')
-      files.push('routes/root.js')
-      files.push('routes/example/index.js')
-      files.push('test/helper.js')
-      files.push('test/plugins/support.test.js')
-      files.push('test/routes/root.test.js')
-      files.push('test/routes/example.test.js')
-    }
-
-    if (answer.language === 'TypeScript') {
       files.push('tsconfig.json')
-      files.push('tsconfig.build.json')
-      files.push('src/app.ts')
-      files.push('src/plugins/README.md')
-      files.push('src/plugins/sensible.ts')
-      files.push('src/plugins/support.ts')
-      files.push('src/routes/README.md')
-      files.push('src/routes/root.ts')
-      files.push('src/routes/example/index.ts')
-      files.push('test/helper.ts')
-      files.push('test/plugins/support.test.ts')
-      files.push('test/routes/root.test.ts')
-      files.push('test/routes/example.test.ts')
+      files.push('index.js')
+      files.push('index.d.ts')
+      files.push('test/index.test.js')
+      files.push('test/index.test-d.ts')
     }
 
     return files
@@ -182,7 +160,7 @@ export default class Project extends Command {
 
   async resolveFile (file: string): Promise<{ template: boolean, content: string }> {
     const o = { template: false, content: '' }
-    const ejsPath = resolve(join('templates', 'project', `${file}.ejs`))
+    const ejsPath = resolve(join('templates', 'plugin', `${file}.ejs`))
     const isEJSTemplate = await this.isFileExist(ejsPath)
     if (isEJSTemplate) {
       o.template = true
@@ -190,7 +168,7 @@ export default class Project extends Command {
       o.content = data.toString()
       return o
     }
-    const filePath = resolve(join('templates', 'project', file))
+    const filePath = resolve(join('templates', 'plugin', file))
     const isFileExist = await this.isFileExist(filePath)
     if (isFileExist) {
       const data = await readFile(filePath)
