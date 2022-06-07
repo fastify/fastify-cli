@@ -2,18 +2,23 @@
 
 const t = require('tap')
 const { execSync } = require('child_process')
-const { mkdirSync } = require('fs')
+const { mkdirSync, readFileSync } = require('fs')
 const path = require('path')
 const rimraf = require('rimraf')
 
-const workdir = path.join(__dirname, 'workdir')
-const target = path.join(workdir, 'cli.test')
+t.test('generate', async (t) => {
+  const workdir = path.join(__dirname, 'workdir')
+  const target = path.join(workdir, 'cli.test')
 
-t.plan(1)
+  rimraf.sync(workdir)
+  mkdirSync(workdir, { recursive: true })
 
-rimraf.sync(workdir)
-mkdirSync(workdir, { recursive: true })
+  execSync(`node cli.js generate ${target}`)
+})
 
-execSync(`node cli.js generate ${target}`)
-
-t.pass()
+t.test('help', async t => {
+  t.equal(
+    execSync('node cli.js', { encoding: 'utf-8' }),
+    readFileSync(path.join(__dirname, '../help/help.txt'), 'utf-8')
+  )
+})
