@@ -111,10 +111,7 @@ async function runFastify (args, additionalOptions) {
 
   if (opts.prettyLogs) {
     options.logger.transport = {
-      target: 'pino-pretty',
-      options: {
-        level: opts.logLevel
-      }
+      target: 'pino-pretty'
     }
   }
 

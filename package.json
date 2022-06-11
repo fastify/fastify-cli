@@ -57,7 +57,6 @@
     "make-promises-safe": "^5.1.0",
     "pino-pretty": "^8.0.0",
     "pkg-up": "^3.1.0",
-    "pump": "^3.0.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
     "yargs-parser": "^20.0.0"
