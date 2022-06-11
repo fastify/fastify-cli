@@ -3,10 +3,6 @@
 'use strict'
 
 require('dotenv').config()
-const assert = require('assert')
-const split = require('split2')
-const PinoColada = require('pino-colada')
-const pump = require('pump')
 const isDocker = require('is-docker')
 const closeWithGrace = require('close-with-grace')
 const listenAddressDocker = '0.0.0.0'
@@ -114,9 +110,7 @@ async function runFastify (args, additionalOptions) {
   }
 
   if (opts.prettyLogs) {
-    const stream = split(PinoColada())
-    options.logger.stream = stream
-    pump(stream, process.stdout, assert.ifError)
+    options.logger.transport = { target: 'pino-pretty' }
   }
 
   if (opts.debug) {
