@@ -234,7 +234,7 @@ The sample code offers you the following npm tasks:
 
 * `npm start` - starts the application
 * `npm run dev` - starts the application with
-  [`pino-colada`](https://github.com/lrlna/pino-colada) pretty logging
+  [`pino-pretty`](https://github.com/pinojs/pino-pretty) pretty logging
   (not suitable for production)
 * `npm test` - runs the tests
 

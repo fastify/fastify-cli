@@ -55,12 +55,11 @@
     "help-me": "^2.0.1",
     "is-docker": "^2.0.0",
     "make-promises-safe": "^5.1.0",
-    "pino-colada": "^2.2.2",
+    "pino-pretty": "^8.0.0",
     "pkg-up": "^3.1.0",
     "pump": "^3.0.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
-    "split2": "^4.1.0",
     "yargs-parser": "^20.0.0"
   },
   "devDependencies": {
