@@ -9,6 +9,7 @@ const {
   mkdirSync,
   readFileSync,
   readFile,
+  promises: fsPromises,
   unlink
 } = require('fs')
 const path = require('path')
@@ -123,6 +124,24 @@ function define (t) {
       await pExec('node ../../generate . --integrate', { cwd: workdir })
       await verifyPkg(t)
       await verifyCopy(t, expected)
+    } catch (err) {
+      t.error(err)
+    }
+  })
+
+  test('--standardlint option will add standard lint dependencies and scripts to javascript template', async (t) => {
+    t.plan(14 + 3)
+    try {
+      rimraf.sync(workdir)
+      await pExec('node ../generate workdir --standardlint', { cwd: path.join(workdir, '..') })
+
+      await verifyPkg(t)
+
+      const data = await fsPromises.readFile(path.join(workdir, 'package.json'))
+      const pkg = JSON.parse(data)
+      t.equal(pkg.scripts.pretest, 'standard')
+      t.equal(pkg.scripts.lint, 'standard --fix')
+      t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
     } catch (err) {
       t.error(err)
     }

@@ -12,7 +12,7 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'standardlint'],
     boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug'],
     envPrefix: 'FASTIFY_',
     alias: {
@@ -40,7 +40,8 @@ module.exports = function parseArgs (args) {
       debugPort: 9320,
       options: false,
       'plugin-timeout': 10 * 1000, // everything should load in 10 seconds
-      lang: 'js'
+      lang: 'js',
+      standardlint: false
     }
   })
 
