@@ -23,7 +23,7 @@ const pluginTemplate = {
     'lint:typescript': 'ts-standard',
     test: 'npm run lint && npm run unit && npm run test:typescript',
     'test:typescript': 'tsd',
-    unit: 'tap test/**/*.test.js'
+    unit: 'tap "test/**/*.test.js"'
   },
   dependencies: {
     'fastify-plugin': cliPkg.devDependencies['fastify-plugin']
