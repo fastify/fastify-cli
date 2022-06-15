@@ -12,8 +12,8 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'standardlint'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require'],
+    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
