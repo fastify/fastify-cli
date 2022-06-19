@@ -154,7 +154,7 @@ async function runFastify (args, additionalOptions) {
   } else if (opts.address) {
     await fastify.listen({ port: opts.port, host: opts.address })
   } else if (opts.socket) {
-    await fastify.listen(opts.socket)
+    await fastify.listen({ path: opts.socket })
   } else if (isDocker()) {
     await fastify.listen({ port: opts.port, host: listenAddressDocker })
   } else {
