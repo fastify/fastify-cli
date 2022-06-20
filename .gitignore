@@ -148,7 +148,7 @@ yarn.lock
 test.sock
 
 # test artifacts
-test/workdir
+test/workdir*
 test/fixtures/*.js
 .vscode/launch.json
 .vscode/settings.json
