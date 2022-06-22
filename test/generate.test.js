@@ -130,24 +130,19 @@ function define (t) {
   })
 
   test('--standardlint option will add standard lint dependencies and scripts to javascript template', async (t) => {
-    t.plan(14 + 3)
-    try {
-      const dir = path.join(__dirname, 'workdir-with-lint')
-      const cwd = path.join(dir, '..')
-      const bin = path.join('..', 'generate')
-      rimraf.sync(dir)
-      await pExec(`node ${bin} ${dir} --standardlint`, { cwd })
+    const dir = path.join(__dirname, 'workdir-with-lint')
+    const cwd = path.join(dir, '..')
+    const bin = path.join('..', 'generate')
+    rimraf.sync(dir)
+    await pExec(`node ${bin} ${dir} --standardlint`, { cwd })
 
-      await verifyPkg(t, dir, 'workdir-with-lint')
+    await verifyPkg(t, dir, 'workdir-with-lint')
 
-      const data = await fsPromises.readFile(path.join(dir, 'package.json'))
-      const pkg = JSON.parse(data)
-      t.equal(pkg.scripts.pretest, 'standard')
-      t.equal(pkg.scripts.lint, 'standard --fix')
-      t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
-    } catch (err) {
-      t.error(err)
-    }
+    const data = await fsPromises.readFile(path.join(dir, 'package.json'))
+    const pkg = JSON.parse(data)
+    t.equal(pkg.scripts.pretest, 'standard')
+    t.equal(pkg.scripts.lint, 'standard --fix')
+    t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
   })
 
   function verifyPkg (t, dir = workdir, pkgName = 'workdir') {

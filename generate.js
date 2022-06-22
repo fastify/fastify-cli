@@ -39,7 +39,7 @@ const javascriptTemplate = {
     log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
     log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
 
-    if (Object.keys(pkg.scripts).includes('lint')) {
+    if (pkg.scripts.lint) {
       log('debug', `run '${chalk.bold('npm lint')}' to run linter and fix code style issues`)
     }
   }
