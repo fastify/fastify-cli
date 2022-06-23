@@ -13,4 +13,4 @@ OPTS
       use the TypeScript template
 
   --standardlint
-      for JavaScript template, optionally includes linter to fix code style issues
+      optionally includes linter to fix code style issues

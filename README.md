@@ -297,24 +297,6 @@ Finally, there will be a new `README.md` file, which provides internal informati
 * Encapsulation semantics
 * Compatible Fastify version
 
-### linting
-
-`fastify-cli` is unopinionated on the choice of linter. We recommend you to add a linter, like so:
-
-```diff
-"devDependencies": {
-+ "standard": "^11.0.1",
-}
-
-"scripts": {
-+ "pretest": "standard",
-  "test": "tap test/**/*.test.js",
-  "start": "fastify start -l info app.js",
-  "dev": "fastify start -l info -P app.js",
-+ "lint": "standard --fix"
-},
-```
-
 ## Test helpers
 
 When you use `fastify-cli` to run your project you need a way to load your application because you can run the CLI command.

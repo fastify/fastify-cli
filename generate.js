@@ -84,6 +84,10 @@ const typescriptTemplate = {
     log('debug', `run '${chalk.bold('npm build:ts')}' to compile the typescript application`)
     log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
     log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
+
+    if (pkg.scripts.lint) {
+      log('debug', `run '${chalk.bold('npm lint')}' to run linter and fix code style issues`)
+    }
   }
 }
 
@@ -153,23 +157,42 @@ function cli (args) {
     process.exit(1)
   }
 
+  const isTypescript = opts.lang === 'ts' || opts.lang === 'typescript'
+
   let template
-  if (opts.lang === 'ts' || opts.lang === 'typescript') {
-    template = typescriptTemplate
+  if (isTypescript) {
+    template = { ...typescriptTemplate }
   } else {
     template = { ...javascriptTemplate }
+  }
 
-    if (opts.standardlint) {
-      template.scripts = {
-        ...template.scripts,
-        pretest: 'standard',
-        lint: 'standard --fix'
-      }
+  if (opts.standardlint && isTypescript) {
+    template.scripts = {
+      ...template.scripts,
+      pretest: 'ts-standard',
+      lint: 'ts-standard --fix'
+    }
 
-      template.devDependencies = {
-        ...template.devDependencies,
-        standard: cliPkg.devDependencies.standard
-      }
+    template.devDependencies = {
+      ...template.devDependencies,
+      'ts-standard': cliPkg.devDependencies['ts-standard']
+    }
+    template['ts-standard'] = {
+      ignore: [
+        'dist',
+        'src/**/*.js'
+      ]
+    }
+  } else if (opts.standardlint) {
+    template.scripts = {
+      ...template.scripts,
+      pretest: 'standard',
+      lint: 'standard --fix'
+    }
+
+    template.devDependencies = {
+      ...template.devDependencies,
+      standard: cliPkg.devDependencies.standard
     }
   }
 

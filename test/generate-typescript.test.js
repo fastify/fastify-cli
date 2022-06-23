@@ -8,9 +8,11 @@ const t = require('tap')
 const {
   mkdirSync,
   readFileSync,
-  readFile
+  readFile,
+  promises: fsPromises
 } = require('fs')
 const path = require('path')
+const { promisify } = require('util')
 const rimraf = require('rimraf')
 const walker = require('walker')
 const { generate, typescriptTemplate } = require('../generate')
@@ -18,6 +20,7 @@ const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'app-ts')
 const cliPkg = require('../package')
 const { exec } = require('child_process')
+const pExec = promisify(exec)
 const minimatch = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
@@ -111,14 +114,30 @@ function define (t) {
     }
   })
 
-  function verifyPkg (t) {
+  test('--standardlint option will add standard lint dependencies and scripts to typescript template', async (t) => {
+    const dir = path.join(__dirname, 'workdir-with-lint')
+    const cwd = path.join(dir, '..')
+    const bin = path.join('..', 'generate')
+    rimraf.sync(dir)
+    await pExec(`node ${bin} ${dir} --lang=ts --standardlint`, { cwd })
+
+    await verifyPkg(t, dir, 'workdir-with-lint')
+
+    const data = await fsPromises.readFile(path.join(dir, 'package.json'))
+    const pkg = JSON.parse(data)
+    t.equal(pkg.scripts.pretest, 'ts-standard')
+    t.equal(pkg.scripts.lint, 'ts-standard --fix')
+    t.equal(pkg.devDependencies['ts-standard'], cliPkg.devDependencies['ts-standard'])
+  })
+
+  function verifyPkg (t, dir = workdir, pkgName = 'workdir') {
     return new Promise((resolve, reject) => {
-      const pkgFile = path.join(workdir, 'package.json')
+      const pkgFile = path.join(dir, 'package.json')
 
       readFile(pkgFile, function (err, data) {
         t.error(err)
         const pkg = JSON.parse(data)
-        t.equal(pkg.name, 'workdir')
+        t.equal(pkg.name, pkgName)
         // we are not checking author because it depends on global npm configs
         t.equal(pkg.version, '1.0.0')
         t.equal(pkg.description, 'This project was bootstrapped with Fastify-CLI.')
