@@ -9,6 +9,7 @@ const {
   mkdirSync,
   readFileSync,
   readFile,
+  promises: fsPromises,
   unlink
 } = require('fs')
 const path = require('path')
@@ -128,14 +129,30 @@ function define (t) {
     }
   })
 
-  function verifyPkg (t) {
+  test('--standardlint option will add standard lint dependencies and scripts to javascript template', async (t) => {
+    const dir = path.join(__dirname, 'workdir-with-lint')
+    const cwd = path.join(dir, '..')
+    const bin = path.join('..', 'generate')
+    rimraf.sync(dir)
+    await pExec(`node ${bin} ${dir} --standardlint`, { cwd })
+
+    await verifyPkg(t, dir, 'workdir-with-lint')
+
+    const data = await fsPromises.readFile(path.join(dir, 'package.json'))
+    const pkg = JSON.parse(data)
+    t.equal(pkg.scripts.pretest, 'standard')
+    t.equal(pkg.scripts.lint, 'standard --fix')
+    t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
+  })
+
+  function verifyPkg (t, dir = workdir, pkgName = 'workdir') {
     return new Promise((resolve, reject) => {
-      const pkgFile = path.join(workdir, 'package.json')
+      const pkgFile = path.join(dir, 'package.json')
 
       readFile(pkgFile, function (err, data) {
         err && reject(err)
         const pkg = JSON.parse(data)
-        t.equal(pkg.name, 'workdir')
+        t.equal(pkg.name, pkgName)
         // we are not checking author because it depends on global npm configs
         t.equal(pkg.version, '1.0.0')
         t.equal(pkg.description, 'This project was bootstrapped with Fastify-CLI.')

@@ -237,6 +237,7 @@ The sample code offers you the following npm tasks:
   [`pino-pretty`](https://github.com/pinojs/pino-pretty) pretty logging
   (not suitable for production)
 * `npm test` - runs the tests
+* `npm run lint` - fixes files accordingly to linter rules, for templates generated with `--standardlint`
 
 You will find three different folders:
 - `plugins`: the folder where you will place all your custom plugins
@@ -263,6 +264,7 @@ it will be overwritten. Use the `--integrate` flag with care.
 | --- | --- |
 | Use the TypeScript template | `--lang=ts`, `--lang=typescript` |
 | Overwrite it when the target directory is the current directory (`.`) | `--integrate`|
+| For JavaScript template, optionally includes Standard linter to fix code style issues | `--standardlint`|
 
 ### generate-plugin
 

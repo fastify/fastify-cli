@@ -11,3 +11,6 @@ OPTS
 
   --lang=ts, --lang=typescript
       use the TypeScript template
+
+  --standardlint
+      for JavaScript template, optionally includes linter to fix code style issues
