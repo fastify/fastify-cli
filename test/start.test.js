@@ -903,7 +903,7 @@ test('should start fastify with custom plugin options with a ESM typescript comp
   t.end()
 })
 
-test('should throw an error when loading ESM typescript compiled plugin and ESM is not supported', { skip: moduleSupport }, async t => {
+test('should throw an error when loading ESM typescript compiled plugin and ESM is not supported', { skip: moduleSupport, timeout: 20000 }, async t => {
   t.plan(1)
 
   const oldStop = start.stop
