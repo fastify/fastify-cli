@@ -533,8 +533,7 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
   t.pass('server closed')
 })
 
-// TODO remove skip
-test('should start the server with watch options that the child process restart when directory changed', { skip: true }, async (t) => {
+test('should start the server with watch options that the child process restart when directory changed', async (t) => {
   t.plan(4)
   const tmpjs = path.resolve(baseFilename + '.js')
 
@@ -563,8 +562,7 @@ test('should start the server with watch options that the child process restart 
   t.pass('should receive restart event')
 })
 
-// TODO remove skip
-test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: true }, async (t) => {
+test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', async (t) => {
   t.plan(5)
 
   const spy = sinon.spy()
@@ -607,7 +605,7 @@ test('should start the server with watch and verbose-watch options that the chil
   t.ok(spy.calledOnce, 'should print a console message on file update')
 })
 
-test('should reload the env on restart when watching', { skip: true }, async (t) => {
+test('should reload the env on restart when watching', async (t) => {
   const testdir = t.testdir({
     '.env': 'GREETING=world',
     'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
