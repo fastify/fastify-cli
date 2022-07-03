@@ -604,7 +604,7 @@ test('should start the server with watch and verbose-watch options that the chil
   t.ok(spy.args.length > 0, 'should print a console message on file update')
 })
 
-test('should reload the env on restart when watching', async (t) => {
+test('should reload the env on restart when watching', { skip: process.platform === 'win32' }, async (t) => {
   const testdir = t.testdir({
     '.env': 'GREETING=world',
     'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
