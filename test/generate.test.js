@@ -20,12 +20,13 @@ const { generate, javascriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'app')
 const cliPkg = require('../package')
-const { exec } = require('child_process')
+const { exec, execSync } = require('child_process')
 const pExec = promisify(exec)
 const pUnlink = promisify(unlink)
 const minimatch = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
+const initVersion = execSync('npm get init-version').toString().trim()
 
 ;(function (cb) {
   const files = []
@@ -154,7 +155,7 @@ function define (t) {
         const pkg = JSON.parse(data)
         t.equal(pkg.name, pkgName)
         // we are not checking author because it depends on global npm configs
-        t.equal(pkg.version, '1.0.0')
+        t.equal(pkg.version, initVersion)
         t.equal(pkg.description, 'This project was bootstrapped with Fastify-CLI.')
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
