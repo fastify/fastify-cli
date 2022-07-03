@@ -251,8 +251,10 @@ test('should error with a good timeout value', async t => {
     }
   })
 
+  const port = getPort()
+
   try {
-    const argv = ['-p', '3040', '-T', '100', './test/data/timeout-plugin.js']
+    const argv = ['-p', port, '-T', '100', './test/data/timeout-plugin.js']
     await start.start(argv)
   } catch (err) {
     t.equal(err.code, 'AVV_ERR_READY_TIMEOUT')
@@ -533,13 +535,14 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
   t.pass('server closed')
 })
 
-// TODO remove skip
-test('should start the server with watch options that the child process restart when directory changed', { skip: true }, async (t) => {
-  t.plan(4)
+test('should start the server with watch options that the child process restart when directory changed', { skip: process.platform === 'win32' }, async (t) => {
+  t.plan(3)
   const tmpjs = path.resolve(baseFilename + '.js')
 
+  const port = getPort()
+
   await writeFile(tmpjs, 'hello world')
-  const argv = ['-p', '4042', '-w', './examples/plugin.js']
+  const argv = ['-p', port, '-w', './examples/plugin.js']
   const fastifyEmitter = await start.start(argv)
 
   t.teardown(async () => {
@@ -548,9 +551,6 @@ test('should start the server with watch options that the child process restart 
     }
     await fastifyEmitter.stop()
   })
-
-  await once(fastifyEmitter, 'start')
-  t.pass('should receive start event')
 
   await once(fastifyEmitter, 'ready')
   t.pass('should receive ready event')
@@ -563,9 +563,8 @@ test('should start the server with watch options that the child process restart 
   t.pass('should receive restart event')
 })
 
-// TODO remove skip
-test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: true }, async (t) => {
-  t.plan(5)
+test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: process.platform === 'win32' }, async (t) => {
+  t.plan(4)
 
   const spy = sinon.spy()
   const watch = proxyquire('../lib/watch', {
@@ -580,8 +579,10 @@ test('should start the server with watch and verbose-watch options that the chil
 
   const tmpjs = path.resolve(baseFilename + '.js')
 
+  const port = getPort()
+
   await writeFile(tmpjs, 'hello world')
-  const argv = ['-p', '4042', '-w', '--verbose-watch', './examples/plugin.js']
+  const argv = ['-p', port, '-w', '--verbose-watch', './examples/plugin.js']
   const fastifyEmitter = await start.start(argv)
 
   t.teardown(async () => {
@@ -590,9 +591,6 @@ test('should start the server with watch and verbose-watch options that the chil
     }
     await fastifyEmitter.stop()
   })
-
-  await once(fastifyEmitter, 'start')
-  t.pass('should receive start event')
 
   await once(fastifyEmitter, 'ready')
   t.pass('should receive ready event')
@@ -603,11 +601,10 @@ test('should start the server with watch and verbose-watch options that the chil
   // this might happen more than once but does not matter in this context
   await once(fastifyEmitter, 'restart')
   t.pass('should receive restart event')
-
-  t.ok(spy.calledOnce, 'should print a console message on file update')
+  t.ok(spy.args.length > 0, 'should print a console message on file update')
 })
 
-test('should reload the env on restart when watching', { skip: true }, async (t) => {
+test('should reload the env on restart when watching', async (t) => {
   const testdir = t.testdir({
     '.env': 'GREETING=world',
     'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
