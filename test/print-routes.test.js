@@ -19,7 +19,7 @@ test('should print routes', async t => {
 
   await fastify.close()
   t.ok(spy.called)
-  t.deepEqual(spy.args, [['debug', '└── / (GET)\n    / (HEAD)\n    / (POST)\n']])
+  t.same(spy.args, [['debug', '└── / (GET)\n    / (HEAD)\n    / (POST)\n']])
 })
 
 test('should print routes via cli', async t => {
@@ -32,7 +32,7 @@ test('should print routes via cli', async t => {
   await command.cli(['./examples/plugin.js'])
 
   t.ok(spy.called)
-  t.deepEqual(spy.args, [['debug', '└── / (GET)\n    / (HEAD)\n    / (POST)\n']])
+  t.same(spy.args, [['debug', '└── / (GET)\n    / (HEAD)\n    / (POST)\n']])
 })
 
 test('should warn on file not found', t => {
@@ -109,5 +109,5 @@ test('should print routes of server with an async/await plugin', async t => {
 
   await fastify.close()
   t.ok(spy.called)
-  t.deepEqual(spy.args, [['debug', '└── / (GET)\n    / (HEAD)\n']])
+  t.same(spy.args, [['debug', '└── / (GET)\n    / (HEAD)\n']])
 })
