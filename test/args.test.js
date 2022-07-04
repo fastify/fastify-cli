@@ -253,3 +253,74 @@ test('should parse custom plugin options', t => {
     lang: 'js'
   })
 })
+
+test('should parse config file correctly and prefer config values over default ones', t => {
+  t.plan(1)
+
+  const argv = [
+    '--config', './test/data/custom-config.js',
+    'app.js'
+  ]
+  const parsedArgs = parseArgs(argv)
+
+  t.strictSame(parsedArgs, {
+    _: ['app.js'],
+    '--': [],
+    port: 5000,
+    bodyLimit: undefined,
+    pluginTimeout: 9000,
+    pluginOptions: {},
+    prettyLogs: true,
+    options: false,
+    watch: true,
+    debug: false,
+    debugPort: 4000,
+    debugHost: '1.1.1.1',
+    ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    verboseWatch: false,
+    logLevel: 'fatal',
+    address: 'fastify.io:9999',
+    socket: undefined,
+    require: undefined,
+    prefix: 'FASTIFY_',
+    loggingModule: undefined,
+    lang: 'js'
+  })
+})
+
+test('should prefer command line args over config file options', t => {
+  t.plan(1)
+
+  const argv = [
+    '--config', './test/data/custom-config.js',
+    '--port', '4000',
+    '--debugPort', '9320',
+    '--plugin-timeout', '10000',
+    'app.js'
+  ]
+  const parsedArgs = parseArgs(argv)
+
+  t.strictSame(parsedArgs, {
+    _: ['app.js'],
+    '--': [],
+    port: 4000,
+    bodyLimit: undefined,
+    pluginTimeout: 10000,
+    pluginOptions: {},
+    prettyLogs: true,
+    options: false,
+    watch: true,
+    debug: false,
+    debugPort: 9320,
+    debugHost: '1.1.1.1',
+    ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    verboseWatch: false,
+    logLevel: 'fatal',
+    address: 'fastify.io:9999',
+    socket: undefined,
+    require: undefined,
+    prefix: 'FASTIFY_',
+    loggingModule: undefined,
+    lang: 'js'
+  })
+})
