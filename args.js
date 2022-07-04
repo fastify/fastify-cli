@@ -2,23 +2,38 @@
 
 const argv = require('yargs-parser')
 const dotenv = require('dotenv')
+const { requireModule } = require('./util')
 
 const DEFAULT_IGNORE = 'node_modules build dist .git bower_components logs .swp .nyc_output'
 
+const DEFAULT_ARGUMENTS = {
+  logLevel: 'fatal',
+  prettyLogs: false,
+  watch: false,
+  verboseWatch: false,
+  debug: false,
+  debugPort: 9320,
+  options: false,
+  pluginTimeout: 10 * 1000, // everything should load in 10 seconds
+  lang: 'js',
+  standardlint: false
+}
+
 module.exports = function parseArgs (args) {
   dotenv.config()
-  const parsedArgs = argv(args, {
+  const commandLineArguments = argv(args, {
     configuration: {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'config'],
     boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
       socket: ['s'],
       help: ['h'],
+      config: ['c'],
       options: ['o'],
       address: ['a'],
       watch: ['w'],
@@ -29,30 +44,24 @@ module.exports = function parseArgs (args) {
       'log-level': ['l'],
       'pretty-logs': ['P'],
       'plugin-timeout': ['T'],
-      'logging-module': ['L']
-    },
-    default: {
-      'log-level': 'fatal',
-      'pretty-logs': false,
-      watch: false,
-      verboseWatch: false,
-      debug: false,
-      debugPort: 9320,
-      options: false,
-      'plugin-timeout': 10 * 1000, // everything should load in 10 seconds
-      lang: 'js',
-      standardlint: false
+      'logging-module': ['L'],
+      'verbose-watch': ['V']
     }
   })
 
-  const additionalArgs = parsedArgs['--'] || []
+  const configFileOptions = commandLineArguments.config ? requireModule(commandLineArguments.config) : undefined
+
+  const additionalArgs = commandLineArguments['--'] || []
   const { _, ...pluginOptions } = argv(additionalArgs)
-  const ignoreWatchArg = parsedArgs.ignoreWatch || ''
+  const ignoreWatchArg = commandLineArguments.ignoreWatch || configFileOptions?.ignoreWatch || ''
 
   let ignoreWatch = `${DEFAULT_IGNORE} ${ignoreWatchArg}`.trim()
   if (ignoreWatchArg.includes('.ts$')) {
     ignoreWatch = ignoreWatch.replace('dist', '')
   }
+
+  // Merge objects from lower to higher priority
+  const parsedArgs = { ...DEFAULT_ARGUMENTS, ...configFileOptions, ...commandLineArguments }
 
   return {
     _: parsedArgs._,
