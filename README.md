@@ -127,10 +127,11 @@ This works with a `.js` extension if you are using Node.js >= 14 and the nearest
 If your `package.json` does not have `"type": "module"`, use `.mjs` for the extension (`plugin.mjs` in the above example).
 
 #### Options
-You can pass the following options via CLI arguments. Every option has a corresponding environment variable:
+You can pass the following options via CLI arguments. You can also use `--config` or `-c` flag to pass a configuration file that exports all the properties listed below in camelCase convention. In case of collision (i.e., An argument existing in both the configuration file and as a command-line argument, the command-line argument is given the priority). Every option has a corresponding environment variable:
 
 | Description                                                                                                                             | Short command | Full command       | Environment variable     |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------------------ |
+| Path to configuration file that can be used to manage the options listed below                                                                                                   | `-c`          | `--config`           | `FASTIFY_CONFIG or CONFIG`   |
 | Port to listen on (default to 3000)                                                                                                     | `-p`          | `--port`           | `FASTIFY_PORT or PORT`   |
 | Address to listen on                                                                                                                    | `-a`          | `--address`        | `FASTIFY_ADDRESS`        |
 | Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
