@@ -17,10 +17,11 @@ const { generate, pluginTemplate } = require('../generate-plugin')
 const workdir = path.join(__dirname, 'workdir')
 const templateDir = path.join(__dirname, '..', 'templates', 'plugin')
 const cliPkg = require('../package')
-const { exec } = require('child_process')
+const { exec, execSync } = require('child_process')
 const minimatch = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
+const initVersion = execSync('npm get init-version').toString().trim()
 
 ;(function (cb) {
   const files = []
@@ -121,7 +122,7 @@ function define (t) {
         t.equal(pkg.main, 'index.js')
         t.equal(pkg.types, 'index.d.ts')
         // we are not checking author because it depends on global npm configs
-        t.equal(pkg.version, '1.0.0')
+        t.equal(pkg.version, initVersion)
         t.equal(pkg.description, '')
         t.ok(pkg.license === 'MIT')
         t.equal(pkg.scripts.lint, 'standard && npm run lint:typescript')
