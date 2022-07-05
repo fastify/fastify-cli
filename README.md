@@ -127,10 +127,11 @@ This works with a `.js` extension if you are using Node.js >= 14 and the nearest
 If your `package.json` does not have `"type": "module"`, use `.mjs` for the extension (`plugin.mjs` in the above example).
 
 #### Options
-You can pass the following options via CLI arguments. Every option has a corresponding environment variable:
+You can pass the following options via CLI arguments. You can also use `--config` or `-c` flag to pass a configuration file that exports all the properties listed below in camelCase convention. In case of collision (i.e., An argument existing in both the configuration file and as a command-line argument, the command-line argument is given the priority). Every option has a corresponding environment variable:
 
 | Description                                                                                                                             | Short command | Full command       | Environment variable     |
 | --------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ------------------ | ------------------------ |
+| Path to configuration file that can be used to manage the options listed below                                                                                                   | `-c`          | `--config`           | `FASTIFY_CONFIG or CONFIG`   |
 | Port to listen on (default to 3000)                                                                                                     | `-p`          | `--port`           | `FASTIFY_PORT or PORT`   |
 | Address to listen on                                                                                                                    | `-a`          | `--address`        | `FASTIFY_ADDRESS`        |
 | Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
@@ -143,7 +144,7 @@ You can pass the following options via CLI arguments. Every option has a corresp
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload                                 | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
-| Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |               | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
+| Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |     `-V`          | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
