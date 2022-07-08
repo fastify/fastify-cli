@@ -95,6 +95,21 @@ module.exports.options = {
 }
 ```
 
+And if you are using EcmaScript Module format:
+
+```javascript
+export default async function plugin (fastify, options) {
+  // Both `/foo` and `/foo/` are registered
+  fastify.get('/foo/', async function (req, reply) {
+    return 'foo'
+  })
+}
+
+export const options = {
+  ignoreTrailingSlash: true
+}
+```
+
 If you want to use custom options for your plugin, just add them after the `--` terminator.
 
 ```js
