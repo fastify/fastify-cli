@@ -947,6 +947,38 @@ test('should start fastify with custom plugin options with a ESM plugin with pac
   t.end()
 })
 
+test('should start fastify with custom server options (ignoreTrailingSlash) with a ESM plugin with package.json "type":"module"', { skip: !moduleSupport }, async t => {
+  t.plan(5)
+
+  const argv = [
+    '-p',
+    getPort(),
+    './examples/package-type-module/ESM-plugin-with-custom-server-options.js',
+    '--options'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}/foo`
+  })
+
+  t.equal(response.statusCode, 200)
+  t.equal(response.headers['content-length'], '' + body.length)
+
+  const { response: response2, body: body2 } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}/foo/`
+  })
+
+  t.equal(response2.statusCode, 200)
+  t.equal(response2.headers['content-length'], '' + body2.length)
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
+})
+
 test('should start fastify with custom plugin options with a CJS plugin with package.json "type":"module"', { skip: !moduleSupport }, async t => {
   t.plan(4)
 
