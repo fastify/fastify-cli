@@ -71,7 +71,7 @@ async function requireServerPluginFromPath (modulePath) {
   let serverPlugin
   if (type === 'module') {
     if (moduleSupport) {
-      serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href)).default
+      serverPlugin = (await import(url.pathToFileURL(resolvedModulePath).href))
     } else {
       throw new Error(`fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
     }
@@ -79,7 +79,7 @@ async function requireServerPluginFromPath (modulePath) {
     serverPlugin = require(resolvedModulePath)
   }
 
-  if (isInvalidAsyncPlugin(serverPlugin)) {
+  if (isInvalidAsyncPlugin(type === 'commonjs' ? serverPlugin : serverPlugin.default)) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +
       'Refer to documentation for more information.')
   }
