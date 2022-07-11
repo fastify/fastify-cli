@@ -24,4 +24,4 @@ functionality into the `plugins` folder, and share it via
 [decorators](https://www.fastify.io/docs/latest/Reference/Decorators/).
 
 If you're a bit confused about using `async/await` to write routes, you would
-better take a look at [Promise resolution](https://www.fastify.io/docs/latest/Routes/#promise-resolution) for more details.
+better take a look at [Promise resolution](https://www.fastify.io/docs/latest/Reference/Routes/#promise-resolution) for more details.
