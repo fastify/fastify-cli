@@ -35,9 +35,6 @@
     "url": "https://github.com/fastify/fastify-cli/issues"
   },
   "homepage": "https://github.com/fastify/fastify-cli#readme",
-  "engines": {
-    "node": ">= 10"
-  },
   "standard": {
     "ignore": [
       "test/data/parsing-error.js",
