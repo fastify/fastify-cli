@@ -65,7 +65,7 @@
     "@types/tap": "^15.0.5",
     "concurrently": "^7.0.0",
     "del-cli": "^3.0.1",
-    "fastify-plugin": "^3.0.0",
+    "fastify-plugin": "^4.0.0",
     "fastify-tsconfig": "^1.0.1",
     "minimatch": "^5.1.0",
     "pre-commit": "^1.2.2",
