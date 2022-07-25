@@ -5,7 +5,7 @@ Short description of the purpose of your plugin.
 ## Install
 
 ```
-npm install __packageName__ --save
+npm i __packageName__
 yarn add __packageName__
 ```
 
