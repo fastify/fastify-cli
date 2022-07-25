@@ -45,7 +45,7 @@
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
     "close-with-grace": "^1.1.0",
-    "commist": "^2.0.0",
+    "commist": "^3.0.0",
     "dotenv": "^16.0.0",
     "fastify": "^4.0.0",
     "generify": "^4.0.0",
