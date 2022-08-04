@@ -11,7 +11,7 @@ const rimraf = require('rimraf')
 const walker = require('walker')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'eject-ts')
-const { eject } = require('../eject-ts')
+const { eject } = require('../eject')
 const expected = {};
 
 (function (cb) {
@@ -28,9 +28,8 @@ const expected = {};
             return cb(err)
           }
 
-          expected[
-            file.replace(appTemplateDir, '').replace(/__/, '.')
-          ] = data.toString()
+          expected[file.replace(appTemplateDir, '').replace(/__/, '.')] =
+            data.toString()
 
           count++
           if (count === files.length) {
@@ -55,38 +54,38 @@ function define (t) {
 
   test('should finish succesfully with template', async (t) => {
     try {
-      await eject(workdir)
+      await eject(workdir, 'eject-ts')
       await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
     }
   })
+}
 
-  function verifyCopy (t, expected) {
-    return new Promise((resolve, reject) => {
-      let count = 0
-      walker(workdir)
-        .on('file', function (file) {
-          count++
-          try {
-            const data = readFileSync(file)
-            file = file.replace(workdir, '')
-            t.same(
-              data.toString().replace(/\r\n/g, '\n'),
-              expected[file],
-              file + ' matching'
-            )
-          } catch (err) {
-            reject(err)
-          }
-        })
-        .on('end', function () {
-          t.equal(Object.keys(expected).length, count)
-          resolve()
-        })
-        .on('error', function (err, entry, stat) {
+function verifyCopy (t, expected) {
+  return new Promise((resolve, reject) => {
+    let count = 0
+    walker(workdir)
+      .on('file', function (file) {
+        count++
+        try {
+          const data = readFileSync(file)
+          file = file.replace(workdir, '')
+          t.same(
+            data.toString().replace(/\r\n/g, '\n'),
+            expected[file],
+            file + ' matching'
+          )
+        } catch (err) {
           reject(err)
-        })
-    })
-  }
+        }
+      })
+      .on('end', function () {
+        t.equal(Object.keys(expected).length, count)
+        resolve()
+      })
+      .on('error', function (err, entry, stat) {
+        reject(err)
+      })
+  })
 }

@@ -284,6 +284,22 @@ it will be overwritten. Use the `--integrate` flag with care.
 | Overwrite it when the target directory is the current directory (`.`) | `--integrate`|
 | For JavaScript template, optionally includes Standard linter to fix code style issues | `--standardlint`|
 
+
+### Eject
+
+`fastify-cli` can generate a simple `server.js` or a `server.ts` in order to launch
+the application withouth the `fastify-cli` command itself.
+
+1. `fastify eject`
+2. `node server.js`
+
+#### Options
+
+| Description | Full command |
+| --- | --- |
+| Use the TypeScript template | `--lang=ts`, `--lang=typescript` |
+
+
 ### generate-plugin
 
 `fastify-cli` can help you improve your plugin development by generating a scaffolding project:

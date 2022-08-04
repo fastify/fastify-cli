@@ -1,24 +1,39 @@
 'use strict'
 
 const path = require('path')
+const argv = require('yargs-parser')
 const generify = require('generify')
 const log = require('./log')
 
-function eject (dir) {
+function eject (dir, template = 'eject') {
   return new Promise((resolve, reject) => {
-    generify(path.join(__dirname, 'templates', 'eject'), dir, {}, function (file) {
-      log('debug', `generated ${file}`)
-    }, function (err) {
-      if (err) {
-        return reject(err)
+    generify(
+      path.join(__dirname, 'templates', template),
+      dir,
+      {},
+      function (file) {
+        log('debug', `generated ${file}`)
+      },
+      function (err) {
+        if (err) {
+          return reject(err)
+        }
+        resolve()
       }
-      resolve()
-    })
+    )
   })
 }
 
-function cli () {
-  eject(process.cwd()).catch(function (err) {
+function cli (args) {
+  const opts = argv(args)
+  const isLangTypescript = opts.lang === 'ts' || opts.lang === 'typescript'
+  const template = isLangTypescript ? 'eject-ts' : 'eject'
+
+  const destinationPath = isLangTypescript
+    ? path.join(process.cwd(), 'src')
+    : process.cwd()
+
+  eject(destinationPath, template).catch(function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
