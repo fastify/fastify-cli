@@ -57,7 +57,8 @@ function define (t) {
 
   test('should finish succesfully with template', async (t) => {
     try {
-      await eject(workdir)
+      const template = 'eject'
+      await eject(workdir, template)
       await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
