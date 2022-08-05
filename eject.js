@@ -2,11 +2,12 @@
 
 const path = require('path')
 const generify = require('generify')
+const argv = require('yargs-parser')
 const log = require('./log')
 
-function eject (dir) {
+function eject (dir, template = 'eject') {
   return new Promise((resolve, reject) => {
-    generify(path.join(__dirname, 'templates', 'eject'), dir, {}, function (file) {
+    generify(path.join(__dirname, 'templates', template), dir, {}, function (file) {
       log('debug', `generated ${file}`)
     }, function (err) {
       if (err) {
@@ -17,8 +18,15 @@ function eject (dir) {
   })
 }
 
-function cli () {
-  eject(process.cwd()).catch(function (err) {
+function cli (args) {
+  const opts = argv[args]
+
+  let template
+  if (opts.lang === 'ts' || opts.lang === 'typescript') {
+    template = 'eject-ts'
+  }
+
+  eject(process.cwd(), template).catch(function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
