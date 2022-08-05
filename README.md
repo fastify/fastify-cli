@@ -27,8 +27,7 @@ Will print an help:
 Fastify command line interface, available commands are:
 
   * start                 start a server
-  * eject                 turns your application into a standalone executable with a server.js file being added
-  * eject-ts              turns your application into a standalone executable with a server.ts file being added
+  * eject                 turns your application into a standalone executable with a server.(js|ts) file being added
   * generate              generate a new project
   * generate-plugin       generate a new plugin project
   * readme                generate a README.md for the plugin
