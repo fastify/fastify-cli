@@ -11,7 +11,7 @@ const rimraf = require('rimraf')
 const walker = require('walker')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'eject-ts')
-const { eject } = require('../eject-ts')
+const { eject } = require('../eject')
 const expected = {};
 
 (function (cb) {
@@ -55,7 +55,8 @@ function define (t) {
 
   test('should finish succesfully with template', async (t) => {
     try {
-      await eject(workdir)
+      const template = 'eject-ts'
+      await eject(workdir, template)
       await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
