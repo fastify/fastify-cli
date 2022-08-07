@@ -61,7 +61,7 @@
   "devDependencies": {
     "@fastify/autoload": "^5.0.0",
     "@fastify/pre-commit": "^2.0.2",
-    "@fastify/sensible": "^4.1.0",
+    "@fastify/sensible": "^5.0.0",
     "@types/node": "^18.0.0",
     "@types/tap": "^15.0.5",
     "concurrently": "^7.0.0",
