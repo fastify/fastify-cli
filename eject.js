@@ -19,7 +19,7 @@ function eject (dir, template) {
 }
 
 function cli (args) {
-  const opts = argv[args]
+  const opts = argv(args)
 
   let template
   if (opts.lang === 'ts' || opts.lang === 'typescript') {
@@ -28,7 +28,7 @@ function cli (args) {
     template = 'eject'
   }
 
-  eject(process.cwd(), template).catch(function (err) {
+  return eject(process.cwd(), template).catch(function (err) {
     if (err) {
       log('error', err.message)
       process.exit(1)
