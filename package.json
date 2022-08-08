@@ -56,7 +56,7 @@
     "pkg-up": "^3.1.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
-    "yargs-parser": "^20.0.0"
+    "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
     "@fastify/autoload": "^5.0.0",
