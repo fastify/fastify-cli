@@ -165,6 +165,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
 | Defines the maximum payload, in bytes,<br>that the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
+| Set the maximum ms delay before forcefully closing pending requests after receiving SIGTERM or SIGINT signals; and uncaughtException or unhandledRejection errors (default: 500)                                                           | `-g`         | `--close-grace-delay`     | `FASTIFY_CLOSE_GRACE_DELAY`     |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 
@@ -212,7 +213,7 @@ const appService = require('./app.js')
 app.register(appService)
 
 // delay is the number of milliseconds for the graceful close to finish
-const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, err, manual }) {
+const closeListeners = closeWithGrace({ delay: process.env.FASTIFY_CLOSE_GRACE_DELAY || 500 }, async function ({ signal, err, manual }) {
   if (err) {
     app.log.error(err)
   }

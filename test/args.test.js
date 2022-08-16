@@ -18,6 +18,7 @@ test('should parse args correctly', t => {
     '--options', 'true',
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
+    '--close-grace-delay', '30000',
     '--body-limit', '5242880',
     '--debug', 'true',
     '--debug-port', 1111,
@@ -42,6 +43,7 @@ test('should parse args correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    closeGraceDelay: 30000,
     pluginOptions: {},
     bodyLimit: 5242880,
     debug: true,
@@ -68,6 +70,7 @@ test('should parse args with = assignment correctly', t => {
     '--options=true',
     '--prefix=FASTIFY_',
     '--plugin-timeout=500',
+    '--close-grace-delay=30000',
     '--body-limit=5242880',
     '--debug=true',
     '--debug-port', 1111,
@@ -92,6 +95,7 @@ test('should parse args with = assignment correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    closeGraceDelay: 30000,
     pluginOptions: {},
     bodyLimit: 5242880,
     debug: true,
@@ -118,6 +122,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PREFIX = 'FASTIFY_'
   process.env.FASTIFY_BODY_LIMIT = '5242880'
   process.env.FASTIFY_PLUGIN_TIMEOUT = '500'
+  process.env.FASTIFY_CLOSE_GRACE_DELAY = '30000'
   process.env.FASTIFY_DEBUG = 'true'
   process.env.FASTIFY_DEBUG_PORT = '1111'
   process.env.FASTIFY_DEBUG_HOST = '1.1.1.1'
@@ -137,6 +142,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PREFIX
     delete process.env.FASTIFY_BODY_LIMIT
     delete process.env.FASTIFY_PLUGIN_TIMEOUT
+    delete process.env.FASTIFY_CLOSE_GRACE_DELAY
     delete process.env.FASTIFY_DEBUG
     delete process.env.FASTIFY_DEBUG_PORT
     delete process.env.FASTIFY_LOGGING_MODULE
@@ -160,6 +166,7 @@ test('should parse env vars correctly', t => {
     socket: 'fastify.io.socket:9999',
     require: './require-module.js',
     pluginTimeout: 500,
+    closeGraceDelay: 30000,
     pluginOptions: {},
     debug: true,
     debugPort: 1111,
@@ -170,7 +177,7 @@ test('should parse env vars correctly', t => {
 })
 
 test('should respect default values', t => {
-  t.plan(12)
+  t.plan(13)
 
   const argv = [
     'app.js'
@@ -186,6 +193,7 @@ test('should respect default values', t => {
   t.equal(parsedArgs.verboseWatch, false)
   t.equal(parsedArgs.logLevel, 'fatal')
   t.equal(parsedArgs.pluginTimeout, 10000)
+  t.equal(parsedArgs.closeGraceDelay, 500)
   t.equal(parsedArgs.debug, false)
   t.equal(parsedArgs.debugPort, 9320)
   t.equal(parsedArgs.loggingModule, undefined)
@@ -208,6 +216,7 @@ test('should parse custom plugin options', t => {
     '--options', 'true',
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
+    '--close-grace-delay', '30000',
     '--body-limit', '5242880',
     '--debug', 'true',
     '--debug-port', 1111,
@@ -239,6 +248,7 @@ test('should parse custom plugin options', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    closeGraceDelay: 30000,
     pluginOptions: {
       a: true,
       b: true,
@@ -269,6 +279,7 @@ test('should parse config file correctly and prefer config values over default o
     port: 5000,
     bodyLimit: undefined,
     pluginTimeout: 9000,
+    closeGraceDelay: 1000,
     pluginOptions: {},
     prettyLogs: true,
     options: false,
@@ -296,6 +307,7 @@ test('should prefer command line args over config file options', t => {
     '--port', '4000',
     '--debugPort', '9320',
     '--plugin-timeout', '10000',
+    '--close-grace-delay', '30000',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -306,6 +318,7 @@ test('should prefer command line args over config file options', t => {
     port: 4000,
     bodyLimit: undefined,
     pluginTimeout: 10000,
+    closeGraceDelay: 30000,
     pluginOptions: {},
     prettyLogs: true,
     options: false,
