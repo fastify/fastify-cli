@@ -49,6 +49,9 @@ OPTS
   -T, --plugin-timeout
       The maximum amount of time that a plugin can take to load (default to 10 seconds).
 
+  -g, --close-grace-delay
+      The maximum amount of time before forcefully closing pending requests (default to 500 ms)
+
   -h, --help
       Show this help message
 
