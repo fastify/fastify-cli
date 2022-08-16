@@ -15,6 +15,7 @@ const DEFAULT_ARGUMENTS = {
   debugPort: 9320,
   options: false,
   pluginTimeout: 10 * 1000, // everything should load in 10 seconds
+  closeGraceDelay: 500,
   lang: 'js',
   standardlint: false
 }
@@ -25,7 +26,7 @@ module.exports = function parseArgs (args) {
     configuration: {
       'populate--': true
     },
-    number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout'],
+    number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay'],
     string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'config'],
     boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint'],
     envPrefix: 'FASTIFY_',
@@ -44,6 +45,7 @@ module.exports = function parseArgs (args) {
       'log-level': ['l'],
       'pretty-logs': ['P'],
       'plugin-timeout': ['T'],
+      'close-grace-delay': ['g'],
       'logging-module': ['L'],
       'verbose-watch': ['V']
     }
@@ -69,6 +71,7 @@ module.exports = function parseArgs (args) {
     port: parsedArgs.port,
     bodyLimit: parsedArgs.bodyLimit,
     pluginTimeout: parsedArgs.pluginTimeout,
+    closeGraceDelay: parsedArgs.closeGraceDelay,
     pluginOptions,
     prettyLogs: parsedArgs.prettyLogs,
     options: parsedArgs.options,

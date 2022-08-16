@@ -137,7 +137,7 @@ async function runFastify (args, additionalOptions) {
   const appConfig = Object.assign({}, opts.pluginOptions, additionalOptions)
   await fastify.register(file.default || file, appConfig)
 
-  const closeListeners = closeWithGrace({ delay: 500 }, async function ({ signal, err, manual }) {
+  const closeListeners = closeWithGrace({ delay: opts.closeGraceDelay }, async function ({ signal, err, manual }) {
     if (err) {
       fastify.log.error(err)
     }
