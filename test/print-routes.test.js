@@ -41,7 +41,7 @@ test('should warn on file not found', t => {
   const oldStop = printRoutes.stop
   t.teardown(() => { printRoutes.stop = oldStop })
   printRoutes.stop = function (message) {
-    t.ok(/.*not-found.js doesn't exist within/.test(message), message)
+    t.ok(/not-found.js doesn't exist within/.test(message), message)
   }
 
   const argv = ['./data/not-found.js']
