@@ -122,6 +122,8 @@ function generate (dir, template) {
 
         pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
 
+        pkg.tap = template.tap
+
         log('debug', 'edited package.json, saving')
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
           if (err) {
@@ -164,6 +166,14 @@ function cli (args) {
     if (opts.esm) {
       template.dir = 'app-esm'
       template.type = 'module'
+      template.tap = {
+        'node-arg': [
+          '--no-warnings',
+          '--experimental-loader',
+          '@istanbuljs/esm-loader-hook'
+        ]
+      }
+      template.devDependencies['@istanbuljs/esm-loader-hook'] = cliPkg.devDependencies['@istanbuljs/esm-loader-hook']
     }
 
     if (opts.standardlint) {

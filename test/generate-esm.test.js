@@ -30,6 +30,14 @@ const initVersion = execSync('npm get init-version').toString().trim()
 
 javascriptTemplate.dir = 'app-esm'
 javascriptTemplate.type = 'module'
+javascriptTemplate.tap = {
+  'node-arg': [
+    '--no-warnings',
+    '--experimental-loader',
+    '@istanbuljs/esm-loader-hook'
+  ]
+}
+javascriptTemplate.devDependencies['@istanbuljs/esm-loader-hook'] = cliPkg.devDependencies['@istanbuljs/esm-loader-hook']
 
 ;(function (cb) {
   const files = []
