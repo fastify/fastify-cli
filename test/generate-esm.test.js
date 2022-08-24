@@ -109,7 +109,7 @@ function define (t) {
   })
 
   test('should finish successfully with ESM javascript template', async (t) => {
-    t.plan(15 + Object.keys(expected).length)
+    t.plan(14 + Object.keys(expected).length)
     try {
       await generate(workdir, javascriptTemplate)
       await verifyPkg(t)
@@ -120,7 +120,7 @@ function define (t) {
   })
 
   test('--integrate option will enhance preexisting package.json and overwrite preexisting files', async (t) => {
-    t.plan(15 + Object.keys(expected).length)
+    t.plan(14 + Object.keys(expected).length)
     try {
       await generate(workdir, javascriptTemplate)
       await pUnlink(path.join(workdir, 'package.json'))
