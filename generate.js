@@ -114,6 +114,8 @@ function generate (dir, template) {
 
         pkg.main = template.main
 
+        pkg.type = template.type
+
         pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
 
         pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
@@ -158,6 +160,11 @@ function cli (args) {
     template = typescriptTemplate
   } else {
     template = { ...javascriptTemplate }
+
+    if (opts.esm) {
+      template.dir = 'app-esm'
+      template.type = 'module'
+    }
 
     if (opts.standardlint) {
       template.scripts = {
