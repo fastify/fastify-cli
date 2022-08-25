@@ -280,6 +280,7 @@ it will be overwritten. Use the `--integrate` flag with care.
 
 | Description | Full command |
 | --- | --- |
+| To generate ESM based JavaScript template | `--esm` |
 | Use the TypeScript template | `--lang=ts`, `--lang=typescript` |
 | Overwrite it when the target directory is the current directory (`.`) | `--integrate`|
 | For JavaScript template, optionally includes Standard linter to fix code style issues | `--standardlint`|
