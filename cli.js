@@ -32,7 +32,7 @@ if (argv.help) {
   help.toStdout(command)
 } else {
   const res = commist.parse(process.argv.splice(2))
-  
+
   if (res) {
     // no command was recognized
     help.toStdout(res)
