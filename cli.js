@@ -4,6 +4,7 @@
 
 const path = require('path')
 const commist = require('commist')()
+const argv = require('yargs-parser')(process.argv)
 const help = require('help-me')({
   // the default
   dir: path.join(path.dirname(require.main.filename), 'help')
@@ -14,7 +15,6 @@ const generate = require('./generate')
 const generatePlugin = require('./generate-plugin')
 const generateReadme = require('./generate-readme')
 const printRoutes = require('./print-routes')
-
 commist.register('start', start.cli)
 commist.register('eject', eject.cli)
 commist.register('generate', generate.cli)
@@ -26,9 +26,15 @@ commist.register('version', function () {
 })
 commist.register('print-routes', printRoutes.cli)
 
-const res = commist.parse(process.argv.splice(2))
+if (argv.help) {
+  const command = argv._.splice(2)[0]
 
-if (res) {
-  // no command was recognized
-  help.toStdout(res)
+  help.toStdout(command)
+} else {
+  const res = commist.parse(process.argv.splice(2))
+
+  if (res) {
+    // no command was recognized
+    help.toStdout(res)
+  }
 }
