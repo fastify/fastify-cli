@@ -1,6 +1,6 @@
 {
   "name": "fastify-cli",
-  "version": "5.1.0",
+  "version": "5.3.0",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "bin": {
@@ -62,6 +62,7 @@
     "@fastify/autoload": "^5.0.0",
     "@fastify/pre-commit": "^2.0.2",
     "@fastify/sensible": "^5.0.0",
+    "@istanbuljs/esm-loader-hook": "0.2.0",
     "@types/node": "^18.0.0",
     "@types/tap": "^15.0.5",
     "concurrently": "^7.0.0",

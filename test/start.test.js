@@ -267,7 +267,7 @@ test('should warn on file not found', t => {
   const oldStop = start.stop
   t.teardown(() => { start.stop = oldStop })
   start.stop = function (message) {
-    t.ok(/.*not-found.js doesn't exist within/.test(message), message)
+    t.ok(/not-found.js doesn't exist within/.test(message), message)
   }
 
   const argv = ['-p', getPort(), './data/not-found.js']

@@ -114,11 +114,15 @@ function generate (dir, template) {
 
         pkg.main = template.main
 
+        pkg.type = template.type
+
         pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
 
         pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
 
         pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
+
+        pkg.tap = template.tap
 
         log('debug', 'edited package.json, saving')
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
@@ -158,6 +162,19 @@ function cli (args) {
     template = typescriptTemplate
   } else {
     template = { ...javascriptTemplate }
+
+    if (opts.esm) {
+      template.dir = 'app-esm'
+      template.type = 'module'
+      template.tap = {
+        'node-arg': [
+          '--no-warnings',
+          '--experimental-loader',
+          '@istanbuljs/esm-loader-hook'
+        ]
+      }
+      template.devDependencies['@istanbuljs/esm-loader-hook'] = cliPkg.devDependencies['@istanbuljs/esm-loader-hook']
+    }
 
     if (opts.standardlint) {
       template.scripts = {
