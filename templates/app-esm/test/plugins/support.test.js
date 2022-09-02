@@ -1,5 +1,3 @@
-'use strict'
-
 import { test } from 'tap'
 import Fastify from 'fastify'
 import Support from '../../plugins/support.js'

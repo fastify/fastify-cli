@@ -1,5 +1,3 @@
-'use strict'
-
 import fp from 'fastify-plugin'
 
 // the use of fastify-plugin is required to be able
