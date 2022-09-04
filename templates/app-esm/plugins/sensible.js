@@ -1,5 +1,3 @@
-'use strict'
-
 import fp from 'fastify-plugin'
 import sensible from '@fastify/sensible'
 
