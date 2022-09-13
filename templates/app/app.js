@@ -3,6 +3,9 @@
 const path = require('path')
 const AutoLoad = require('@fastify/autoload')
 
+// Pass --options via CLI arguments in command to enable these options.
+module.exports.options = {}
+
 module.exports = async function (fastify, opts) {
   // Place here your custom code!
 
