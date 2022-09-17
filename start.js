@@ -55,7 +55,7 @@ function stop (message) {
   exit(message)
 }
 
-async function runFastify (args, additionalOptions) {
+async function runFastify (args, additionalOptions, serverOptions) {
   const opts = parseArgs(args)
   if (opts.require) {
     if (typeof opts.require === 'string') {
@@ -124,6 +124,10 @@ async function runFastify (args, additionalOptions) {
         opts.debugHost || isDocker() ? listenAddressDocker : undefined
       )
     }
+  }
+
+  if (serverOptions) {
+    Object.assign(options, serverOptions)
   }
 
   const fastify = Fastify(
