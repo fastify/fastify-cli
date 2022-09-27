@@ -345,10 +345,11 @@ There are two utilities provided:
 - `build`: builds your application and returns the `fastify` instance without calling the `listen` method.
 - `listen`: starts your application and returns the `fastify` instance listening on the configured port.
 
-Both of these utilities have the `function(arg, pluginOptions)` parameters:
+Both of these utilities have the `function(arg, pluginOptions, serverOptions)` parameters:
 
 - `cliArgs`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
 - `pluginOptions`: is an object containing the options provided to the started plugin (eg: `app.js`).
+- `serverOptions`: is an object containing the additional options provided to fastify server, similar to the `--options` command line argument
 
 ```js
 // load the utility helper functions
@@ -368,6 +369,31 @@ test('test my application', async t => {
   t.same(res.json(), { hello: 'one' })
 })
 ```
+
+Log output is consumed by tap. If log messages should be logged to the console 
+the logger needs to be configured to output to stderr instead of stdout. 
+
+```js
+const logger = {
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      destination: 2,
+    },
+  },
+}
+const argv = ['app.js']
+test('test my application with logging enabled', async t => {
+  const app = await build(argv, {}, { logger })
+  t.teardown(() => app.close())
+
+  // test your application here:
+  const res = await app.inject('/')
+  t.same(res.json(), { hello: 'one' })
+})
+```
+
+
 
 
 ## Contributing

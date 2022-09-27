@@ -4,6 +4,7 @@ const util = require('util')
 const fs = require('fs')
 const path = require('path')
 const { test } = require('tap')
+const stream = require('stream')
 
 const helper = require('../helper')
 
@@ -98,4 +99,28 @@ test('should start fastify', async t => {
   const app = await helper.listen(argv, {})
   t.teardown(() => app.close())
   t.ok(app.server.listening)
+})
+
+test('should start fastify with custom logger configuration', async t => {
+  const argv = ['./examples/plugin.js']
+  const lines = []
+  const dest = new stream.Writable({
+    write: function (chunk, enc, cb) {
+      lines.push(JSON.parse(chunk))
+      cb()
+    }
+  })
+
+  const app = await helper.listen(argv, {}, {
+    logger: {
+      level: 'warn',
+      stream: dest
+    }
+  })
+  t.teardown(() => app.close())
+  app.log.info('test')
+  t.same(lines.length, 0)
+  app.log.warn('test')
+  t.same(lines.length, 1)
+  t.same(app.log.level, 'warn')
 })
