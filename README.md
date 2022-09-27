@@ -345,7 +345,7 @@ There are two utilities provided:
 - `build`: builds your application and returns the `fastify` instance without calling the `listen` method.
 - `listen`: starts your application and returns the `fastify` instance listening on the configured port.
 
-Both of these utilities have the `function(arg, pluginOptions)` parameters:
+Both of these utilities have the `function(arg, pluginOptions, serverOptions)` parameters:
 
 - `cliArgs`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
 - `pluginOptions`: is an object containing the options provided to the started plugin (eg: `app.js`).
