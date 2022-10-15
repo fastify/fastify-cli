@@ -677,6 +677,38 @@ test('should read env variables from .env file', async (t) => {
   await fastify.close()
 })
 
+test('should read env variables from .env file and not override existing env vars in watch mode', async (t) => {
+  process.env.GREETING = 'planet'
+  const testdir = t.testdir({
+    '.env': 'GREETING=world',
+    'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
+  })
+
+  const cwd = process.cwd()
+
+  process.chdir(testdir)
+
+  const port = getPort()
+  const argv = ['-p', port, '-w', path.join(testdir, 'plugin.js')]
+  const fastifyEmitter = await requireUncached('../start').start(argv)
+
+  t.teardown(() => {
+    process.chdir(cwd)
+  })
+
+  await once(fastifyEmitter, 'ready')
+
+  const r1 = await sget({
+    method: 'GET',
+    url: `http://localhost:${port}`
+  })
+
+  t.equal(r1.response.statusCode, 200)
+  t.same(JSON.parse(r1.body), { hello: 'planet' })
+
+  await fastifyEmitter.stop()
+})
+
 test('crash on unhandled rejection', t => {
   t.plan(1)
 
