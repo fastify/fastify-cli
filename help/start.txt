@@ -53,10 +53,10 @@ OPTS
       The maximum amount of time before forcefully closing pending requests (default to 500 ms)
 
   -d, --debug
-      Enable debug mode (node inspect) 
+      Start Fastify app in debug mode with nodejs inspector 
 
-  --debug-port
-      Port to listen on for debugger(default to 9320)
+  -I, --debug-port
+      Set the inspector port (default to 9320)
 
   -h, --help
       Show this help message
