@@ -642,7 +642,7 @@ test('should reload the env on restart when watching', { skip: process.platform 
   })
 
   t.equal(r2.response.statusCode, 200)
-  t.same(JSON.parse(r2.body), { hello: 'planet' })
+  t.same(JSON.parse(r2.body), { hello: 'world' }) /* world because when making a restart the server still passes the arguments that change the environment variable */
 
   await fastifyEmitter.stop()
 })
