@@ -14,11 +14,11 @@ const path = require('path')
 const rimraf = require('rimraf')
 const walker = require('walker')
 const workdir = path.join(__dirname, 'workdir')
-const appTemplateDir = path.join(__dirname, '..', 'templates', 'eject')
+const appTemplateDir = path.join(__dirname, '..', 'templates', 'eject-esm')
 const { eject, cli } = require('../eject')
-const expected = {}
+const expected = {};
 
-;(function (cb) {
+(function (cb) {
   const files = []
   walker(appTemplateDir)
     .on('file', function (file) {
@@ -32,7 +32,9 @@ const expected = {}
             return cb(err)
           }
 
-          expected[file.replace(appTemplateDir, '').replace(/__/, '.')] = data.toString()
+          expected[
+            file.replace(appTemplateDir, '').replace(/__/, '.')
+          ] = data.toString()
 
           count++
           if (count === files.length) {
@@ -57,7 +59,7 @@ function define (t) {
 
   test('should finish succesfully with template', async (t) => {
     try {
-      const template = 'eject'
+      const template = 'eject-esm'
       await eject(workdir, template)
       await verifyCopy(t, expected)
     } catch (err) {
@@ -68,7 +70,7 @@ function define (t) {
   test('should finish successfully with cli', async (t) => {
     try {
       process.chdir(workdir)
-      await cli([])
+      await cli(['--esm'])
       await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
@@ -84,7 +86,11 @@ function define (t) {
           try {
             const data = readFileSync(file)
             file = file.replace(workdir, '')
-            t.same(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
+            t.same(
+              data.toString().replace(/\r\n/g, '\n'),
+              expected[file],
+              file + ' matching'
+            )
           } catch (err) {
             reject(err)
           }

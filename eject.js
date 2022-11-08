@@ -25,7 +25,11 @@ function cli (args) {
   if (opts.lang === 'ts' || opts.lang === 'typescript') {
     template = 'eject-ts'
   } else {
-    template = 'eject'
+    if (opts.esm) {
+      template = 'eject-esm'
+    } else {
+      template = 'eject'
+    }
   }
 
   return eject(process.cwd(), template).catch(function (err) {

@@ -6,5 +6,8 @@ You can set the port to listen on with the PORT environment variable (default to
 
 OPTS
 
+  --esm
+      use the ESM template
+
   --lang=ts, --lang=typescript
       use the TypeScript template
