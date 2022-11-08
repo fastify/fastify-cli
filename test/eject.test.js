@@ -68,7 +68,7 @@ function define (t) {
   test('should finish successfully with cli', async (t) => {
     try {
       process.chdir(workdir)
-      await cli()
+      await cli([])
       await verifyCopy(t, expected)
     } catch (err) {
       t.error(err)
