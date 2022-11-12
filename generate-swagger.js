@@ -11,7 +11,6 @@ const {
   showHelpForCommand
 } = require('./util')
 const fp = require('fastify-plugin')
-const { default: fastify } = require('fastify')
 
 let Fastify = null
 

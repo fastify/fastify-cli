@@ -11,7 +11,7 @@ test('should generate swagger', async (t) => {
 
   try {
     const swagger = JSON.parse(await generateSwagger([swaggerplugin]))
-    t.equal(swagger["openapi"], "3.0.3")
+    t.equal(swagger.openapi, '3.0.3')
   } catch (err) {
     t.error(err)
   }
