@@ -11,6 +11,7 @@ const {
   showHelpForCommand
 } = require('./util')
 const fp = require('fastify-plugin')
+const { default: fastify } = require('fastify')
 
 let Fastify = null
 
@@ -39,13 +40,16 @@ async function generateSwagger (args) {
   loadModules(opts)
 
   const fastify = await runFastify(opts)
+  try {
+    if (fastify.swagger == null) {
+      log('error', '@fastify/swagger plugin not installed')
+      process.exit(1)
+    }
 
-  if (fastify.swagger == null) {
-    log('error', '@fastify/swagger plugin not installed')
-    process.exit(1)
+    return JSON.stringify(fastify.swagger(), undefined, 2)
+  } finally {
+    fastify.close()
   }
-
-  process.stdout.write(JSON.stringify(fastify.swagger(), undefined, 2))
 }
 
 async function runFastify (opts) {
@@ -77,8 +81,8 @@ function stop (message) {
 }
 
 function cli (args) {
-  return generateSwagger(args).then(fastify => {
-    if (fastify) return fastify.close()
+  return generateSwagger(args).then(swagger => {
+    process.stdout.write(swagger + '\n')
   })
 }
 
