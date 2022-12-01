@@ -124,3 +124,29 @@ test('should start fastify with custom logger configuration', async t => {
   t.same(lines.length, 1)
   t.same(app.log.level, 'warn')
 })
+
+test('should merge the CLI and FILE configs', async t => {
+  const argv = ['./examples/plugin-with-logger.js', '--options']
+
+  const lines = []
+  const dest = new stream.Writable({
+    write: function (chunk, enc, cb) {
+      lines.push(JSON.parse(chunk))
+      cb()
+    }
+  })
+
+  const app = await helper.listen(argv, {}, {
+    logger: {
+      level: 'warn',
+      stream: dest
+    }
+  })
+  t.teardown(() => app.close())
+  app.log.info('test')
+  t.same(lines.length, 0)
+  app.log.warn({ foo: 'test' })
+  t.same(app.log.level, 'warn')
+  t.same(lines.length, 1)
+  t.same(lines[0].foo, '***')
+})

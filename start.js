@@ -5,6 +5,10 @@
 require('dotenv').config()
 const isDocker = require('is-docker')
 const closeWithGrace = require('close-with-grace')
+const deepmerge = require('@fastify/deepmerge')({
+  cloneProtoObject (obj) { return obj }
+})
+
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
@@ -99,7 +103,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
   const defaultLogger = {
     level: opts.logLevel
   }
-  const options = {
+  let options = {
     logger: logger || defaultLogger,
 
     pluginTimeout: opts.pluginTimeout
@@ -127,12 +131,14 @@ async function runFastify (args, additionalOptions, serverOptions) {
   }
 
   if (serverOptions) {
-    Object.assign(options, serverOptions)
+    options = deepmerge(options, serverOptions)
   }
 
-  const fastify = Fastify(
-    opts.options ? Object.assign(options, file.options) : options
-  )
+  if (opts.options && file.options) {
+    options = deepmerge(options, file.options)
+  }
+
+  const fastify = Fastify(options)
 
   if (opts.prefix) {
     opts.pluginOptions.prefix = opts.prefix

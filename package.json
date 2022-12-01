@@ -11,7 +11,7 @@
     "lint:fix": "standard --fix",
     "unit": "tap \"test/**/*.test.{js,ts}\" \"templates/**/*.test.{js,ts}\" --timeout 300",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test": "npm run lint && npm run unit && npm run test:typescript",
+    "test": "npm run unit && npm run test:typescript",
     "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
   "keywords": [
@@ -42,6 +42,7 @@
     ]
   },
   "dependencies": {
+    "@fastify/deepmerge": "^1.2.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
     "close-with-grace": "^1.1.0",
