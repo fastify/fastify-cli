@@ -49,7 +49,7 @@ async function start (args) {
   loadModules(opts)
 
   if (opts.watch) {
-    return watch(args, opts.ignoreWatch, opts.verboseWatch)
+    return watch(args, opts.ignoreWatch, opts.verboseWatch, opts.onWatchEvent)
   }
 
   return runFastify(args)

@@ -159,6 +159,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload                                 | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
+| When watch triggers a restart, run a command.                                                                                           | `-e`          | `--on-watch-event`       | `FASTIFY_ON_WATCH_EVENT ` |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
 | Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |     `-V`          | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |

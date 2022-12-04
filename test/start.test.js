@@ -564,7 +564,7 @@ test('should start the server with watch options that the child process restart 
 })
 
 test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: process.platform === 'win32' }, async (t) => {
-  t.plan(4)
+  t.plan(5)
 
   const spy = sinon.spy()
   const watch = proxyquire('../lib/watch', {
@@ -582,7 +582,7 @@ test('should start the server with watch and verbose-watch options that the chil
   const port = getPort()
 
   await writeFile(tmpjs, 'hello world')
-  const argv = ['-p', port, '-w', '--verbose-watch', './examples/plugin.js']
+  const argv = ['-p', port, '-w', '--verbose-watch', '--on-watch-event="echo changed"', './examples/plugin.js']
   const fastifyEmitter = await start.start(argv)
 
   t.teardown(async () => {
@@ -592,11 +592,22 @@ test('should start the server with watch and verbose-watch options that the chil
     await fastifyEmitter.stop()
   })
 
+  // listen for any of the forked processes messages
+  const onChanges = new Promise((resolve, reject) => {
+    for (const child of fastifyEmitter.childs) {
+      child.on('message', resolve)
+      setTimeout(reject, 300)
+    }
+  })
+
   await once(fastifyEmitter, 'ready')
   t.pass('should receive ready event')
 
   await writeFile(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't catch change event in CI, but local test is all ok. you can remove annotation in local environment.
   t.pass('change tmpjs')
+
+  const message = await onChanges
+  t.ok(message.includes('changed'), 'forked process sends "changed" message')
 
   // this might happen more than once but does not matter in this context
   await once(fastifyEmitter, 'restart')

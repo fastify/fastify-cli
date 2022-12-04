@@ -38,6 +38,10 @@ OPTS
   [env: FASTIFY_WATCH]
       Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.
 
+  -e, --on-watch-event
+  [env: FASTIFY_ON_WATCH_EVENT]
+      When watch triggers a restart, run a command.
+
   -x, --prefix
   [env: FASTIFY_PREFIX]
       Set the prefix
