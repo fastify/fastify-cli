@@ -30,6 +30,7 @@ Fastify command line interface, available commands are:
   * eject                 turns your application into a standalone executable with a server.(js|ts) file being added
   * generate              generate a new project
   * generate-plugin       generate a new plugin project
+  * generate-swagger      generate Swagger/OpenAPI schema for a project using @fastify/swagger
   * readme                generate a README.md for the plugin
   * print-routes          prints the representation of the internal radix tree used by the router, useful for debugging.
   * version               the current fastify-cli version
@@ -316,6 +317,12 @@ Finally, there will be a new `README.md` file, which provides internal informati
 * Encapsulation semantics
 * Compatible Fastify version
 
+### generate-swagger
+
+if your project uses `@fastify/swagger`, `fastify-cli` can generate and write out the resulting Swagger/OpenAPI schema for you.
+
+`fastify generate-swagger app.js`
+
 ### linting
 
 `fastify-cli` is unopinionated on the choice of linter. We recommend you to add a linter, like so:
@@ -370,8 +377,8 @@ test('test my application', async t => {
 })
 ```
 
-Log output is consumed by tap. If log messages should be logged to the console 
-the logger needs to be configured to output to stderr instead of stdout. 
+Log output is consumed by tap. If log messages should be logged to the console
+the logger needs to be configured to output to stderr instead of stdout.
 
 ```js
 const logger = {
