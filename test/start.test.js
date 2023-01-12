@@ -535,6 +535,27 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
   t.pass('server closed')
 })
 
+test('should start the server listening on 0.0.0.0 when running in kubernetes', async t => {
+  t.plan(2)
+  const isKubernetes = sinon.stub()
+  isKubernetes.returns(true)
+
+  const start = proxyquire('../start', {
+    './util': {
+      ...require('../util'),
+      isKubernetes
+    }
+  })
+
+  const argv = ['-p', getPort(), './examples/plugin.js']
+  const fastify = await start.start(argv)
+
+  t.equal(fastify.server.address().address, '0.0.0.0')
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
 test('should start the server with watch options that the child process restart when directory changed', { skip: process.platform === 'win32' }, async (t) => {
   t.plan(3)
   const tmpjs = path.resolve(baseFilename + '.js')

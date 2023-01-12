@@ -98,4 +98,10 @@ function showHelpForCommand (commandName) {
   }
 }
 
-module.exports = { exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
+function isKubernetes () {
+  // Detection based on https://kubernetes.io/docs/reference/kubectl/#in-cluster-authentication-and-namespace-overrides
+  return process.env.KUBERNETES_SERVICE_HOST !== undefined ||
+    fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
+}
+
+module.exports = { isKubernetes, exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
