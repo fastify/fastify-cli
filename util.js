@@ -7,8 +7,6 @@ const resolveFrom = require('resolve-from')
 
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
-const isKubernetes = () => process.env.KUBERNETES_SERVICE_HOST !== undefined
-
 function exit (message) {
   if (message instanceof Error) {
     console.log(message)
@@ -98,6 +96,12 @@ function showHelpForCommand (commandName) {
   } catch (e) {
     exit(`unable to get help for command "${commandName}"`)
   }
+}
+
+function isKubernetes () {
+  // Detection based on https://kubernetes.io/docs/reference/kubectl/#in-cluster-authentication-and-namespace-overrides
+  return process.env.KUBERNETES_SERVICE_HOST !== undefined ||
+    fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
 }
 
 module.exports = { isKubernetes, exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }

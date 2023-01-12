@@ -537,7 +537,15 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
 
 test('should start the server listening on 0.0.0.0 when running in kubernetes', async t => {
   t.plan(2)
-  process.env.KUBERNETES_SERVICE_HOST = '1.2.3.4'
+  const isKubernetes = sinon.stub()
+  isKubernetes.returns(true)
+
+  const start = proxyquire('../start', {
+    './util': {
+      ...require('../util'),
+      isKubernetes
+    }
+  })
 
   const argv = ['-p', getPort(), './examples/plugin.js']
   const fastify = await start.start(argv)
@@ -545,7 +553,6 @@ test('should start the server listening on 0.0.0.0 when running in kubernetes', 
   t.equal(fastify.server.address().address, '0.0.0.0')
 
   await fastify.close()
-  delete process.env.KUBERNETES_SERVICE_HOST
   t.pass('server closed')
 })
 
