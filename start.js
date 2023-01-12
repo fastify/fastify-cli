@@ -17,7 +17,8 @@ const {
   requireModule,
   requireFastifyForModule,
   requireServerPluginFromPath,
-  showHelpForCommand
+  showHelpForCommand,
+  isKubernetes
 } = require('./util')
 
 let Fastify = null
@@ -125,7 +126,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     } else {
       require('inspector').open(
         opts.debugPort,
-        opts.debugHost || isDocker() ? listenAddressDocker : undefined
+        opts.debugHost || isDocker() || isKubernetes() ? listenAddressDocker : undefined
       )
     }
   }
@@ -165,7 +166,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     await fastify.listen({ port: opts.port, host: opts.address })
   } else if (opts.socket) {
     await fastify.listen({ path: opts.socket })
-  } else if (isDocker()) {
+  } else if (isDocker() || isKubernetes()) {
     await fastify.listen({ port: opts.port, host: listenAddressDocker })
   } else {
     await fastify.listen({ port: opts.port })

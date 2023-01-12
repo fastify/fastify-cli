@@ -7,6 +7,8 @@ const resolveFrom = require('resolve-from')
 
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
+const isKubernetes = () => process.env.KUBERNETES_SERVICE_HOST !== undefined
+
 function exit (message) {
   if (message instanceof Error) {
     console.log(message)
@@ -98,4 +100,4 @@ function showHelpForCommand (commandName) {
   }
 }
 
-module.exports = { exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
+module.exports = { isKubernetes, exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
