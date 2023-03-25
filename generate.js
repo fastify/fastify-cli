@@ -184,13 +184,11 @@ function cli (args) {
       template.dir = 'app-esm'
       template.type = 'module'
       template.tap = {
-        'node-arg': [
-          '--no-warnings',
-          '--experimental-loader',
-          '@istanbuljs/esm-loader-hook'
-        ]
+        coverage: false
       }
-      template.devDependencies['@istanbuljs/esm-loader-hook'] = cliPkg.devDependencies['@istanbuljs/esm-loader-hook']
+
+      template.devDependencies.c8 = cliPkg.devDependencies.c8
+      template.scripts.test = 'c8 tap "test/**/*.test.js"'
     }
 
     if (opts.standardlint) {
