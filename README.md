@@ -30,6 +30,7 @@ Fastify command line interface, available commands are:
   * eject                 turns your application into a standalone executable with a server.(js|ts) file being added
   * generate              generate a new project
   * generate-plugin       generate a new plugin project
+  * generate-swagger      generate Swagger/OpenAPI schema for a project using @fastify/swagger
   * readme                generate a README.md for the plugin
   * print-routes          prints the representation of the internal radix tree used by the router, useful for debugging.
   * version               the current fastify-cli version
@@ -156,7 +157,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Path to logging configuration module to use                                                                                             | `-L`          | `--logging-module`  | `FASTIFY_LOGGING_MODULE` |
 | Start Fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
 | Set the inspector port (default: 9320)                                                                                                  | `-I`          | `--debug-port`     | `FASTIFY_DEBUG_PORT`     |
-| Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
+| Set the inspector host to listen on (default: loopback address or `0.0.0.0` inside Docker or Kubernetes)                                              |               | `--debug-host`     | `FASTIFY_DEBUG_HOST`     |
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload                                 | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
@@ -174,9 +175,9 @@ By default `--ignore-watch` flag is set to ignore `node_modules build dist .git 
 
 #### Containerization
 
-When deploying to a Docker, and potentially other, containers, it is advisable to set a fastify address of `0.0.0.0` because these containers do not default to exposing mapped ports to localhost.
+When deploying to a Docker container, and potentially other, containers, it is advisable to set a fastify address of `0.0.0.0` because these containers do not default to exposing mapped ports to localhost.
 
-For containers built and run specifically by the Docker Daemon, fastify-cli is able to detect that the server process is running within a Docker container and the `0.0.0.0` listen address is set automatically.
+For containers built and run specifically by the Docker Daemon or inside a Kubernetes cluster, fastify-cli is able to detect that the server process is running within a container and the `0.0.0.0` listen address is set automatically.
 
 Other containerization tools (eg. Buildah and Podman) are not detected automatically, so the `0.0.0.0` listen address must be set explicitly with either the `--address` flag or the `FASTIFY_ADDRESS` environment variable.
 
@@ -316,6 +317,12 @@ Finally, there will be a new `README.md` file, which provides internal informati
 * Encapsulation semantics
 * Compatible Fastify version
 
+### generate-swagger
+
+if your project uses `@fastify/swagger`, `fastify-cli` can generate and write out the resulting Swagger/OpenAPI schema for you.
+
+`fastify generate-swagger app.js`
+
 ### linting
 
 `fastify-cli` is unopinionated on the choice of linter. We recommend you to add a linter, like so:
@@ -370,8 +377,8 @@ test('test my application', async t => {
 })
 ```
 
-Log output is consumed by tap. If log messages should be logged to the console 
-the logger needs to be configured to output to stderr instead of stdout. 
+Log output is consumed by tap. If log messages should be logged to the console
+the logger needs to be configured to output to stderr instead of stdout.
 
 ```js
 const logger = {

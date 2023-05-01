@@ -5,6 +5,10 @@
 require('dotenv').config()
 const isDocker = require('is-docker')
 const closeWithGrace = require('close-with-grace')
+const deepmerge = require('@fastify/deepmerge')({
+  cloneProtoObject (obj) { return obj }
+})
+
 const listenAddressDocker = '0.0.0.0'
 const watch = require('./lib/watch')
 const parseArgs = require('./args')
@@ -13,7 +17,8 @@ const {
   requireModule,
   requireFastifyForModule,
   requireServerPluginFromPath,
-  showHelpForCommand
+  showHelpForCommand,
+  isKubernetes
 } = require('./util')
 
 let Fastify = null
@@ -99,7 +104,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
   const defaultLogger = {
     level: opts.logLevel
   }
-  const options = {
+  let options = {
     logger: logger || defaultLogger,
 
     pluginTimeout: opts.pluginTimeout
@@ -121,18 +126,20 @@ async function runFastify (args, additionalOptions, serverOptions) {
     } else {
       require('inspector').open(
         opts.debugPort,
-        opts.debugHost || isDocker() ? listenAddressDocker : undefined
+        opts.debugHost || isDocker() || isKubernetes() ? listenAddressDocker : undefined
       )
     }
   }
 
   if (serverOptions) {
-    Object.assign(options, serverOptions)
+    options = deepmerge(options, serverOptions)
   }
 
-  const fastify = Fastify(
-    opts.options ? Object.assign(options, file.options) : options
-  )
+  if (opts.options && file.options) {
+    options = deepmerge(options, file.options)
+  }
+
+  const fastify = Fastify(options)
 
   if (opts.prefix) {
     opts.pluginOptions.prefix = opts.prefix
@@ -159,7 +166,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     await fastify.listen({ port: opts.port, host: opts.address })
   } else if (opts.socket) {
     await fastify.listen({ path: opts.socket })
-  } else if (isDocker()) {
+  } else if (isDocker() || isKubernetes()) {
     await fastify.listen({ port: opts.port, host: listenAddressDocker })
   } else {
     await fastify.listen({ port: opts.port })

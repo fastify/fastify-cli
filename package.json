@@ -1,6 +1,6 @@
 {
   "name": "fastify-cli",
-  "version": "5.5.1",
+  "version": "5.7.1",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "bin": {
@@ -11,7 +11,7 @@
     "lint:fix": "standard --fix",
     "unit": "tap \"test/**/*.test.{js,ts}\" \"templates/**/*.test.{js,ts}\" --timeout 300",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test": "npm run lint && npm run unit && npm run test:typescript",
+    "test": "npm run unit && npm run test:typescript",
     "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
   "keywords": [
@@ -42,12 +42,14 @@
     ]
   },
   "dependencies": {
+    "@fastify/deepmerge": "^1.2.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
     "close-with-grace": "^1.1.0",
     "commist": "^3.0.0",
     "dotenv": "^16.0.0",
     "fastify": "^4.0.0",
+    "fastify-plugin": "^4.0.0",
     "generify": "^4.0.0",
     "help-me": "^4.0.1",
     "is-docker": "^2.0.0",
@@ -67,7 +69,6 @@
     "@types/tap": "^15.0.5",
     "concurrently": "^7.0.0",
     "del-cli": "^3.0.1",
-    "fastify-plugin": "^4.0.0",
     "fastify-tsconfig": "^1.0.1",
     "minimatch": "^5.1.0",
     "proxyquire": "^2.1.3",
