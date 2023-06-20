@@ -33,7 +33,7 @@ javascriptTemplate.type = 'module'
 javascriptTemplate.tap = {
   coverage: false
 }
-javascriptTemplate.devDependencies['c8'] = cliPkg.devDependencies['c8']
+javascriptTemplate.devDependencies.c8 = cliPkg.devDependencies.c8
 javascriptTemplate.scripts.test = 'c8 tap "test/**/*.test.js"'
 
 ;(function (cb) {
