@@ -16,6 +16,7 @@ const generatePlugin = require('./generate-plugin')
 const generateSwagger = require('./generate-swagger')
 const generateReadme = require('./generate-readme')
 const printRoutes = require('./print-routes')
+const printPlugins = require('./print-plugins')
 commist.register('start', start.cli)
 commist.register('eject', eject.cli)
 commist.register('generate', generate.cli)
@@ -27,6 +28,7 @@ commist.register('version', function () {
   console.log(require('./package.json').version)
 })
 commist.register('print-routes', printRoutes.cli)
+commist.register('print-plugins', printPlugins.cli)
 
 if (argv.help) {
   const command = argv._.splice(2)[0]

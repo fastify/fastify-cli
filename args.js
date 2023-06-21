@@ -17,7 +17,8 @@ const DEFAULT_ARGUMENTS = {
   pluginTimeout: 10 * 1000, // everything should load in 10 seconds
   closeGraceDelay: 500,
   lang: 'js',
-  standardlint: false
+  standardlint: false,
+  commonPrefix: false
 }
 
 module.exports = function parseArgs (args) {
@@ -27,8 +28,8 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'config'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'config', 'method'],
+    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -87,6 +88,9 @@ module.exports = function parseArgs (args) {
     require: parsedArgs.require,
     prefix: parsedArgs.prefix,
     loggingModule: parsedArgs.loggingModule,
-    lang: parsedArgs.lang
+    lang: parsedArgs.lang,
+    method: parsedArgs.method,
+    commonPrefix: parsedArgs.commonPrefix,
+    includeHooks: parsedArgs.includeHooks
   }
 }

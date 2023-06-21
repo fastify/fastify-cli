@@ -50,7 +50,10 @@ test('should parse args correctly', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined
   })
 })
 
@@ -102,7 +105,10 @@ test('should parse args with = assignment correctly', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined
   })
 })
 
@@ -172,7 +178,10 @@ test('should parse env vars correctly', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined
   })
 })
 
@@ -260,7 +269,10 @@ test('should parse custom plugin options', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     loggingModule: './custom-logger.js',
-    lang: 'js'
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined
   })
 })
 
@@ -295,7 +307,10 @@ test('should parse config file correctly and prefer config values over default o
     require: undefined,
     prefix: 'FASTIFY_',
     loggingModule: undefined,
-    lang: 'js'
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined
   })
 })
 
@@ -334,6 +349,9 @@ test('should prefer command line args over config file options', t => {
     require: undefined,
     prefix: 'FASTIFY_',
     loggingModule: undefined,
-    lang: 'js'
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined
   })
 })

@@ -3,6 +3,7 @@
 const proxyquire = require('proxyquire')
 const tap = require('tap')
 const sinon = require('sinon')
+const { execSync } = require('child_process')
 
 const printRoutes = require('../print-routes')
 
@@ -23,16 +24,12 @@ test('should print routes', async t => {
 })
 
 test('should print routes via cli', async t => {
-  t.plan(2)
+  t.plan(1)
 
-  const spy = sinon.spy()
-  const command = proxyquire('../print-routes', {
-    './log': spy
-  })
-  await command.cli(['./examples/plugin.js'])
-
-  t.ok(spy.called)
-  t.same(spy.args, [['debug', '└── / (GET, HEAD, POST)\n']])
+  t.same(
+    execSync('node cli.js print-routes ./examples/plugin.js', { encoding: 'utf-8' }),
+    '└── / (GET, HEAD, POST)\n\n'
+  )
 })
 
 test('should warn on file not found', t => {
@@ -110,4 +107,43 @@ test('should print routes of server with an async/await plugin', async t => {
   await fastify.close()
   t.ok(spy.called)
   t.same(spy.args, [['debug', '└── / (GET, HEAD)\n']])
+})
+
+test('should print uncimpressed routes with --common-refix flag', async t => {
+  t.plan(2)
+
+  const spy = sinon.spy()
+  const command = proxyquire('../print-routes', {
+    './log': spy
+  })
+  await command.cli(['./examples/plugin-common-prefix.js', '--commonPrefix'])
+
+  t.ok(spy.called)
+  t.same(spy.args, [['debug', '└── /\n    └── hel\n        ├── lo-world (GET, HEAD)\n        └── p (POST)\n']])
+})
+
+test('should print debug safe GET routes with --method GET flag', async t => {
+  t.plan(2)
+
+  const spy = sinon.spy()
+  const command = proxyquire('../print-routes', {
+    './log': spy
+  })
+  await command.cli(['./examples/plugin.js', '--method', 'GET'])
+
+  t.ok(spy.called)
+  t.same(spy.args, [['debug', '└── / (GET)\n']])
+})
+
+test('should print routes with hooks with --include-hooks flag', async t => {
+  t.plan(2)
+
+  const spy = sinon.spy()
+  const command = proxyquire('../print-routes', {
+    './log': spy
+  })
+  await command.cli(['./examples/plugin.js', '--include-hooks'])
+
+  t.ok(spy.called)
+  t.same(spy.args, [['debug', '└── / (GET, POST)\n    / (HEAD)\n    • (onSend) ["headRouteOnSendHandler()"]\n']])
 })

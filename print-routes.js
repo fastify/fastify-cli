@@ -60,7 +60,11 @@ async function runFastify (opts) {
 
   await fastify.register(file, pluginOptions)
   await fastify.ready()
-  log('debug', fastify.printRoutes())
+  log('debug', fastify.printRoutes({
+    method: opts.method,
+    commonPrefix: opts.commonPrefix,
+    includeHooks: opts.includeHooks
+  }))
 
   return fastify
 }
