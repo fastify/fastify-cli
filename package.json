@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "unit:template-ts-esm": "TS_NODE_PROJECT=./templates/app-ts-esm/tsconfig.json tap templates/app-ts-esm/test/**/*.test.ts --no-coverage --node-arg=--loader=ts-node/esm --timeout 100",
+    "unit:template-ts-esm": " cross-env TS_NODE_PROJECT=./templates/app-ts-esm/tsconfig.json tap templates/app-ts-esm/test/**/*.test.ts --no-coverage --node-arg=--loader=ts-node/esm --timeout 100",
     "unit:cli": "tap \"test/**/*.test.{js,ts}\" --no-coverage --timeout 200",
     "unit:templates-without-ts-esm": "tap \"templates/app/**/*.test.js\" \"templates/app-esm/**/*.test.js\" \"templates/app-ts/**/*.test.ts\" --no-coverage --timeout 200",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
@@ -71,6 +71,7 @@
     "@types/tap": "^15.0.5",
     "c8": "^7.13.0",
     "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
     "del-cli": "^3.0.1",
     "fastify-tsconfig": "^1.0.1",
     "minimatch": "^5.1.0",
