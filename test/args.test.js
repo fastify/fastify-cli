@@ -13,6 +13,7 @@ test('should parse args correctly', t => {
     '--log-level', 'info',
     '--pretty-logs', 'true',
     '--watch', 'true',
+    '--on-watch-event', 'echo changed',
     '--ignore-watch', 'ignoreme.js',
     '--verbose-watch', 'true',
     '--options', 'true',
@@ -34,6 +35,7 @@ test('should parse args correctly', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    onWatchEvent: 'echo changed',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
@@ -65,6 +67,7 @@ test('should parse args with = assignment correctly', t => {
     '--log-level=info',
     '--pretty-logs=true',
     '--watch=true',
+    '--on-watch-event="echo changed"',
     '--ignore-watch=ignoreme.js',
     '--verbose-watch=true',
     '--options=true',
@@ -86,6 +89,7 @@ test('should parse args with = assignment correctly', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    onWatchEvent: 'echo changed',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
@@ -116,6 +120,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_LOG_LEVEL = 'info'
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
+  process.env.FASTIFY_ON_WATCH_EVENT = 'echo changed'
   process.env.FASTIFY_IGNORE_WATCH = 'ignoreme.js'
   process.env.FASTIFY_VERBOSE_WATCH = 'true'
   process.env.FASTIFY_OPTIONS = 'true'
@@ -136,6 +141,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_LOG_LEVEL
     delete process.env.FASTIFY_PRETTY_LOGS
     delete process.env.FASTIFY_WATCH
+    delete process.env.FASTIFY_ON_WATCH_EVENT
     delete process.env.FASTIFY_IGNORE_WATCH
     delete process.env.FASTIFY_VERBOSE_WATCH
     delete process.env.FASTIFY_OPTIONS
@@ -156,6 +162,7 @@ test('should parse env vars correctly', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    onWatchEvent: 'echo changed',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     address: 'fastify.io:9999',
@@ -177,7 +184,7 @@ test('should parse env vars correctly', t => {
 })
 
 test('should respect default values', t => {
-  t.plan(13)
+  t.plan(14)
 
   const argv = [
     'app.js'
@@ -189,6 +196,7 @@ test('should respect default values', t => {
   t.equal(parsedArgs.options, false)
   t.equal(parsedArgs.prettyLogs, false)
   t.equal(parsedArgs.watch, false)
+  t.equal(parsedArgs.onWatchEvent, '')
   t.equal(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
   t.equal(parsedArgs.verboseWatch, false)
   t.equal(parsedArgs.logLevel, 'fatal')
@@ -211,6 +219,7 @@ test('should parse custom plugin options', t => {
     '--log-level', 'info',
     '--pretty-logs', 'true',
     '--watch', 'true',
+    '--on-watch-event', 'echo changed',
     '--ignore-watch', 'ignoreme.js',
     '--verbose-watch', 'true',
     '--options', 'true',
@@ -239,6 +248,7 @@ test('should parse custom plugin options', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    onWatchEvent: 'echo changed',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
@@ -284,6 +294,7 @@ test('should parse config file correctly and prefer config values over default o
     prettyLogs: true,
     options: false,
     watch: true,
+    onWatchEvent: '',
     debug: false,
     debugPort: 4000,
     debugHost: '1.1.1.1',
@@ -323,6 +334,7 @@ test('should prefer command line args over config file options', t => {
     prettyLogs: true,
     options: false,
     watch: true,
+    onWatchEvent: '',
     debug: false,
     debugPort: 9320,
     debugHost: '1.1.1.1',

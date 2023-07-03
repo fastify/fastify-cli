@@ -11,6 +11,7 @@ const DEFAULT_ARGUMENTS = {
   prettyLogs: false,
   watch: false,
   verboseWatch: false,
+  onWatchEvent: '',
   debug: false,
   debugPort: 9320,
   options: false,
@@ -27,7 +28,7 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'config'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'on-watch-event', 'logging-module', 'debug-host', 'lang', 'require', 'config'],
     boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint'],
     envPrefix: 'FASTIFY_',
     alias: {
@@ -41,6 +42,7 @@ module.exports = function parseArgs (args) {
       prefix: ['x'],
       require: ['r'],
       debug: ['d'],
+      'on-watch-event': ['e'],
       'debug-port': ['I'],
       'log-level': ['l'],
       'pretty-logs': ['P'],
@@ -81,6 +83,7 @@ module.exports = function parseArgs (args) {
     debugHost: parsedArgs.debugHost,
     ignoreWatch,
     verboseWatch: parsedArgs.verboseWatch,
+    onWatchEvent: parsedArgs.onWatchEvent,
     logLevel: parsedArgs.logLevel,
     address: parsedArgs.address,
     socket: parsedArgs.socket,
