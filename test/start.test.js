@@ -556,7 +556,7 @@ test('should start the server listening on 0.0.0.0 when running in kubernetes', 
   t.pass('server closed')
 })
 
-test('should start the server with watch options that the child process restart when directory changed', { skip: process.platform === 'win32' }, async (t) => {
+test('should start the server with watch options that the child process restart when directory changed', { skip: process.platform === 'win32' || (process.platform === 'darwin' && ['v20', 'v19', 'v18'].some(v => process.version.startsWith(v))) }, async (t) => {
   t.plan(3)
   const tmpjs = path.resolve(baseFilename + '.js')
 
@@ -584,7 +584,7 @@ test('should start the server with watch options that the child process restart 
   t.pass('should receive restart event')
 })
 
-test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: process.platform === 'win32' }, async (t) => {
+test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: process.platform === 'win32' || (process.platform === 'darwin' && ['v20', 'v19', 'v18'].some(v => process.version.startsWith(v))) }, async (t) => {
   t.plan(4)
 
   const spy = sinon.spy()

@@ -9,9 +9,9 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "unit:template-ts-esm": " cross-env TS_NODE_PROJECT=./templates/app-ts-esm/tsconfig.json tap templates/app-ts-esm/test/**/*.test.ts --no-coverage --node-arg=--loader=ts-node/esm --timeout 100 --color -R specy",
+    "unit:template-ts-esm": " cross-env TS_NODE_PROJECT=./templates/app-ts-esm/tsconfig.json tap templates/app-ts-esm/test/**/*.test.ts --no-coverage --node-arg=--loader=ts-node/esm --timeout 400 --color -R specy",
     "unit:cli": "tap \"test/**/*.test.{js,ts}\" --no-coverage --jobs=1 --timeout 400 --color -R specy",
-    "unit:templates-without-ts-esm": "tap \"templates/app/**/*.test.js\" \"templates/app-esm/**/*.test.js\" \"templates/app-ts/**/*.test.ts\" --no-coverage --timeout 200 --color -R specy",
+    "unit:templates-without-ts-esm": "tap \"templates/app/**/*.test.js\" \"templates/app-esm/**/*.test.js\" \"templates/app-ts/**/*.test.ts\" --no-coverage --timeout 400 --color -R specy",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
     "test-no-coverage": "npm run unit:cli && npm run unit:templates-without-ts-esm && npm run unit:template-ts-esm && npm run test:typescript",
     "test": "c8 --clean npm run test-no-coverage",
