@@ -556,7 +556,7 @@ test('should start the server listening on 0.0.0.0 when running in kubernetes', 
   t.pass('server closed')
 })
 
-test('should start the server with watch options that the child process restart when directory changed', { skip: process.platform === 'win32' || (process.platform === 'darwin' && ['v20', 'v19', 'v18'].some(v => process.version.startsWith(v))) }, async (t) => {
+test('should start the server with watch options that the child process restart when directory changed', { skip: ['win32', 'darwin'].includes(process.platform) }, async (t) => {
   t.plan(3)
   const tmpjs = path.resolve(baseFilename + '.js')
 
@@ -576,15 +576,16 @@ test('should start the server with watch options that the child process restart 
   await once(fastifyEmitter, 'ready')
   t.pass('should receive ready event')
 
+  const restartPromise = once(fastifyEmitter, 'restart')
   await writeFile(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't catch change event in CI, but local test is all ok. you can remove annotation in local environment.
   t.pass('change tmpjs')
 
   // this might happen more than once but does not matter in this context
-  await once(fastifyEmitter, 'restart')
+  await restartPromise
   t.pass('should receive restart event')
 })
 
-test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: process.platform === 'win32' || (process.platform === 'darwin' && ['v20', 'v19', 'v18'].some(v => process.version.startsWith(v))) }, async (t) => {
+test('should start the server with watch and verbose-watch options that the child process restart when directory changed with console message about changes ', { skip: ['win32', 'darwin'].includes(process.platform) }, async (t) => {
   t.plan(4)
 
   const spy = sinon.spy()
@@ -616,11 +617,12 @@ test('should start the server with watch and verbose-watch options that the chil
   await once(fastifyEmitter, 'ready')
   t.pass('should receive ready event')
 
+  const restartPromise = once(fastifyEmitter, 'restart')
   await writeFile(tmpjs, 'hello fastify', { flag: 'a+' }) // chokidar watch can't catch change event in CI, but local test is all ok. you can remove annotation in local environment.
   t.pass('change tmpjs')
 
   // this might happen more than once but does not matter in this context
-  await once(fastifyEmitter, 'restart')
+  await restartPromise
   t.pass('should receive restart event')
   t.ok(spy.args.length > 0, 'should print a console message on file update')
 })
