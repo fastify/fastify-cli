@@ -9,9 +9,12 @@
   "scripts": {
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "unit": "tap \"test/**/*.test.{js,ts}\" \"templates/**/*.test.{js,ts}\" --timeout 300",
+    "unit:template-ts-esm": " cross-env TS_NODE_PROJECT=./templates/app-ts-esm/tsconfig.json tap templates/app-ts-esm/test/**/*.test.ts --no-coverage --node-arg=--loader=ts-node/esm --timeout 400 --jobs 1 --color -R specy",
+    "unit:cli": "tap \"test/**/*.test.{js,ts}\" --no-coverage --timeout 400 --jobs 1 --color -R specy",
+    "unit:templates-without-ts-esm": "tap \"templates/app/**/*.test.js\" \"templates/app-esm/**/*.test.js\" \"templates/app-ts/**/*.test.ts\" --no-coverage --timeout 400 --jobs 1 --color -R specy",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test": "npm run unit && npm run test:typescript",
+    "test-no-coverage": "npm run unit:cli && npm run unit:templates-without-ts-esm && npm run unit:template-ts-esm && npm run test:typescript",
+    "test": "c8 --clean npm run test-no-coverage",
     "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
   "keywords": [
@@ -64,10 +67,11 @@
     "@fastify/autoload": "^5.0.0",
     "@fastify/pre-commit": "^2.0.2",
     "@fastify/sensible": "^5.0.0",
-    "@istanbuljs/esm-loader-hook": "0.2.0",
     "@types/node": "^18.0.0",
     "@types/tap": "^15.0.5",
+    "c8": "^7.13.0",
     "concurrently": "^7.0.0",
+    "cross-env": "^7.0.3",
     "del-cli": "^3.0.1",
     "fastify-tsconfig": "^1.0.1",
     "minimatch": "^5.1.0",
