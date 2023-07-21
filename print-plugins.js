@@ -21,15 +21,15 @@ function loadModules (opts) {
   }
 }
 
-function printRoutes (args) {
+function printPlugins (args) {
   const opts = parseArgs(args)
   if (opts.help) {
-    return showHelpForCommand('print-routes')
+    return showHelpForCommand('print-plugins')
   }
 
   if (opts._.length !== 1) {
     console.error('Missing the required file parameter\n')
-    return showHelpForCommand('print-routes')
+    return showHelpForCommand('print-plugins')
   }
 
   // we start crashing on unhandledRejection
@@ -60,11 +60,7 @@ async function runFastify (opts) {
 
   await fastify.register(file, pluginOptions)
   await fastify.ready()
-  log('debug', fastify.printRoutes({
-    method: opts.method,
-    commonPrefix: opts.commonPrefix,
-    includeHooks: opts.includeHooks
-  }))
+  log('debug', fastify.printPlugins())
 
   return fastify
 }
@@ -74,12 +70,12 @@ function stop (message) {
 }
 
 function cli (args) {
-  return printRoutes(args).then(fastify => {
+  return printPlugins(args).then(fastify => {
     if (fastify) return fastify.close()
   })
 }
 
-module.exports = { cli, stop, printRoutes }
+module.exports = { cli, stop, printPlugins }
 
 if (require.main === module) {
   cli(process.argv.slice(2))
