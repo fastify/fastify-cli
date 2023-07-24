@@ -17,28 +17,27 @@ function exit (message) {
 
   process.exit()
 }
-function serverTypeScriptPlugin(resolvedModulePath) {
+function serverTypeScriptPlugin (resolvedModulePath) {
   const currentDir = process.cwd()
   const tsconfigPath = path.join(currentDir, 'tsconfig.json')
-  if(!fs.existsSync(tsconfigPath)) {
+  if (!fs.existsSync(tsconfigPath)) {
     throw new Error('The tsconfig.json file does not exist.')
   }
   const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'))
-  const outDir = tsconfig.compilerOptions && tsconfig.compilerOptions.outDir;
+  const outDir = tsconfig.compilerOptions && tsconfig.compilerOptions.outDir
   if (!outDir) {
     throw new Error('The output directory (outDir) was not specified in tsconfig.json.')
   }
   const relativeToRootDir = path.relative(currentDir, resolvedModulePath)
   const outDirRelativeToRootDir = relativeToRootDir.replace(/^[^/]+/, outDir).replace(/\.ts$/, '.js')
-  const modulePath = path.resolve(currentDir, outDirRelativeToRootDir);
+  const modulePath = path.resolve(currentDir, outDirRelativeToRootDir)
 
   if (!fs.existsSync(outDir)) {
-    throw new Error(`The output directory (outDir) has not been built. Please run the "tsc" command to build it.`)
+    throw new Error('The output directory (outDir) has not been built. Please run the "tsc" command to build it.')
   }
 
-  return modulePath;
+  return modulePath
 }
-
 
 function requireModule (moduleName) {
   if (fs.existsSync(moduleName)) {
@@ -79,7 +78,7 @@ function getScriptType (fname, packageType) {
   return (modulePattern.test(fname) ? 'module' : commonjsPattern.test(fname) ? 'commonjs' : packageType) || 'commonjs'
 }
 
-async function requireServerPluginFromPath (modulePath, opts = { swagger: false}) {
+async function requireServerPluginFromPath (modulePath, opts = { swagger: false }) {
   let resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
   if (!fs.existsSync(resolvedModulePath)) {
@@ -90,7 +89,6 @@ async function requireServerPluginFromPath (modulePath, opts = { swagger: false}
 
   const type = getScriptType(resolvedModulePath, packageType)
 
-  
   if (opts.swagger && resolvedModulePath.endsWith('.ts')) {
     resolvedModulePath = serverTypeScriptPlugin(resolvedModulePath)
   }
