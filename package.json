@@ -61,7 +61,6 @@
     "pkg-up": "^3.1.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
-    "ts-node": "^10.9.1",
     "yargs-parser": "^21.1.1"
   },
   "devDependencies": {

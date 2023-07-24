@@ -51,6 +51,7 @@ const typescriptTemplate = {
   scripts: {
     test: 'npm run build:ts && tsc -p test/tsconfig.json && tap --ts "test/**/*.test.ts"',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
+    swagger: "fastify generate-swagger ./src/app.ts",
     'build:ts': 'tsc',
     'watch:ts': 'tsc -w',
     dev: 'npm run build:ts && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "npm:watch:ts" "npm:dev:start"',

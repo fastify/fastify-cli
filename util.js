@@ -4,11 +4,7 @@ const url = require('url')
 const semver = require('semver')
 const pkgUp = require('pkg-up')
 const resolveFrom = require('resolve-from')
-const tsNode = require('ts-node')
-const moduleSupport = semver.satisfies(
-  process.version,
-  '>= 14 || >= 12.17.0 < 13.0.0'
-)
+const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 function exit (message) {
   if (message instanceof Error) {
@@ -21,6 +17,28 @@ function exit (message) {
 
   process.exit()
 }
+function serverTypeScriptPlugin(resolvedModulePath) {
+  const currentDir = process.cwd()
+  const tsconfigPath = path.join(currentDir, 'tsconfig.json')
+  if(!fs.existsSync(tsconfigPath)) {
+    throw new Error('The tsconfig.json file does not exist.')
+  }
+  const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'))
+  const outDir = tsconfig.compilerOptions && tsconfig.compilerOptions.outDir;
+  if (!outDir) {
+    throw new Error('The output directory (outDir) was not specified in tsconfig.json.')
+  }
+  const relativeToRootDir = path.relative(currentDir, resolvedModulePath)
+  const outDirRelativeToRootDir = relativeToRootDir.replace(/^[^/]+/, outDir).replace(/\.ts$/, '.js')
+  const modulePath = path.resolve(currentDir, outDirRelativeToRootDir);
+
+  if (!fs.existsSync(outDir)) {
+    throw new Error(`The output directory (outDir) has not been built. Please run the "tsc" command to build it.`)
+  }
+
+  return modulePath;
+}
+
 
 function requireModule (moduleName) {
   if (fs.existsSync(moduleName)) {
@@ -58,56 +76,39 @@ async function getPackageType (cwd) {
 function getScriptType (fname, packageType) {
   const modulePattern = /\.mjs$/i
   const commonjsPattern = /\.cjs$/i
-  return (
-    (modulePattern.test(fname)
-      ? 'module'
-      : commonjsPattern.test(fname)
-        ? 'commonjs'
-        : packageType) || 'commonjs'
-  )
+  return (modulePattern.test(fname) ? 'module' : commonjsPattern.test(fname) ? 'commonjs' : packageType) || 'commonjs'
 }
 
-async function requireServerPluginFromPath (modulePath) {
-  const resolvedModulePath = path.resolve(process.cwd(), modulePath)
+async function requireServerPluginFromPath (modulePath, opts = { swagger: false}) {
+  let resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
   if (!fs.existsSync(resolvedModulePath)) {
-    throw new Error(
-      `${resolvedModulePath} doesn't exist within ${process.cwd()}`
-    )
+    throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
   const packageType = await getPackageType(resolvedModulePath)
 
   const type = getScriptType(resolvedModulePath, packageType)
 
+  
+  if (opts.swagger && resolvedModulePath.endsWith('.ts')) {
+    resolvedModulePath = serverTypeScriptPlugin(resolvedModulePath)
+  }
   let serverPlugin
-  tsNode.register({
-    transpileOnly: true,
-    skipProject: true
-  })
   if (type === 'module') {
     if (moduleSupport) {
       serverPlugin = await import(url.pathToFileURL(resolvedModulePath).href)
     } else {
-      throw new Error(
-        `fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`
-      )
+      throw new Error(`fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
     }
   } else {
     serverPlugin = require(resolvedModulePath)
   }
 
-  if (
-    isInvalidAsyncPlugin(
-      type === 'commonjs' ? serverPlugin : serverPlugin.default
-    )
-  ) {
-    throw new Error(
-      'Async/Await plugin function should contain 2 arguments. ' +
-      'Refer to documentation for more information.'
-    )
+  if (isInvalidAsyncPlugin(type === 'commonjs' ? serverPlugin : serverPlugin.default)) {
+    throw new Error('Async/Await plugin function should contain 2 arguments. ' +
+      'Refer to documentation for more information.')
   }
-
   return serverPlugin
 }
 
@@ -124,17 +125,7 @@ function showHelpForCommand (commandName) {
 
 function isKubernetes () {
   // Detection based on https://kubernetes.io/docs/reference/kubectl/#in-cluster-authentication-and-namespace-overrides
-  return (
-    process.env.KUBERNETES_SERVICE_HOST !== undefined ||
-    fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
-  )
+  return process.env.KUBERNETES_SERVICE_HOST !== undefined || fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
 }
 
-module.exports = {
-  isKubernetes,
-  exit,
-  requireModule,
-  requireFastifyForModule,
-  showHelpForCommand,
-  requireServerPluginFromPath
-}
+module.exports = { isKubernetes, exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
