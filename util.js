@@ -42,7 +42,7 @@ function requireFastifyForModule (modulePath) {
 }
 
 function isInvalidAsyncPlugin (plugin) {
-  return plugin.length !== 2 && plugin.constructor.name === 'AsyncFunction'
+  return plugin && plugin.length !== 2 && plugin.constructor.name === 'AsyncFunction'
 }
 
 async function getPackageType (cwd) {
