@@ -1034,3 +1034,15 @@ test('should start fastify with custom plugin options with a CJS plugin with pac
   t.pass('server closed')
   t.end()
 })
+
+test('should throw error for invalid fastify plugin (object)', async t => {
+  t.plan(1)
+  try {
+    const port = getPort()
+    const argv = ['-p', port, '-T', '100', './test/data/object.js']
+    await start.start(argv)
+    t.fail('should not start')
+  } catch (err) {
+    t.equal(err.code, 'AVV_ERR_PLUGIN_NOT_VALID')
+  }
+})
