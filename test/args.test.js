@@ -110,7 +110,7 @@ test('should parse args with = assignment correctly', t => {
     method: undefined,
     commonPrefix: false,
     includeHooks: undefined,
-    trustProxy: false,
+    trustProxy: false
   })
 })
 
