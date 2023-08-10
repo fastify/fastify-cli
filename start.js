@@ -138,7 +138,9 @@ async function runFastify (args, additionalOptions, serverOptions) {
   if (opts.options && file.options) {
     options = deepmerge(options, file.options)
   }
-
+  if(opts.trustProxy){
+    options.trustProxy = opts.trustProxy
+  }
   const fastify = Fastify(options)
 
   if (opts.prefix) {
