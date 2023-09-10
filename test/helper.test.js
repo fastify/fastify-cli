@@ -1,10 +1,10 @@
 'use strict'
 
-const util = require('util')
-const fs = require('fs')
-const path = require('path')
+const util = require('node:util')
+const fs = require('node:fs')
+const path = require('node:path')
 const { test } = require('tap')
-const stream = require('stream')
+const stream = require('node:stream')
 
 const helper = require('../helper')
 

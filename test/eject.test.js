@@ -9,8 +9,8 @@ const {
   mkdirSync,
   readFileSync,
   readFile
-} = require('fs')
-const path = require('path')
+} = require('node:fs')
+const path = require('node:path')
 const rimraf = require('rimraf')
 const walker = require('walker')
 const workdir = path.join(__dirname, 'workdir')

@@ -1,14 +1,14 @@
 /* global GLOBAL_MODULE_1, GLOBAL_MODULE_2 */
 'use strict'
 
-const util = require('util')
-const { once } = require('events')
-const fs = require('fs')
-const path = require('path')
-const crypto = require('crypto')
+const util = require('node:util')
+const { once } = require('node:events')
+const fs = require('node:fs')
+const path = require('node:path')
+const crypto = require('node:crypto')
 const semver = require('semver')
 const baseFilename = path.join(__dirname, 'fixtures', `test_${crypto.randomBytes(16).toString('hex')}`)
-const { fork } = require('child_process')
+const { fork } = require('node:child_process')
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 const t = require('tap')
@@ -226,7 +226,7 @@ test('should start fastify at given socket path', { skip: process.platform === '
   const fastify = await start.start(argv)
 
   await new Promise((resolve, reject) => {
-    const request = require('http').request({
+    const request = require('node:http').request({
       method: 'GET',
       path: '/',
       socketPath: sockFile

@@ -124,7 +124,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     if (process.version.match(/v[0-6]\..*/g)) {
       stop('Fastify debug mode not compatible with Node.js version < 6')
     } else {
-      require('inspector').open(
+      require('node:inspector').open(
         opts.debugPort,
         opts.debugHost || isDocker() || isKubernetes() ? listenAddressDocker : undefined
       )

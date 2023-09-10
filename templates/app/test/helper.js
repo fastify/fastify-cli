@@ -4,7 +4,7 @@
 // between our tests.
 
 const { build: buildApplication } = require('fastify-cli/helper')
-const path = require('path')
+const path = require('node:path')
 const AppPath = path.join(__dirname, '..', 'app.js')
 
 // Fill in this config with all the configurations

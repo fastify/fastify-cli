@@ -3,15 +3,15 @@
 const {
   readFile,
   writeFile
-} = require('fs').promises
-const { existsSync } = require('fs')
-const path = require('path')
+} = require('node:fs').promises
+const { existsSync } = require('node:fs')
+const path = require('node:path')
 const chalk = require('chalk')
 const generify = require('generify')
 const argv = require('yargs-parser')
 const cliPkg = require('./package')
-const { execSync } = require('child_process')
-const { promisify } = require('util')
+const { execSync } = require('node:child_process')
+const { promisify } = require('node:util')
 const log = require('./log')
 
 const pluginTemplate = {
