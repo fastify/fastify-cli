@@ -36,7 +36,7 @@ const javascriptTemplate = {
     log('info', `project ${pkg.name} generated successfully`)
     log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
     log('debug', `run '${chalk.bold('npm start')}' to start the application`)
-    log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
+    log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-pretty pretty logging (not suitable for production)`)
     log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
 
     if (pkg.scripts.lint) {
@@ -82,7 +82,7 @@ const typescriptTemplate = {
     log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
     log('debug', `run '${chalk.bold('npm start')}' to start the application`)
     log('debug', `run '${chalk.bold('npm build:ts')}' to compile the typescript application`)
-    log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-colada pretty logging (not suitable for production)`)
+    log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-pretty pretty logging (not suitable for production)`)
     log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
   }
 }
