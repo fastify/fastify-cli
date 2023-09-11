@@ -1,3 +1,8 @@
 Usage: fastify generate-plugin [opts] <file> [--] [<plugin-options>]
 
-Generate Swagger/OpenAPI schema for a project using @fastify/cli.
+Generate Swagger/OpenAPI schema for a project using @fastify/swagger.
+
+OPTS
+
+  --yaml=true
+      generate in YAML format
