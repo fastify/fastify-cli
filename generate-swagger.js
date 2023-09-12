@@ -48,7 +48,7 @@ async function generateSwagger (args) {
     }
 
     if (extraOpts.yaml) {
-      return fastify.swagger({ yaml: true });
+      return fastify.swagger({ yaml: true })
     } else {
       return JSON.stringify(fastify.swagger(), undefined, 2)
     }
