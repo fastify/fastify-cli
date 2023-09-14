@@ -3,6 +3,7 @@
 'use strict'
 
 const parseArgs = require('./args')
+const argv = require('yargs-parser')
 const log = require('./log')
 const {
   exit,
@@ -24,6 +25,7 @@ function loadModules (opts) {
 
 async function generateSwagger (args) {
   const opts = parseArgs(args)
+  const extraOpts = argv(args)
   if (opts.help) {
     return showHelpForCommand('generate-swagger')
   }
@@ -45,7 +47,11 @@ async function generateSwagger (args) {
       process.exit(1)
     }
 
-    return JSON.stringify(fastify.swagger(), undefined, 2)
+    if (extraOpts.yaml) {
+      return fastify.swagger({ yaml: true })
+    } else {
+      return JSON.stringify(fastify.swagger(), undefined, 2)
+    }
   } finally {
     fastify.close()
   }

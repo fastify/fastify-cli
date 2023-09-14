@@ -16,3 +16,14 @@ test('should generate swagger', async (t) => {
     t.error(err)
   }
 })
+
+test('should generate swagger in yaml format', async (t) => {
+  t.plan(1)
+
+  try {
+    const swagger = await generateSwagger(['--yaml=true', swaggerplugin])
+    t.ok(swagger.startsWith('openapi: 3.0.3'))
+  } catch (err) {
+    t.error(err)
+  }
+})
