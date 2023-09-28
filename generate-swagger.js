@@ -63,7 +63,7 @@ async function runFastify (opts) {
   let file = null
 
   try {
-    file = await requireServerPluginFromPath(opts._[0])
+    file = await requireServerPluginFromPath(opts._[0], { swagger: true })
   } catch (e) {
     return module.exports.stop(e)
   }

@@ -4,7 +4,6 @@ const url = require('url')
 const semver = require('semver')
 const pkgUp = require('pkg-up')
 const resolveFrom = require('resolve-from')
-
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 function exit (message) {
@@ -17,6 +16,27 @@ function exit (message) {
   }
 
   process.exit()
+}
+function serverTypeScriptPlugin (resolvedModulePath) {
+  const currentDir = process.cwd()
+  const tsconfigPath = path.join(currentDir, 'tsconfig.json')
+  if (!fs.existsSync(tsconfigPath)) {
+    throw new Error('The tsconfig.json file does not exist.')
+  }
+  const tsconfig = JSON.parse(fs.readFileSync(tsconfigPath, 'utf8'))
+  const outDir = tsconfig.compilerOptions && tsconfig.compilerOptions.outDir
+  if (!outDir) {
+    throw new Error('The output directory (outDir) was not specified in tsconfig.json.')
+  }
+  const relativeToRootDir = path.relative(currentDir, resolvedModulePath)
+  const outDirRelativeToRootDir = relativeToRootDir.replace(/^[^/]+/, outDir).replace(/\.ts$/, '.js')
+  const modulePath = path.resolve(currentDir, outDirRelativeToRootDir)
+
+  if (!fs.existsSync(outDir)) {
+    throw new Error('The output directory (outDir) has not been built. Please run the "tsc" command to build it.')
+  }
+
+  return modulePath
 }
 
 function requireModule (moduleName) {
@@ -58,16 +78,20 @@ function getScriptType (fname, packageType) {
   return (modulePattern.test(fname) ? 'module' : commonjsPattern.test(fname) ? 'commonjs' : packageType) || 'commonjs'
 }
 
-async function requireServerPluginFromPath (modulePath) {
-  const resolvedModulePath = path.resolve(process.cwd(), modulePath)
+async function requireServerPluginFromPath (modulePath, opts = { swagger: false }) {
+  let resolvedModulePath = path.resolve(process.cwd(), modulePath)
 
   if (!fs.existsSync(resolvedModulePath)) {
     throw new Error(`${resolvedModulePath} doesn't exist within ${process.cwd()}`)
   }
 
   const packageType = await getPackageType(resolvedModulePath)
+
   const type = getScriptType(resolvedModulePath, packageType)
 
+  if (opts.swagger && resolvedModulePath.endsWith('.ts')) {
+    resolvedModulePath = serverTypeScriptPlugin(resolvedModulePath)
+  }
   let serverPlugin
   if (type === 'module') {
     if (moduleSupport) {
@@ -83,7 +107,6 @@ async function requireServerPluginFromPath (modulePath) {
     throw new Error('Async/Await plugin function should contain 2 arguments. ' +
       'Refer to documentation for more information.')
   }
-
   return serverPlugin
 }
 
@@ -94,14 +117,13 @@ function showHelpForCommand (commandName) {
     console.log(fs.readFileSync(helpFilePath, 'utf8'))
     exit()
   } catch (e) {
-    exit(`unable to get help for command "${commandName}"`)
+    exit(`unable to get help for command '${commandName}'`)
   }
 }
 
 function isKubernetes () {
   // Detection based on https://kubernetes.io/docs/reference/kubectl/#in-cluster-authentication-and-namespace-overrides
-  return process.env.KUBERNETES_SERVICE_HOST !== undefined ||
-    fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
+  return process.env.KUBERNETES_SERVICE_HOST !== undefined || fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
 }
 
 module.exports = { isKubernetes, exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
