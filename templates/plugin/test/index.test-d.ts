@@ -5,7 +5,7 @@ import { expectType } from 'tsd'
 let app
 try {
   app = fastify()
-  await app.ready()
+  app.ready()
   app.register(example)
   expectType<() => string>(app.exampleDecorator)
 } catch (err) {
