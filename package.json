@@ -15,7 +15,7 @@
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
     "test-no-coverage": "npm run unit:cli && npm run unit:templates-without-ts-esm && npm run unit:template-ts-esm && npm run test:typescript",
     "test": "c8 --clean npm run test-no-coverage",
-    "test:typescript": "tsd templates/plugin && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
+    "test:typescript": "tsd templates/plugin -t ./../../index.d.ts && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
   "keywords": [
     "fastify",
@@ -84,8 +84,8 @@
     "tap": "^16.1.0",
     "ts-node": "^10.4.0",
     "ts-standard": "^12.0.1",
-    "tsd": "^0.16.0",
-    "typescript": "^4.5.4",
+    "tsd": "^0.28.0",
+    "typescript": "^5.2.2",
     "walker": "^1.0.8"
   },
   "tsd": {
