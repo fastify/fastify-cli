@@ -1,3 +1,5 @@
+'use strict'
+
 module.exports = {
   port: 5000,
   address: 'fastify.io:9999',
