@@ -1,3 +1,5 @@
+'use strict'
+
 const { test } = require('tap')
 
 test('should register the correct decorator', async t => {
