@@ -170,7 +170,7 @@ function define (t) {
         t.equal(pkg.dependencies['@fastify/sensible'], cliPkg.devDependencies['@fastify/sensible'])
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
 
-        const testGlob = pkg.scripts.test.split(' ')[1].replace(/"/g, '')
+        const testGlob = pkg.scripts.test.split(' ', 2)[1].replace(/"/g, '')
         t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)
         resolve()
       })
