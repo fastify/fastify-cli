@@ -139,7 +139,7 @@ function define (t) {
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
         t.same(pkg.tsd, pluginTemplate.tsd)
 
-        const testGlob = pkg.scripts.unit.split(' ')[1].replace(/"/g, '')
+        const testGlob = pkg.scripts.unit.split(' ', 2)[1].replace(/"/g, '')
         t.equal(minimatch.match(['test/more/test/here/ok.test.js'], testGlob).length, 1)
         resolve()
       })

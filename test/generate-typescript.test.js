@@ -143,7 +143,7 @@ function define (t) {
         t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
-        const testGlob = pkg.scripts.test.split(' ')[10].replace(/"/g, '')
+        const testGlob = pkg.scripts.test.split(' ', 11)[10].replace(/"/g, '')
 
         t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()

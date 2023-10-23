@@ -180,7 +180,7 @@ function define (t) {
         // Test for "type:module"
         t.equal(pkg.type, 'module')
 
-        const testGlob = pkg.scripts.test.split(' ')[2].replace(/"/g, '')
+        const testGlob = pkg.scripts.test.split(' ', 3)[2].replace(/"/g, '')
         t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)
         resolve()
       })
