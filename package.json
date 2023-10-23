@@ -70,7 +70,7 @@
     "@types/node": "^20.4.4",
     "@types/tap": "^15.0.5",
     "c8": "^7.13.0",
-    "concurrently": "^7.0.0",
+    "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
     "del-cli": "^3.0.1",
     "fastify-tsconfig": "^2.0.0",
