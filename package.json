@@ -3,6 +3,7 @@
   "version": "5.8.0",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
+  "type": "commonjs",
   "bin": {
     "fastify": "cli.js"
   },
