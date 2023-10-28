@@ -714,7 +714,7 @@ test('should start the server with inspect options and the defalut port is 9320'
   t.plan(3)
 
   const start = proxyquire('../start', {
-    inspector: {
+    'node:inspector': {
       open (p) {
         t.equal(p, 9320)
         t.pass('inspect open called')
@@ -733,7 +733,7 @@ test('should start the server with inspect options and use the exactly port', as
 
   const port = getPort()
   const start = proxyquire('../start', {
-    inspector: {
+    'node:inspector': {
       open (p) {
         t.equal(p, Number(port))
         t.pass('inspect open called')
