@@ -4,13 +4,13 @@ const {
   readFile,
   writeFile,
   existsSync
-} = require('fs')
-const path = require('path')
+} = require('node:fs')
+const path = require('node:path')
 const chalk = require('chalk')
 const generify = require('generify')
 const argv = require('yargs-parser')
 const cliPkg = require('./package')
-const { execSync } = require('child_process')
+const { execSync } = require('node:child_process')
 const log = require('./log')
 
 const javascriptTemplate = {

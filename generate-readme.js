@@ -1,10 +1,10 @@
 'use strict'
 
-const { readFileSync, existsSync } = require('fs')
-const path = require('path')
+const { readFileSync, existsSync } = require('node:fs')
+const path = require('node:path')
 const generify = require('generify')
 const argv = require('yargs-parser')
-const { execSync } = require('child_process')
+const { execSync } = require('node:child_process')
 const log = require('./log')
 
 function toMarkdownList (a) {

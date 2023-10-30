@@ -1,9 +1,9 @@
 'use strict'
 
 const t = require('tap')
-const { execSync } = require('child_process')
-const { mkdirSync, readFileSync } = require('fs')
-const path = require('path')
+const { execSync } = require('node:child_process')
+const { mkdirSync, readFileSync } = require('node:fs')
+const path = require('node:path')
 const rimraf = require('rimraf')
 
 t.test('generate', async (t) => {

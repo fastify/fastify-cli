@@ -1,6 +1,6 @@
 'use strict'
 
-const path = require('path')
+const path = require('node:path')
 const AutoLoad = require('@fastify/autoload')
 
 // Pass --options via CLI arguments in command to enable these options.

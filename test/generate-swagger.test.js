@@ -1,6 +1,6 @@
 'use strict'
 
-const path = require('path')
+const path = require('node:path')
 const t = require('tap')
 const { test } = t
 const { generateSwagger } = require('../generate-swagger')

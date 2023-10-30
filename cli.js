@@ -2,7 +2,7 @@
 
 'use strict'
 
-const path = require('path')
+const path = require('node:path')
 const commist = require('commist')()
 const argv = require('yargs-parser')(process.argv)
 const help = require('help-me')({

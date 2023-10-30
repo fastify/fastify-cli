@@ -11,16 +11,16 @@ const {
   readFile,
   promises: fsPromises,
   unlink
-} = require('fs')
-const path = require('path')
-const { promisify } = require('util')
+} = require('node:fs')
+const path = require('node:path')
+const { promisify } = require('node:util')
 const rimraf = require('rimraf')
 const walker = require('walker')
 const { generate, javascriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'app')
 const cliPkg = require('../package')
-const { exec, execSync } = require('child_process')
+const { exec, execSync } = require('node:child_process')
 const pExec = promisify(exec)
 const pUnlink = promisify(unlink)
 const minimatch = require('minimatch')
