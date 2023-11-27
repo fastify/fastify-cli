@@ -33,7 +33,6 @@ const pluginTemplate = {
     fastify: cliPkg.devDependencies.fastify,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
     standard: cliPkg.devDependencies.standard,
-    tap: cliPkg.devDependencies.tap,
     'ts-standard': cliPkg.devDependencies['ts-standard'],
     tsd: cliPkg.devDependencies.tsd,
     typescript: cliPkg.devDependencies.typescript
