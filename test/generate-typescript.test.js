@@ -143,7 +143,6 @@ function define (t) {
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
         t.equal(pkg.devDependencies.tsx, cliPkg.devDependencies.tsx)
 
-        // bcs minimatch doesn't know about test/*/*.ts type of globs
         const testGlob = pkg.scripts.test.split(' ', 14)[13]
 
         t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
