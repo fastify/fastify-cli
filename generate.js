@@ -17,7 +17,7 @@ const javascriptTemplate = {
   dir: 'app',
   main: 'app.js',
   scripts: {
-    test: 'tap "test/**/*.test.js"',
+    test: 'node --test test/**/*.test.js',
     start: 'fastify start -l info app.js',
     dev: 'fastify start -w -l info -P app.js'
   },
@@ -118,8 +118,6 @@ function generate (dir, template) {
         pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
 
         pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
-
-        pkg.tap = template.tap
 
         log('debug', 'edited package.json, saving')
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
