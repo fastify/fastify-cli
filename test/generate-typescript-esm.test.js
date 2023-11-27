@@ -23,6 +23,9 @@ const strip = require('strip-ansi')
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
 
+typescriptTemplate.type = 'module'
+typescriptTemplate.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --import tsx/esm test/**/*.ts'
+
 ;(function (cb) {
   const files = []
   walker(appTemplateDir)
@@ -126,7 +129,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && tsx --test test/*/*.ts')
+        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --import tsx/esm test/**/*.ts')
         t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts['watch:ts'], 'tsc -w')
@@ -143,7 +146,7 @@ function define (t) {
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
         t.equal(pkg.devDependencies.tsx, cliPkg.devDependencies.tsx)
 
-        const testGlob = pkg.scripts.test.split(' ', 11)[10].replace('*', '**')
+        const testGlob = pkg.scripts.test.split(' ', 15)[14]
 
         t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()

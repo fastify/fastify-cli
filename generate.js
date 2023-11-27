@@ -162,8 +162,7 @@ function cli (args) {
       template.type = 'module'
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      // what to do with ts/esm and node --test... ?
-      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test --import tsx/esm test/**/*.ts'
+      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --import tsx/esm test/**/*.ts'
     }
   } else {
     template = { ...javascriptTemplate }
