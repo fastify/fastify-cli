@@ -1,9 +1,8 @@
 // This file contains code that we reuse between our tests.
 const helper = require('fastify-cli/helper.js')
 import * as path from 'path'
-import * as test from 'node:test';
 
-export type AfterFn = typeof test.after['prototype'];
+export type TeardownFn = (after: () => void) => void;
 
 const AppPath = path.join(__dirname, '..', 'src', 'app.ts')
 
@@ -14,7 +13,7 @@ async function config () {
 }
 
 // Automatically build and tear down our instance
-async function build (after: AfterFn) {
+async function build (teardown: TeardownFn) {
   // you can set all the options supported by the fastify CLI command
   const argv = [AppPath]
 
@@ -24,7 +23,7 @@ async function build (after: AfterFn) {
   const app = await helper.build(argv, await config())
 
   // Tear down our app after we are done
-  after(() => void app.close())
+  teardown(() => void app.close())
 
   return app
 }

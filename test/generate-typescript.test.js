@@ -101,7 +101,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(24 + Object.keys(expected).length)
+    t.plan(25 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -126,7 +126,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && tap --ts "test/**/*.test.ts"')
+        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && tsx --test test/*/*.ts')
         t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts['watch:ts'], 'tsc -w')
@@ -141,8 +141,10 @@ function define (t) {
         t.equal(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
+        t.equal(pkg.devDependencies.tsx, cliPkg.devDependencies.tsx)
 
-        const testGlob = pkg.scripts.test.split(' ', 11)[10].replace(/"/g, '')
+        // bcs minimatch doesn't know about test/*/*.ts type of globs
+        const testGlob = pkg.scripts.test.split(' ', 11)[10].replace('*', '**')
 
         t.equal(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()

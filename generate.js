@@ -47,7 +47,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'npm run build:ts && tsc -p test/tsconfig.json && tap --ts "test/**/*.test.ts"',
+    test: 'npm run build:ts && tsc -p test/tsconfig.json && tsx --test test/*/*.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     'watch:ts': 'tsc -w',
@@ -67,7 +67,8 @@ const typescriptTemplate = {
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
-    typescript: cliPkg.devDependencies.typescript
+    typescript: cliPkg.devDependencies.typescript,
+    tsx: cliPkg.devDependencies.tsx
   },
   nodemonConfig: {
     watch: ['src/'],
