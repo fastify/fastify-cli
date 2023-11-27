@@ -106,7 +106,7 @@ function define (t) {
   })
 
   test('should finish succesfully with javascript template', async (t) => {
-    t.plan(14 + Object.keys(expected).length)
+    t.plan(13 + Object.keys(expected).length)
     try {
       await generate(workdir, javascriptTemplate)
       await verifyPkg(t)
@@ -117,7 +117,7 @@ function define (t) {
   })
 
   test('--integrate option will enhance preexisting package.json and overwrite preexisting files', async (t) => {
-    t.plan(14 + Object.keys(expected).length)
+    t.plan(13 + Object.keys(expected).length)
     try {
       await generate(workdir, javascriptTemplate)
       await pUnlink(path.join(workdir, 'package.json'))
@@ -168,8 +168,7 @@ function define (t) {
         t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'] || cliPkg.dependencies['fastify-plugin'])
         t.equal(pkg.dependencies['@fastify/autoload'], cliPkg.devDependencies['@fastify/autoload'])
         t.equal(pkg.dependencies['@fastify/sensible'], cliPkg.devDependencies['@fastify/sensible'])
-        t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
-
+        
         const testGlob = pkg.scripts.test.split(' ', 2)[1].replace(/"/g, '')
         t.equal(minimatch.match(['test/services/plugins/more/test/here/ok.test.js'], testGlob).length, 1)
         resolve()

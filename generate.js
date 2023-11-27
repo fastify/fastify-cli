@@ -28,9 +28,7 @@ const javascriptTemplate = {
     '@fastify/sensible': cliPkg.devDependencies['@fastify/sensible'],
     'fastify-cli': '^' + cliPkg.version
   },
-  devDependencies: {
-    tap: cliPkg.devDependencies.tap
-  },
+  devDependencies: {},
   logInstructions: function (pkg) {
     log('debug', 'saved package.json')
     log('info', `project ${pkg.name} generated successfully`)
