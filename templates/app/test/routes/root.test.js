@@ -1,7 +1,7 @@
 'use strict'
 
-const { test } = require('tap')
-const { build } = require('../helper')
+const { test } = require('node:test')
+const assert = require('node:assert')
 
 test('default root route', async (t) => {
   const app = await build(t)
@@ -9,7 +9,7 @@ test('default root route', async (t) => {
   const res = await app.inject({
     url: '/'
   })
-  t.same(JSON.parse(res.payload), { root: true })
+  assert.deepStrictEqual(JSON.parse(res.payload), { root: true })
 })
 
 // inject callback style:
@@ -22,6 +22,6 @@ test('default root route', async (t) => {
 //     url: '/'
 //   }, (err, res) => {
 //     t.error(err)
-//     t.same(JSON.parse(res.payload), { root: true })
+//     assert.deepStrictEqual(JSON.parse(res.payload), { root: true })
 //   })
 // })

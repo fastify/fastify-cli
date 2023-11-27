@@ -1,6 +1,8 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const assert = require('node:assert')
+
 const Fastify = require('fastify')
 const Support = require('../../plugins/support')
 
@@ -9,7 +11,7 @@ test('support works standalone', async (t) => {
   fastify.register(Support)
 
   await fastify.ready()
-  t.equal(fastify.someSupport(), 'hugs')
+  assert.equal(fastify.someSupport(), 'hugs')
 })
 
 // You can also use plugin with opts in fastify v2
@@ -21,6 +23,6 @@ test('support works standalone', async (t) => {
 //
 //   fastify.ready((err) => {
 //     t.error(err)
-//     t.equal(fastify.someSupport(), 'hugs')
+//     assert.equal(fastify.someSupport(), 'hugs')
 //   })
 // })
