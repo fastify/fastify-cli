@@ -47,7 +47,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'npm run build:ts && tsc -p test/tsconfig.json && tsx --test test/*/*.ts',
+    test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test --require tsx/cjs test/**/*.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     'watch:ts': 'tsc -w',
@@ -162,7 +162,8 @@ function cli (args) {
       template.type = 'module'
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && tsx --test test/**/*.test.ts && c8 report'
+      // what to do with ts/esm and node --test... ?
+      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test --import tsx/esm test/**/*.ts'
     }
   } else {
     template = { ...javascriptTemplate }

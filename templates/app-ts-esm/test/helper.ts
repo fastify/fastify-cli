@@ -1,7 +1,7 @@
 // This file contains code that we reuse between our tests.
 import helper from 'fastify-cli/helper.js'
 import * as test from 'node:test'
-import path from 'path'
+import * as path from 'path'
 import { fileURLToPath } from 'url'
 
 export type TestContext = {
