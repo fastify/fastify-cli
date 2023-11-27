@@ -17,9 +17,8 @@
     "unit:esm": "node --test templates/app-esm/test/**/*.test.js",
     "unit:ts-cjs": "node --test --require tsx/cjs templates/app-ts/test/**/*.test.ts || echo \"Needs fixing related to fastify-cli/helper import\"",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test-no-coverage": "npm run unit:cli && npm run test:typescript",
-    "test": "c8 --clean npm run test-no-coverage",
-    "posttest": "npm run unit:templates-without-ts-esm && npm run unit:template-ts-esm",
+    "test:cli-and-typescript": "npm run unit:cli && npm run test:typescript",
+    "test": "c8 --clean npm run test:cli-and-typescript && npm run unit:templates-without-ts-esm && npm run unit:template-ts-esm",
     "test:typescript": "tsd templates/plugin -t ./../../index.d.ts && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
   },
   "keywords": [
