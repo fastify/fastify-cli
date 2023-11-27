@@ -30,11 +30,8 @@ const initVersion = execSync('npm get init-version').toString().trim()
 
 javascriptTemplate.dir = 'app-esm'
 javascriptTemplate.type = 'module'
-javascriptTemplate.tap = {
-  coverage: false
-}
 javascriptTemplate.devDependencies.c8 = cliPkg.devDependencies.c8
-javascriptTemplate.scripts.test = 'c8 tap "test/**/*.test.js"'
+javascriptTemplate.scripts.test = 'node --test test/**/*.test.js'
 
 ;(function (cb) {
   const files = []
@@ -168,7 +165,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.equal(pkg.scripts.test, 'c8 tap "test/**/*.test.js"')
+        t.equal(pkg.scripts.test, javascriptTemplate.scripts.test)
         t.equal(pkg.scripts.start, 'fastify start -l info app.js')
         t.equal(pkg.scripts.dev, 'fastify start -w -l info -P app.js')
         t.equal(pkg.dependencies['fastify-cli'], '^' + cliPkg.version)

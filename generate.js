@@ -160,18 +160,9 @@ function cli (args) {
     if (opts.esm) {
       template.dir = 'app-ts-esm'
       template.type = 'module'
-      template.tap = {
-        'node-arg': [
-          '--no-warnings',
-          '--experimental-loader',
-          'ts-node/esm'
-        ],
-        coverage: false
-      }
 
-      // For coverage, NYC with Typescript ESM doesn't work https://github.com/tapjs/node-tap/issues/735
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && c8 tap --ts "test/**/*.test.ts"'
+      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && tsx --test test/**/*.test.ts && c8 report'
     }
   } else {
     template = { ...javascriptTemplate }
@@ -179,12 +170,9 @@ function cli (args) {
     if (opts.esm) {
       template.dir = 'app-esm'
       template.type = 'module'
-      template.tap = {
-        coverage: false
-      }
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'c8 tap "test/**/*.test.js"'
+      template.scripts.test = 'node --test test/**/*.test.js'
     }
 
     if (opts.standardlint) {
