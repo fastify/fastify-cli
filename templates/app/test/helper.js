@@ -23,7 +23,7 @@ async function build (t) {
   // different from the production setup
   const app = await buildApplication(argv, config())
 
-  //close the app after we are done
+  // close the app after we are done
   t.after(() => app.close())
 
   return app
