@@ -26,7 +26,7 @@ async function build (t) {
   const app = await helper.build(argv, config())
 
   // tear down our app after we are done
-  t.after(() => app.close(app))
+  t.after(() => app.close())
 
   return app
 }
