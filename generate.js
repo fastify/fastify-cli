@@ -67,7 +67,6 @@ const typescriptTemplate = {
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
-    tap: cliPkg.devDependencies.tap,
     typescript: cliPkg.devDependencies.typescript
   },
   nodemonConfig: {

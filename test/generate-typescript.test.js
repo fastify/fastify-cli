@@ -101,7 +101,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(25 + Object.keys(expected).length)
+    t.plan(24 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -140,7 +140,6 @@ function define (t) {
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
         t.equal(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
-        t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
         const testGlob = pkg.scripts.test.split(' ', 11)[10].replace(/"/g, '')
