@@ -1,6 +1,4 @@
-const suite = process.argv[2]
-
-function shouldTest(suiteName) {
+function shouldTest (suiteName) {
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   const code = nodeMajorVersion < 20 ? 0 : 1
   if (!code) {
