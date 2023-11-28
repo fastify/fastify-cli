@@ -15,7 +15,7 @@
     "unit:templates-without-ts-esm": "npm run unit:cjs && npm run unit:esm && npm run unit:ts-cjs",
     "unit:cjs": "node --test templates/app/test/**/*.test.js",
     "unit:esm": "node --test templates/app-esm/test/**/*.test.js",
-    "unit:ts-cjs": "node --test --require tsx/cjs templates/app-ts/test/**/*.test.ts || echo \"Needs fixing related to fastify-cli/helper import\"",
+    "unit:ts-cjs": "node --test --require tsx/cjs templates/app-ts/test/**/*.test.ts",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
     "test:cli-and-typescript": "npm run unit:cli && npm run test:typescript",
     "test": "c8 --clean npm run test:cli-and-typescript && npm run unit:templates-without-ts-esm && npm run unit:template-ts-esm",
