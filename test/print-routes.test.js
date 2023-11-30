@@ -9,6 +9,8 @@ const exec = util.promisify(require('node:child_process').exec)
 const printRoutes = require('../print-routes')
 
 const test = tap.test
+const { NYC_PROCESS_ID, NODE_V8_COVERAGE } = process.env
+const SHOULD_SKIP = NYC_PROCESS_ID || NODE_V8_COVERAGE
 
 test('should print routes', async t => {
   t.plan(2)
@@ -25,7 +27,7 @@ test('should print routes', async t => {
 })
 
 // This never exits in CI for some reason
-test('should print routes via cli', { skip: process.env.CI }, async t => {
+test('should print routes via cli', { skip: SHOULD_SKIP }, async t => {
   t.plan(1)
   const { stdout } = await exec('node cli.js print-routes ./examples/plugin.js', { encoding: 'utf-8', timeout: 10000 })
   t.same(
