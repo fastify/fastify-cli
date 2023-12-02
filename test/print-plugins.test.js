@@ -10,7 +10,11 @@ const printPlugins = require('../print-plugins')
 
 const test = tap.test
 
-test('should print plugins', async t => {
+const { NYC_PROCESS_ID, NODE_V8_COVERAGE } = process.env
+const SHOULD_SKIP = NYC_PROCESS_ID || NODE_V8_COVERAGE
+
+// This test should be skipped when coverage reporting is used since outputs won't match
+test('should print plugins', { skip: SHOULD_SKIP }, async t => {
   t.plan(3)
 
   const spy = sinon.spy()
@@ -25,8 +29,8 @@ test('should print plugins', async t => {
   t.match(spy.args[0][1], /bound root \d+ ms\n├── bound _after \d+ ms\n├─┬ function \(fastify, options, next\) { -- fastify\.decorate\('test', true\) \d+ ms\n│ ├── bound _after \d+ ms\n│ ├── bound _after \d+ ms\n│ └── bound _after \d+ ms\n└── bound _after \d+ ms\n/)
 })
 
-// This never exits in CI for some reason
-test('should plugins routes via cli', { skip: process.env.CI }, async t => {
+// This test should be skipped when coverage reporting is used since outputs won't match
+test('should plugins routes via cli', { skip: SHOULD_SKIP }, async t => {
   t.plan(1)
   const { stdout } = await exec('node cli.js print-plugins ./examples/plugin.js', { encoding: 'utf-8', timeout: 10000 })
   t.match(
@@ -91,7 +95,8 @@ test('should exit without error on help', t => {
   t.end()
 })
 
-test('should print plugins of server with an async/await plugin', async t => {
+// This test should be skipped when coverage reporting is used since outputs won't match
+test('should print plugins of server with an async/await plugin', { skip: SHOULD_SKIP }, async t => {
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   if (nodeMajorVersion < 7) {
     t.pass('Skip because Node version < 7')
