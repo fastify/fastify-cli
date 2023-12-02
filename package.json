@@ -11,7 +11,7 @@
     "lint": "standard",
     "lint:fix": "standard --fix",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test": "c8 --clean npm run test:cli-and-typescript && npm run unit:suites",
+    "test": "npm run unit:suites && c8 --clean npm run test:cli-and-typescript",
     "unit:cjs": "node suite-runner.js \"templates/app/test/**/*.test.js\"",
     "unit:esm": "node suite-runner.js \"templates/app-esm/test/**/*.test.js\"",
     "unit:ts-cjs": "node -r tsx/cjs suite-runner.js \"templates/app-ts/test/**/*.test.ts\"",
