@@ -8,9 +8,5 @@
     "target": "ES2022",
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts"],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  }
+  "include": ["src/**/*.ts"]
 }
