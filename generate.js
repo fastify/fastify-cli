@@ -47,7 +47,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test --require tsx/cjs test/**/*.ts',
+    test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register test/**/*.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     'watch:ts': 'tsc -w',
@@ -67,8 +67,7 @@ const typescriptTemplate = {
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
-    typescript: cliPkg.devDependencies.typescript,
-    tsx: cliPkg.devDependencies.tsx
+    typescript: cliPkg.devDependencies.typescript
   },
   nodemonConfig: {
     watch: ['src/'],
@@ -162,7 +161,7 @@ function cli (args) {
       template.type = 'module'
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --import tsx/esm test/**/*.ts'
+      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
     }
   } else {
     template = { ...javascriptTemplate }

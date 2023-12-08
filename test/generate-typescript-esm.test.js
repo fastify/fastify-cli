@@ -24,7 +24,7 @@ const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
 
 typescriptTemplate.type = 'module'
-typescriptTemplate.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --import tsx/esm test/**/*.ts'
+typescriptTemplate.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
 
 ;(function (cb) {
   const files = []
@@ -104,7 +104,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(25 + Object.keys(expected).length)
+    t.plan(24 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -129,7 +129,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --import tsx/esm test/**/*.ts')
+        t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts')
         t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts['watch:ts'], 'tsc -w')
@@ -144,7 +144,6 @@ function define (t) {
         t.equal(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
-        t.equal(pkg.devDependencies.tsx, cliPkg.devDependencies.tsx)
 
         const testGlob = pkg.scripts.test.split(' ', 15)[14]
 
