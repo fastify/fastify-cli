@@ -22,7 +22,7 @@
     "unit:cli-ts": "cross-env TS_NODE_PROJECT=./test/configs/ts-cjs.tsconfig.json tap \"test/**/*.test.ts\" --no-coverage --timeout 400 --jobs 1 --color -R specy",
     "unit:cli": "npm run unit:cli-js && npm run unit:cli-ts",
     "test:cli-and-typescript": "npm run unit:cli && npm run test:typescript",
-    "test:typescript": "tsd templates/plugin -t ./../../index.d.ts && tsc --project templates/app-ts/tsconfig.json && del-cli templates/app-ts/dist"
+    "test:typescript": "tsd templates/plugin -t ./../../index.d.ts && tsc --project templates/app-ts/tsconfig.json --noEmit"
   },
   "keywords": [
     "fastify",
@@ -79,7 +79,6 @@
     "c8": "^7.13.0",
     "concurrently": "^8.2.2",
     "cross-env": "^7.0.3",
-    "del-cli": "^3.0.1",
     "fastify-tsconfig": "^2.0.0",
     "minimatch": "^5.1.0",
     "proxyquire": "^2.1.3",
