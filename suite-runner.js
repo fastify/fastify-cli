@@ -13,6 +13,10 @@ glob(pattern, (err, matches) => {
     process.exit(1)
   }
   const resolved = matches.map(file => path.resolve(file))
-  const testRs = run({ files: resolved, timeout }).compose(spec)
+  const testRs = run({ files: resolved, timeout })
+    .on('test:fail', () => {
+      process.exitCode = 1
+    })
+    .compose(spec)
   testRs.pipe(process.stdout)
 })
