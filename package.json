@@ -60,7 +60,7 @@
     "fastify": "^4.0.0",
     "fastify-plugin": "^4.0.0",
     "generify": "^4.0.0",
-    "help-me": "^4.0.1",
+    "help-me": "^5.0.0",
     "is-docker": "^2.0.0",
     "make-promises-safe": "^5.1.0",
     "pino-pretty": "^10.1.0",
