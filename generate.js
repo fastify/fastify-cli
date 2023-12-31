@@ -17,7 +17,7 @@ const javascriptTemplate = {
   dir: 'app',
   main: 'app.js',
   scripts: {
-    test: 'tap "test/**/*.test.js"',
+    test: 'node --test test/**/*.test.js',
     start: 'fastify start -l info app.js',
     dev: 'fastify start -w -l info -P app.js'
   },
@@ -28,9 +28,7 @@ const javascriptTemplate = {
     '@fastify/sensible': cliPkg.devDependencies['@fastify/sensible'],
     'fastify-cli': '^' + cliPkg.version
   },
-  devDependencies: {
-    tap: cliPkg.devDependencies.tap
-  },
+  devDependencies: {},
   logInstructions: function (pkg) {
     log('debug', 'saved package.json')
     log('info', `project ${pkg.name} generated successfully`)
@@ -49,7 +47,7 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
-    test: 'npm run build:ts && tsc -p test/tsconfig.json && tap --ts "test/**/*.test.ts"',
+    test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register test/**/*.ts',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     'watch:ts': 'tsc -w',
@@ -69,7 +67,6 @@ const typescriptTemplate = {
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
-    tap: cliPkg.devDependencies.tap,
     typescript: cliPkg.devDependencies.typescript
   },
   nodemonConfig: {
@@ -122,8 +119,6 @@ function generate (dir, template) {
 
         pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
 
-        pkg.tap = template.tap
-
         log('debug', 'edited package.json, saving')
         writeFile('package.json', JSON.stringify(pkg, null, 2), (err) => {
           if (err) {
@@ -164,18 +159,9 @@ function cli (args) {
     if (opts.esm) {
       template.dir = 'app-ts-esm'
       template.type = 'module'
-      template.tap = {
-        'node-arg': [
-          '--no-warnings',
-          '--experimental-loader',
-          'ts-node/esm'
-        ],
-        coverage: false
-      }
 
-      // For coverage, NYC with Typescript ESM doesn't work https://github.com/tapjs/node-tap/issues/735
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && c8 tap --ts "test/**/*.test.ts"'
+      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
     }
   } else {
     template = { ...javascriptTemplate }
@@ -183,12 +169,9 @@ function cli (args) {
     if (opts.esm) {
       template.dir = 'app-esm'
       template.type = 'module'
-      template.tap = {
-        coverage: false
-      }
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'c8 tap "test/**/*.test.js"'
+      template.scripts.test = 'node --test test/**/*.test.js'
     }
 
     if (opts.standardlint) {

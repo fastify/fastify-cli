@@ -1,6 +1,7 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const assert = require('node:assert')
 const { build } = require('../helper')
 
 test('example is loaded', async (t) => {
@@ -9,7 +10,7 @@ test('example is loaded', async (t) => {
   const res = await app.inject({
     url: '/example'
   })
-  t.equal(res.payload, 'this is an example')
+  assert.equal(res.payload, 'this is an example')
 })
 
 // inject callback style:
@@ -22,6 +23,6 @@ test('example is loaded', async (t) => {
 //     url: '/example'
 //   }, (err, res) => {
 //     t.error(err)
-//     t.equal(res.payload, 'this is an example')
+//     assert.equal(res.payload, 'this is an example')
 //   })
 // })

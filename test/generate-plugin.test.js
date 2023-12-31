@@ -101,7 +101,7 @@ function define (t) {
   })
 
   test('should finish succesfully', async (t) => {
-    t.plan(19 + Object.keys(expected).length)
+    t.plan(18 + Object.keys(expected).length)
     try {
       await generate(workdir, pluginTemplate)
       await verifyPkg(t)
@@ -134,7 +134,6 @@ function define (t) {
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
         t.equal(pkg.devDependencies.fastify, cliPkg.devDependencies.fastify)
         t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
-        t.equal(pkg.devDependencies.tap, cliPkg.devDependencies.tap)
         t.equal(pkg.devDependencies.tsd, cliPkg.devDependencies.tsd)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
         t.same(pkg.tsd, pluginTemplate.tsd)

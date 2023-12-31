@@ -1,4 +1,5 @@
-import { test } from 'tap'
+import { test } from 'node:test'
+import * as assert from 'node:assert'
 import Fastify from 'fastify'
 import Support from '../../src/plugins/support.js'
 
@@ -7,5 +8,5 @@ test('support works standalone', async (t) => {
   void fastify.register(Support)
   await fastify.ready()
 
-  t.equal(fastify.someSupport(), 'hugs')
+  assert.equal(fastify.someSupport(), 'hugs')
 })

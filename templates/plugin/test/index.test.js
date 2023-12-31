@@ -1,15 +1,14 @@
 'use strict'
 
-const { test } = require('tap')
+const { test } = require('node:test')
+const assert = require('node:assert')
 
 test('should register the correct decorator', async t => {
-  t.plan(1)
-
   const app = require('fastify')()
 
   app.register(require('..'))
 
   await app.ready()
 
-  t.same(app.exampleDecorator(), 'decorated')
+  assert.equal(app.exampleDecorator(), 'decorated')
 })
