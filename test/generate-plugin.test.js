@@ -18,7 +18,6 @@ const workdir = path.join(__dirname, 'workdir')
 const templateDir = path.join(__dirname, '..', 'templates', 'plugin')
 const cliPkg = require('../package')
 const { exec, execSync } = require('node:child_process')
-const minimatch = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
