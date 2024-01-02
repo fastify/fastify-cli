@@ -5,8 +5,8 @@ import { expectType } from 'tsd'
 let app
 try {
   app = fastify()
-  app.ready()
-  app.register(example)
+  void app.ready()
+  void app.register(example)
   expectType<() => string>(app.exampleDecorator)
 } catch (err) {
   console.error(err)

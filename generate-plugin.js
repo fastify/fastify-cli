@@ -23,10 +23,10 @@ const pluginTemplate = {
     'lint:typescript': 'ts-standard',
     test: 'npm run lint && npm run unit && npm run test:typescript',
     'test:typescript': 'tsd',
-    unit: 'tap "test/**/*.test.js"'
+    unit: 'node --test'
   },
   dependencies: {
-    'fastify-plugin': cliPkg.devDependencies['fastify-plugin']
+    'fastify-plugin': cliPkg.dependencies['fastify-plugin']
   },
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
@@ -50,12 +50,11 @@ const pluginTemplate = {
 
 async function generate (dir, template) {
   const generifyPromise = promisify(generify)
-  const file = await generifyPromise(
+  await generifyPromise(
     path.join(__dirname, 'templates', template.dir),
     dir,
     {}
   )
-  log('debug', `generated ${file}`)
 
   process.chdir(dir)
   execSync('npm init -y')
