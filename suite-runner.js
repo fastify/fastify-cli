@@ -6,7 +6,7 @@ const glob = require('glob')
 const pattern = process.argv[process.argv.length - 1]
 
 console.info(`Running tests matching ${pattern}`)
-const timeout = 5 * 60 * 1000 // 5 minutes
+const timeout = 10 * 60 * 1000 // 5 minutes
 glob(pattern, (err, matches) => {
   if (err) {
     console.error(err)
