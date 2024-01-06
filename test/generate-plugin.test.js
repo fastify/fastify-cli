@@ -18,7 +18,6 @@ const workdir = path.join(__dirname, 'workdir')
 const templateDir = path.join(__dirname, '..', 'templates', 'plugin')
 const cliPkg = require('../package')
 const { exec, execSync } = require('node:child_process')
-const minimatch = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
@@ -101,7 +100,7 @@ function define (t) {
   })
 
   test('should finish succesfully', async (t) => {
-    t.plan(18 + Object.keys(expected).length)
+    t.plan(17 + Object.keys(expected).length)
     try {
       await generate(workdir, pluginTemplate)
       await verifyPkg(t)
@@ -129,8 +128,8 @@ function define (t) {
         t.equal(pkg.scripts['lint:typescript'], 'ts-standard')
         t.equal(pkg.scripts.test, 'npm run lint && npm run unit && npm run test:typescript')
         t.equal(pkg.scripts['test:typescript'], 'tsd')
-        t.equal(pkg.scripts.unit, 'tap "test/**/*.test.js"')
-        t.equal(pkg.dependencies['fastify-plugin'], cliPkg.devDependencies['fastify-plugin'])
+        t.equal(pkg.scripts.unit, 'node --test')
+        t.equal(pkg.dependencies['fastify-plugin'], cliPkg.dependencies['fastify-plugin'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
         t.equal(pkg.devDependencies.fastify, cliPkg.devDependencies.fastify)
         t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
@@ -138,8 +137,6 @@ function define (t) {
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
         t.same(pkg.tsd, pluginTemplate.tsd)
 
-        const testGlob = pkg.scripts.unit.split(' ', 2)[1].replace(/"/g, '')
-        t.equal(minimatch.match(['test/more/test/here/ok.test.js'], testGlob).length, 1)
         resolve()
       })
     })
