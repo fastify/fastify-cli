@@ -36,6 +36,7 @@ Fastify command line interface, available commands are:
   * print-plugins         prints the representation of the internal plugin tree used by avvio, useful for debugging.
   * version               the current fastify-cli version
   * help                  help about commands
+  * install               install Fastify plugins
 
 Launch 'fastify help [command]' to know more about the commands.
 
