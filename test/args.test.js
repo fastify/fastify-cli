@@ -9,8 +9,8 @@ test('should parse args correctly', t => {
 
   const argv = [
     '--port', '7777',
-    '--address', 'fastify.io:9999',
-    '--socket', 'fastify.io.socket:9999',
+    '--address', 'fastify.dev:9999',
+    '--socket', 'fastify.dev.socket:9999',
     '--require', './require-module.js',
     '--log-level', 'info',
     '--pretty-logs', 'true',
@@ -39,8 +39,8 @@ test('should parse args correctly', t => {
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
-    address: 'fastify.io:9999',
-    socket: 'fastify.io.socket:9999',
+    address: 'fastify.dev:9999',
+    socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
@@ -64,8 +64,8 @@ test('should parse args with = assignment correctly', t => {
 
   const argv = [
     '--port=7777',
-    '--address=fastify.io:9999',
-    '--socket=fastify.io.socket:9999',
+    '--address=fastify.dev:9999',
+    '--socket=fastify.dev.socket:9999',
     '--require', './require-module.js',
     '--log-level=info',
     '--pretty-logs=true',
@@ -94,8 +94,8 @@ test('should parse args with = assignment correctly', t => {
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
-    address: 'fastify.io:9999',
-    socket: 'fastify.io.socket:9999',
+    address: 'fastify.dev:9999',
+    socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
@@ -118,8 +118,8 @@ test('should parse env vars correctly', t => {
   t.plan(1)
 
   process.env.FASTIFY_PORT = '7777'
-  process.env.FASTIFY_ADDRESS = 'fastify.io:9999'
-  process.env.FASTIFY_SOCKET = 'fastify.io.socket:9999'
+  process.env.FASTIFY_ADDRESS = 'fastify.dev:9999'
+  process.env.FASTIFY_SOCKET = 'fastify.dev.socket:9999'
   process.env.FASTIFY_REQUIRE = './require-module.js'
   process.env.FASTIFY_LOG_LEVEL = 'info'
   process.env.FASTIFY_PRETTY_LOGS = 'true'
@@ -166,12 +166,12 @@ test('should parse env vars correctly', t => {
     watch: true,
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
-    address: 'fastify.io:9999',
+    address: 'fastify.dev:9999',
     bodyLimit: 5242880,
     logLevel: 'info',
     port: 7777,
     prefix: 'FASTIFY_',
-    socket: 'fastify.io.socket:9999',
+    socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
     pluginTimeout: 500,
     closeGraceDelay: 30000,
@@ -216,8 +216,8 @@ test('should parse custom plugin options', t => {
 
   const argv = [
     '--port', '7777',
-    '--address', 'fastify.io:9999',
-    '--socket', 'fastify.io.socket:9999',
+    '--address', 'fastify.dev:9999',
+    '--socket', 'fastify.dev.socket:9999',
     '--require', './require-module.js',
     '--log-level', 'info',
     '--pretty-logs', 'true',
@@ -253,8 +253,8 @@ test('should parse custom plugin options', t => {
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
-    address: 'fastify.io:9999',
-    socket: 'fastify.io.socket:9999',
+    address: 'fastify.dev:9999',
+    socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
@@ -304,7 +304,7 @@ test('should parse config file correctly and prefer config values over default o
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
     verboseWatch: false,
     logLevel: 'fatal',
-    address: 'fastify.io:9999',
+    address: 'fastify.dev:9999',
     socket: undefined,
     require: undefined,
     prefix: 'FASTIFY_',
@@ -346,7 +346,7 @@ test('should prefer command line args over config file options', t => {
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
     verboseWatch: false,
     logLevel: 'fatal',
-    address: 'fastify.io:9999',
+    address: 'fastify.dev:9999',
     socket: undefined,
     require: undefined,
     prefix: 'FASTIFY_',

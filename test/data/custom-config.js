@@ -2,7 +2,7 @@
 
 module.exports = {
   port: 5000,
-  address: 'fastify.io:9999',
+  address: 'fastify.dev:9999',
   prefix: 'FASTIFY_',
   watch: true,
   prettyLogs: true,
