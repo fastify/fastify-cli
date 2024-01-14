@@ -20,4 +20,4 @@ Run the test cases.
 
 ## Learn More
 
-To learn Fastify, check out the [Fastify documentation](https://www.fastify.dev/docs/latest/).
+To learn Fastify, check out the [Fastify documentation](https://fastify.dev/docs/latest/).
