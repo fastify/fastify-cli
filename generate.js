@@ -63,6 +63,7 @@ const typescriptTemplate = {
   },
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
+    c8: cliPkg.devDependencies.c8,
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
