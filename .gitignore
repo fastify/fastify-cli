@@ -148,6 +148,9 @@ yarn.lock
 .vscode
 .idea
 
+#tap files
+.tap/
+
 # created by test
 test.sock
 
