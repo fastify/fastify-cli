@@ -246,7 +246,7 @@ test('should error with a good timeout value', async t => {
   const start = proxyquire('../start', {
     assert: {
       ifError (err) {
-        t.equal(err.code, 'AVV_ERR_READY_TIMEOUT')
+        t.equal(err.code, 'AVV_ERR_PLUGIN_EXEC_TIMEOUT')
       }
     }
   })
@@ -257,7 +257,7 @@ test('should error with a good timeout value', async t => {
     const argv = ['-p', port, '-T', '100', './test/data/timeout-plugin.js']
     await start.start(argv)
   } catch (err) {
-    t.equal(err.code, 'AVV_ERR_READY_TIMEOUT')
+    t.equal(err.code, 'AVV_ERR_PLUGIN_EXEC_TIMEOUT')
   }
 })
 
