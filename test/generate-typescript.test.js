@@ -138,7 +138,7 @@ function define (t) {
         t.equal(pkg.dependencies['@fastify/autoload'], cliPkg.devDependencies['@fastify/autoload'])
         t.equal(pkg.dependencies['@fastify/sensible'], cliPkg.devDependencies['@fastify/sensible'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
-        t.equal(pkg.devDependencies['c8'], cliPkg.devDependencies['c8'])
+        t.equal(pkg.devDependencies.c8, cliPkg.devDependencies.c8)
         t.equal(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
