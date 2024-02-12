@@ -101,7 +101,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(24 + Object.keys(expected).length)
+    t.plan(25 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -138,6 +138,7 @@ function define (t) {
         t.equal(pkg.dependencies['@fastify/autoload'], cliPkg.devDependencies['@fastify/autoload'])
         t.equal(pkg.dependencies['@fastify/sensible'], cliPkg.devDependencies['@fastify/sensible'])
         t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
+        t.equal(pkg.devDependencies.c8, cliPkg.devDependencies.c8)
         t.equal(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.equal(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
