@@ -1,6 +1,6 @@
 {
   "name": "fastify-cli",
-  "version": "6.1.0",
+  "version": "6.1.1",
   "description": "Run a fastify route with one command!",
   "main": "cli.js",
   "type": "commonjs",
@@ -59,7 +59,7 @@
     "close-with-grace": "^1.1.0",
     "commist": "^3.0.0",
     "dotenv": "^16.0.0",
-    "fastify": "^4.0.0",
+    "fastify": "^4.26.1",
     "fastify-plugin": "^4.0.0",
     "generify": "^4.0.0",
     "help-me": "^4.0.1",
