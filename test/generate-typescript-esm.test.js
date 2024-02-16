@@ -130,7 +130,7 @@ function define (t) {
         // so for local tests we need to accept MIT as well
         t.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
         t.equal(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts')
-        t.equal(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
+        t.equal(pkg.scripts.start, 'fastify start -l info dist/app.js')
         t.equal(pkg.scripts['build:ts'], 'tsc')
         t.equal(pkg.scripts['watch:ts'], 'tsc -w')
         t.equal(pkg.scripts.dev, 'npm run build:ts && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "npm:watch:ts" "npm:dev:start"')
