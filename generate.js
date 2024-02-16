@@ -48,7 +48,7 @@ const typescriptTemplate = {
   main: 'app.ts',
   scripts: {
     test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register test/**/*.ts',
-    start: 'npm run build:ts && fastify start -l info dist/app.js',
+    start: 'fastify start -l info dist/app.js',
     'build:ts': 'tsc',
     'watch:ts': 'tsc -w',
     dev: 'npm run build:ts && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "npm:watch:ts" "npm:dev:start"',
