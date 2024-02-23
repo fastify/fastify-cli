@@ -115,6 +115,7 @@ function define (t) {
   function verifyPkg (t) {
     return new Promise((resolve, reject) => {
       const pkgFile = path.join(workdir, 'package.json')
+      
       readFile(pkgFile, function (err, data) {
         t.error(err)
         const pkg = JSON.parse(data)
