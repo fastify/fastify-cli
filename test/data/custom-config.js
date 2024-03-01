@@ -8,5 +8,6 @@ module.exports = {
   prettyLogs: true,
   debugPort: 4000,
   pluginTimeout: 9 * 1000,
-  closeGraceDelay: 1000
+  closeGraceDelay: 1000,
+  trustProxy: true
 }

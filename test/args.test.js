@@ -55,7 +55,8 @@ test('should parse args correctly', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: false
   })
 })
 
@@ -110,7 +111,8 @@ test('should parse args with = assignment correctly', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: false
   })
 })
 
@@ -183,7 +185,8 @@ test('should parse env vars correctly', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: false
   })
 })
 
@@ -274,7 +277,8 @@ test('should parse custom plugin options', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: false
   })
 })
 
@@ -312,7 +316,8 @@ test('should parse config file correctly and prefer config values over default o
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: true
   })
 })
 
@@ -354,6 +359,7 @@ test('should prefer command line args over config file options', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: true
   })
 })

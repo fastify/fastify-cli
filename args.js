@@ -23,13 +23,14 @@ const DEFAULT_ARGUMENTS = {
 
 module.exports = function parseArgs (args) {
   dotenv.config()
+  const TRUST_PROXY = process.env.TRUST_PROXY || ''
   const commandLineArguments = argv(args, {
     configuration: {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay'],
     string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'config', 'method'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks'],
+    boolean: ['pretty-logs', 'options', 'trustProxy', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -65,7 +66,9 @@ module.exports = function parseArgs (args) {
 
   // Merge objects from lower to higher priority
   const parsedArgs = { ...DEFAULT_ARGUMENTS, ...configFileOptions, ...commandLineArguments }
-
+  const isNumber = isNaN(Number(TRUST_PROXY)) === false
+  const isTrue = TRUST_PROXY.toLowerCase() === 'true'
+  const trustProxy = isNumber ? Number(TRUST_PROXY) : isTrue
   return {
     _: parsedArgs._,
     '--': additionalArgs,
@@ -91,6 +94,7 @@ module.exports = function parseArgs (args) {
     lang: parsedArgs.lang,
     method: parsedArgs.method,
     commonPrefix: parsedArgs.commonPrefix,
-    includeHooks: parsedArgs.includeHooks
+    includeHooks: parsedArgs.includeHooks,
+    trustProxy: parsedArgs.trustProxy || Boolean(trustProxy)
   }
 }
