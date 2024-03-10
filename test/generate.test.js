@@ -84,7 +84,7 @@ function define (t) {
   test('errors if package.json exists when use generate . and integrate flag is not set', (t) => {
     t.plan(2)
     exec('node generate.js .', (err, stdout) => {
-      t.equal('a package.json file already exists in target directory', strip(stdout.toString().trim()))
+      t.equal('a package.json file already exists in target directory. retry with the --integrate flag to proceed', strip(stdout.toString().trim()))
       t.equal(1, err.code)
     })
   })
@@ -92,7 +92,7 @@ function define (t) {
   test('errors if package.json exists when use generate ./ and integrate flag is not set', (t) => {
     t.plan(2)
     exec('node generate.js ./', (err, stdout) => {
-      t.equal('a package.json file already exists in target directory', strip(stdout.toString().trim()))
+      t.equal('a package.json file already exists in target directory. retry with the --integrate flag to proceed', strip(stdout.toString().trim()))
       t.equal(1, err.code)
     })
   })
