@@ -32,9 +32,6 @@ function printPlugins (args) {
     return showHelpForCommand('print-plugins')
   }
 
-  // we start crashing on unhandledRejection
-  require('make-promises-safe')
-
   loadModules(opts)
 
   return runFastify(opts)
