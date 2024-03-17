@@ -15,6 +15,7 @@ const parseArgs = require('./args')
 const {
   exit,
   requireModule,
+  requireESModule,
   requireFastifyForModule,
   requireServerPluginFromPath,
   showHelpForCommand,
@@ -60,26 +61,52 @@ function stop (message) {
   exit(message)
 }
 
+function preloadCJSModule (opts) {
+  if (typeof opts.require === 'string') {
+    opts.require = [opts.require]
+  }
+  try {
+    opts.require.forEach(module => {
+      if (module) {
+        /* This check ensures we ignore `-r ""`, trailing `-r`, or
+          * other silly things the user might (inadvertently) be doing.
+          */
+        requireModule(module)
+      }
+    })
+  } catch (e) {
+    module.exports.stop(e)
+  }
+}
+
+async function preloadESModule (opts) {
+  if (typeof opts.import === 'string') {
+    opts.import = [opts.import]
+  }
+  opts.import.forEach(async (m) => {
+    if (m) {
+      /* This check ensures we ignore `-r ""`, trailing `-r`, or
+       * other silly things the user might (inadvertently) be doing.
+       */
+      try {
+        await requireESModule(m)
+      } catch (e) {
+        module.exports.stop(e)
+      }
+    }
+  })
+}
+
 async function runFastify (args, additionalOptions, serverOptions) {
   const opts = parseArgs(args)
-  if (opts.require) {
-    if (typeof opts.require === 'string') {
-      opts.require = [opts.require]
-    }
 
-    try {
-      opts.require.forEach(module => {
-        if (module) {
-          /* This check ensures we ignore `-r ""`, trailing `-r`, or
-           * other silly things the user might (inadvertently) be doing.
-           */
-          requireModule(module)
-        }
-      })
-    } catch (e) {
-      module.exports.stop(e)
-    }
+  if (opts.require) {
+    preloadCJSModule(opts)
   }
+  if (opts.import) {
+    await preloadESModule(opts)
+  }
+
   opts.port = opts.port || process.env.PORT || 3000
 
   loadModules(opts)
