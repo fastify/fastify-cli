@@ -154,6 +154,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Address to listen on                                                                                                                    | `-a`          | `--address`        | `FASTIFY_ADDRESS`        |
 | Socket to listen on                                                                                                                     | `-s`          | `--socket`         | `FASTIFY_SOCKET`         |
 | Module to preload                                                                                                                       | `-r`          | `--require`        | `FASTIFY_REQUIRE`        |
+| ES Module to preload                                                                                                                    | `-i`          | `--import`         | `FASTIFY_IMPORT`         |
 | Log level (default to fatal)                                                                                                            | `-l`          | `--log-level`      | `FASTIFY_LOG_LEVEL`      |
 | Path to logging configuration module to use                                                                                             | `-L`          | `--logging-module`  | `FASTIFY_LOGGING_MODULE` |
 | Start Fastify app in debug mode with nodejs inspector                                                                                   | `-d`          | `--debug`          | `FASTIFY_DEBUG`          |
