@@ -61,7 +61,7 @@ function stop (message) {
   exit(message)
 }
 
-function preloadCJSModule (opts) {
+function preloadCJSModules (opts) {
   if (typeof opts.require === 'string') {
     opts.require = [opts.require]
   }
@@ -79,13 +79,13 @@ function preloadCJSModule (opts) {
   }
 }
 
-async function preloadESModule (opts) {
+async function preloadESModules (opts) {
   if (typeof opts.import === 'string') {
     opts.import = [opts.import]
   }
   opts.import.forEach(async (m) => {
     if (m) {
-      /* This check ensures we ignore `-r ""`, trailing `-r`, or
+      /* This check ensures we ignore `-i ""`, trailing `-i`, or
        * other silly things the user might (inadvertently) be doing.
        */
       try {
@@ -101,10 +101,10 @@ async function runFastify (args, additionalOptions, serverOptions) {
   const opts = parseArgs(args)
 
   if (opts.require) {
-    preloadCJSModule(opts)
+    preloadCJSModules(opts)
   }
   if (opts.import) {
-    await preloadESModule(opts)
+    await preloadESModules(opts)
   }
 
   opts.port = opts.port || process.env.PORT || 3000
