@@ -44,9 +44,6 @@ async function start (args) {
     return showHelpForCommand('start')
   }
 
-  // we start crashing on unhandledRejection
-  require('make-promises-safe')
-
   loadModules(opts)
 
   if (opts.watch) {

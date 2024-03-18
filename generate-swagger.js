@@ -35,9 +35,6 @@ async function generateSwagger (args) {
     return showHelpForCommand('generate-swagger')
   }
 
-  // we start crashing on unhandledRejection
-  require('make-promises-safe')
-
   loadModules(opts)
 
   const fastify = await runFastify(opts)

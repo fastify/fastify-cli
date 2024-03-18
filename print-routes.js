@@ -32,9 +32,6 @@ function printRoutes (args) {
     return showHelpForCommand('print-routes')
   }
 
-  // we start crashing on unhandledRejection
-  require('make-promises-safe')
-
   loadModules(opts)
 
   return runFastify(opts)
