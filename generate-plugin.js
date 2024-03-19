@@ -93,7 +93,7 @@ function cli (args) {
     process.exit(1)
   }
   if (!opts.integrate && existsSync(path.join(dir, 'package.json'))) {
-    log('error', 'a package.json file already exists in target directory')
+    log('error', 'a package.json file already exists in target directory. retry with the --integrate flag to proceed')
     process.exit(1)
   }
 
