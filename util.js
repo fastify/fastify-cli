@@ -30,6 +30,15 @@ function requireModule (moduleName) {
   }
 }
 
+async function requireESModule (moduleName) {
+  if (fs.existsSync(moduleName)) {
+    const moduleFilePath = path.resolve(moduleName)
+    return import(url.pathToFileURL(moduleFilePath))
+  } else {
+    return import(moduleName)
+  }
+}
+
 function requireFastifyForModule (modulePath) {
   try {
     const basedir = path.resolve(process.cwd(), modulePath)
@@ -104,4 +113,12 @@ function isKubernetes () {
     fs.existsSync('/run/secrets/kubernetes.io/serviceaccount/token')
 }
 
-module.exports = { isKubernetes, exit, requireModule, requireFastifyForModule, showHelpForCommand, requireServerPluginFromPath }
+module.exports = {
+  isKubernetes,
+  exit,
+  requireModule,
+  requireESModule,
+  requireFastifyForModule,
+  showHelpForCommand,
+  requireServerPluginFromPath
+}

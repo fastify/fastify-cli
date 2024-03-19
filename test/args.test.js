@@ -12,6 +12,7 @@ test('should parse args correctly', t => {
     '--address', 'fastify.dev:9999',
     '--socket', 'fastify.dev.socket:9999',
     '--require', './require-module.js',
+    '--import', './import-module.js',
     '--log-level', 'info',
     '--pretty-logs', 'true',
     '--watch', 'true',
@@ -42,6 +43,7 @@ test('should parse args correctly', t => {
     address: 'fastify.dev:9999',
     socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
+    import: './import-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
@@ -67,6 +69,7 @@ test('should parse args with = assignment correctly', t => {
     '--address=fastify.dev:9999',
     '--socket=fastify.dev.socket:9999',
     '--require', './require-module.js',
+    '--import', './import-module.js',
     '--log-level=info',
     '--pretty-logs=true',
     '--watch=true',
@@ -97,6 +100,7 @@ test('should parse args with = assignment correctly', t => {
     address: 'fastify.dev:9999',
     socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
+    import: './import-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
@@ -121,6 +125,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_ADDRESS = 'fastify.dev:9999'
   process.env.FASTIFY_SOCKET = 'fastify.dev.socket:9999'
   process.env.FASTIFY_REQUIRE = './require-module.js'
+  process.env.FASTIFY_IMPORT = './import-module.js'
   process.env.FASTIFY_LOG_LEVEL = 'info'
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
@@ -141,6 +146,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_ADDRESS
     delete process.env.FASTIFY_SOCKET
     delete process.env.FASTIFY_REQUIRE
+    delete process.env.FASTIFY_IMPORT
     delete process.env.FASTIFY_LOG_LEVEL
     delete process.env.FASTIFY_PRETTY_LOGS
     delete process.env.FASTIFY_WATCH
@@ -173,6 +179,7 @@ test('should parse env vars correctly', t => {
     prefix: 'FASTIFY_',
     socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
+    import: './import-module.js',
     pluginTimeout: 500,
     closeGraceDelay: 30000,
     pluginOptions: {},
@@ -188,7 +195,7 @@ test('should parse env vars correctly', t => {
 })
 
 test('should respect default values', t => {
-  t.plan(13)
+  t.plan(14)
 
   const argv = [
     'app.js'
@@ -209,6 +216,7 @@ test('should respect default values', t => {
   t.equal(parsedArgs.debugPort, 9320)
   t.equal(parsedArgs.loggingModule, undefined)
   t.equal(parsedArgs.require, undefined)
+  t.equal(parsedArgs.import, undefined)
 })
 
 test('should parse custom plugin options', t => {
@@ -219,6 +227,7 @@ test('should parse custom plugin options', t => {
     '--address', 'fastify.dev:9999',
     '--socket', 'fastify.dev.socket:9999',
     '--require', './require-module.js',
+    '--import', './import-module.js',
     '--log-level', 'info',
     '--pretty-logs', 'true',
     '--watch', 'true',
@@ -256,6 +265,7 @@ test('should parse custom plugin options', t => {
     address: 'fastify.dev:9999',
     socket: 'fastify.dev.socket:9999',
     require: './require-module.js',
+    import: './import-module.js',
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
@@ -307,6 +317,7 @@ test('should parse config file correctly and prefer config values over default o
     address: 'fastify.dev:9999',
     socket: undefined,
     require: undefined,
+    import: undefined,
     prefix: 'FASTIFY_',
     loggingModule: undefined,
     lang: 'js',
@@ -349,6 +360,7 @@ test('should prefer command line args over config file options', t => {
     address: 'fastify.dev:9999',
     socket: undefined,
     require: undefined,
+    import: undefined,
     prefix: 'FASTIFY_',
     loggingModule: undefined,
     lang: 'js',

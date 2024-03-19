@@ -1,4 +1,4 @@
-/* global GLOBAL_MODULE_1, GLOBAL_MODULE_2 */
+/* global GLOBAL_MODULE_1, GLOBAL_MODULE_2, GLOBAL_MODULE_3, GLOBAL_MODULE_4 */
 'use strict'
 
 const util = require('node:util')
@@ -774,6 +774,17 @@ test('should support preloading custom module', async t => {
   t.pass('server closed')
 })
 
+test('should support preloading custom ES module', async t => {
+  t.plan(2)
+
+  const argv = ['-i', './test/data/custom-import.mjs', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  t.ok(globalThis.GLOBAL_MODULE_3)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
 test('should support preloading multiple custom modules', async t => {
   t.plan(3)
 
@@ -782,6 +793,17 @@ test('should support preloading multiple custom modules', async t => {
   t.ok(GLOBAL_MODULE_1)
   t.ok(GLOBAL_MODULE_2)
 
+  await fastify.close()
+  t.pass('server closed')
+})
+
+test('should support preloading multiple custom ES modules', async t => {
+  t.plan(3)
+
+  const argv = ['-i', './test/data/custom-import.mjs', '-i', './test/data/custom-import2.mjs', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  t.ok(GLOBAL_MODULE_3)
+  t.ok(GLOBAL_MODULE_4)
   await fastify.close()
   t.pass('server closed')
 })
@@ -797,6 +819,17 @@ test('preloading custom module with empty and trailing require flags should not 
   t.pass('server closed')
 })
 
+test('preloading custom ES module with empty and trailing import flags should not throw', async t => {
+  t.plan(2)
+
+  const argv = ['-i', './test/data/custom-import.mjs', '-i', '', './examples/plugin.js', '-i']
+  const fastify = await start.start(argv)
+  t.ok(GLOBAL_MODULE_3)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
 test('preloading custom module that is not found should throw', async t => {
   t.plan(2)
 
@@ -807,6 +840,22 @@ test('preloading custom module that is not found should throw', async t => {
   }
 
   const argv = ['-r', './test/data/require-missing.js', './examples/plugin.js']
+  const fastify = await start.start(argv)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
+test('preloading custom ES module that is not found should throw', async t => {
+  t.plan(2)
+
+  const oldStop = start.stop
+  t.teardown(() => { start.stop = oldStop })
+  start.stop = function (err) {
+    t.ok(/Cannot find module/.test(err.message), err.message)
+  }
+
+  const argv = ['-i', './test/data/import-missing.mjs', './examples/plugin.js']
   const fastify = await start.start(argv)
 
   await fastify.close()

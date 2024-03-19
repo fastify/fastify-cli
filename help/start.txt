@@ -22,6 +22,10 @@ OPTS
   [env: FASTIFY_REQUIRE]
       Module to preload
 
+  -i, --import
+  [env: FASTIFY_IMPORT]
+      ES Module to preload
+
   -L, --logging-module
   [env: FASTIFY_LOGGING_MODULE]
       Path to logging configuration module to use
