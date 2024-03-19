@@ -1,0 +1,9 @@
+Usage: fastify install <FOLDER>
+
+Launches an interactive CLI application that allows you to browse and install Fastify plugins.
+Requires an existing `package.json` file in the specified folder.
+
+OPTS
+
+  --search, -s
+      search for plugins containing the given word

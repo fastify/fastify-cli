@@ -17,6 +17,7 @@ const generateSwagger = require('./generate-swagger')
 const generateReadme = require('./generate-readme')
 const printRoutes = require('./print-routes')
 const printPlugins = require('./print-plugins')
+const installPlugins = require('./install-plugins')
 commist.register('start', start.cli)
 commist.register('eject', eject.cli)
 commist.register('generate', generate.cli)
@@ -29,16 +30,17 @@ commist.register('version', function () {
 })
 commist.register('print-routes', printRoutes.cli)
 commist.register('print-plugins', printPlugins.cli)
+commist.register('install', installPlugins.cli)
 
 if (argv.help) {
   const command = argv._.splice(2)[0]
 
   help.toStdout(command)
 } else {
-  const res = commist.parse(process.argv.splice(2))
-
-  if (res) {
-    // no command was recognized
-    help.toStdout(res)
-  }
+  commist.parseAsync(process.argv.splice(2)).then(res => {
+    if (res) {
+      // no command was recognized
+      help.toStdout(res)
+    }
+  })
 }
