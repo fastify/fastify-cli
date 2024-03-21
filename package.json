@@ -65,7 +65,7 @@
     "help-me": "^4.0.1",
     "is-docker": "^2.0.0",
     "pino-pretty": "^10.1.0",
-    "pkg-up": "^3.1.0",
+    "pkg-up": "^5.0.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
     "yargs-parser": "^21.1.1"
