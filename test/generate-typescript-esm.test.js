@@ -11,14 +11,14 @@ const {
   readFile
 } = require('node:fs')
 const path = require('node:path')
-const {rimraf} = require('rimraf')
+const { rimraf } = require('rimraf')
 const walker = require('walker')
 const { generate, typescriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
 const appTemplateDir = path.join(__dirname, '..', 'templates', 'app-ts')
 const cliPkg = require('../package')
 const { exec, execSync } = require('node:child_process')
-const {minimatch} = require('minimatch')
+const { minimatch } = require('minimatch')
 const strip = require('strip-ansi')
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
