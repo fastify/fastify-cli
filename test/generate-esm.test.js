@@ -14,7 +14,7 @@ const {
 } = require('node:fs')
 const path = require('node:path')
 const { promisify } = require('node:util')
-const rimraf = require('rimraf')
+const {rimraf} = require('rimraf')
 const walker = require('walker')
 const { generate, javascriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')

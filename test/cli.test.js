@@ -4,7 +4,7 @@ const t = require('tap')
 const { execSync } = require('node:child_process')
 const { mkdirSync, readFileSync } = require('node:fs')
 const path = require('node:path')
-const rimraf = require('rimraf')
+const {rimraf} = require('rimraf')
 
 t.test('generate', async (t) => {
   const workdir = path.join(__dirname, 'workdir')

@@ -11,7 +11,7 @@ const {
   readFile
 } = require('node:fs')
 const path = require('node:path')
-const rimraf = require('rimraf')
+const {rimraf} = require('rimraf')
 const walker = require('walker')
 const { generate, typescriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
