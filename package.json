@@ -64,7 +64,7 @@
     "generify": "^4.0.0",
     "help-me": "^4.0.1",
     "is-docker": "^2.0.0",
-    "pino-pretty": "^10.1.0",
+    "pino-pretty": "^11.1.0",
     "pkg-up": "^3.1.0",
     "resolve-from": "^5.0.0",
     "semver": "^7.3.5",
