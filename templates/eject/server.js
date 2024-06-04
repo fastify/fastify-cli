@@ -26,7 +26,7 @@ const closeListeners = closeWithGrace({ delay: process.env.FASTIFY_CLOSE_GRACE_D
   await app.close()
 })
 
-app.addHook('onClose', async (instance, done) => {
+app.addHook('onClose', (instance, done) => {
   closeListeners.uninstall()
   done()
 })
