@@ -142,6 +142,34 @@ test('should start fastify with custom plugin options', async t => {
 
   await fastify.close()
   t.pass('server closed')
+  t.end()
+})
+
+test('should start fastify with default custom plugin options', async t => {
+  t.plan(4)
+
+  const argv = [
+    '-o',
+    '-p',
+    getPort(),
+    './examples/plugin-with-custom-options.js'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.equal(response.statusCode, 200)
+  t.equal(response.headers['content-length'], '' + body.length)
+  t.same(JSON.parse(body), {
+    hello: 'test'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
 })
 
 test('should start fastify with custom options with a typescript compiled plugin', async t => {
@@ -187,6 +215,33 @@ test('should start fastify with custom plugin options with a typescript compiled
 
   await fastify.close()
   t.pass('server closed')
+})
+
+test('should start fastify with custom plugin default exported options with a typescript compiled plugin', async t => {
+  t.plan(4)
+
+  const argv = [
+    '-o',
+    '-p',
+    getPort(),
+    './examples/ts-plugin-with-custom-options.js'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.equal(response.statusCode, 200)
+  t.equal(response.headers['content-length'], '' + body.length)
+  t.same(JSON.parse(body), {
+    hello: 'test'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
 })
 
 test('should start the server at the given prefix', async t => {
@@ -965,6 +1020,33 @@ test('should start fastify with custom plugin options with a ESM typescript comp
     b: true,
     c: true,
     hello: 'world'
+  })
+
+  await fastify.close()
+  t.pass('server closed')
+  t.end()
+})
+
+test('should start fastify with custom plugin default options with a ESM typescript compiled plugin', { skip: !moduleSupport }, async t => {
+  t.plan(4)
+
+  const argv = [
+    '-o',
+    '-p',
+    getPort(),
+    './examples/ts-plugin-with-custom-options.mjs'
+  ]
+  const fastify = await start.start(argv)
+
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${fastify.server.address().port}`
+  })
+
+  t.equal(response.statusCode, 200)
+  t.equal(response.headers['content-length'], '' + body.length)
+  t.same(JSON.parse(body), {
+    hello: 'test'
   })
 
   await fastify.close()

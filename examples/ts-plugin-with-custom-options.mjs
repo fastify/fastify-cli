@@ -6,3 +6,7 @@ export default async function plugin (fastify, options) {
     return options
   })
 }
+
+export const options = {
+  hello: 'test'
+}
