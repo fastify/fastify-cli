@@ -169,7 +169,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     opts.pluginOptions.prefix = opts.prefix
   }
 
-  const appConfig = Object.assign({}, opts.pluginOptions, additionalOptions)
+  const appConfig = Object.assign({}, opts.options ? file.options : {}, opts.pluginOptions, additionalOptions)
   await fastify.register(file.default || file, appConfig)
 
   const closeListeners = closeWithGrace({ delay: opts.closeGraceDelay }, async function ({ signal, err, manual }) {

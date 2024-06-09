@@ -80,6 +80,7 @@ module.exports = async function (fastify, options) {
 For a list of available flags for `fastify start` see the help: `fastify help start`.
 
 If you want to use custom options for the server creation, just export an options object with your route and run the cli command with the `--options` flag.
+These options also get passed to your plugin via the `options` argument.
 
 ```js
 // plugin.js
@@ -113,7 +114,8 @@ export const options = {
 }
 ```
 
-If you want to use custom options for your plugin, just add them after the `--` terminator.
+If you want to use custom options for your plugin, just add them after the `--` terminator. If used in conjunction with the `--options` argument, the CLI
+arguments take precedence.
 
 ```js
 // plugin.js
