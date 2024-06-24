@@ -53,7 +53,7 @@
     ]
   },
   "dependencies": {
-    "@fastify/deepmerge": "^1.2.0",
+    "@fastify/deepmerge": "^2.0.0",
     "chalk": "^4.1.2",
     "chokidar": "^3.5.2",
     "close-with-grace": "^1.1.0",
