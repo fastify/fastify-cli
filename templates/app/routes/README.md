@@ -16,7 +16,7 @@ typically stored in a file; be careful to group your routes logically,
 e.g. all `/users` routes in a `users.js` file. We have added
 a `root.js` file for you with a '/' root added.
 
-If a single file become too large, create a folder and add a `index.js` file there:
+If a single file becomes too large, create a folder and add a `index.js` file there:
 this file must be a Fastify plugin, and it will be loaded automatically
 by the application. You can now add as many files as you want inside that folder.
 In this way you can create complex routes within a single monolith,
