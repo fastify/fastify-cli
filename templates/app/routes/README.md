@@ -1,8 +1,11 @@
 # Routes Folder
 
-Routes define routes within your application. Fastify provides an
-easy path to a microservice architecture, in the future you might want
-to independently deploy some of those.
+Routes define the pathways within your application.
+Fastify's structure supports the modular monolith approach, where your
+application is organized into distinct, self-contained modules.
+This facilitates easier scaling and future transition to a microservice architecture.
+Each module can evolve independently, and in the future, you might want to deploy
+some of these modules separately.
 
 In this folder you should define all the routes that define the endpoints
 of your web application.
@@ -13,7 +16,7 @@ typically stored in a file; be careful to group your routes logically,
 e.g. all `/users` routes in a `users.js` file. We have added
 a `root.js` file for you with a '/' root added.
 
-If a single file becomes too large, create a folder and add a `index.js` file there:
+If a single file become too large, create a folder and add a `index.js` file there:
 this file must be a Fastify plugin, and it will be loaded automatically
 by the application. You can now add as many files as you want inside that folder.
 In this way you can create complex routes within a single monolith,
