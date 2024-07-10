@@ -95,7 +95,7 @@ async function preloadESModules (opts) {
   })
 }
 
-async function runFastify (args, additionalOptions = {}, serverOptions = {}, buildOptions = {}) {
+async function runFastify (args, additionalOptions, serverOptions, buildOptions = {}) {
   const opts = parseArgs(args)
 
   if (opts.require) {
@@ -156,7 +156,9 @@ async function runFastify (args, additionalOptions = {}, serverOptions = {}, bui
     }
   }
 
-  options = deepmerge(options, serverOptions)
+  if (serverOptions) {
+    options = deepmerge(options, serverOptions)
+  }
 
   if (opts.options && file.options) {
     options = deepmerge(options, file.options)
@@ -186,7 +188,7 @@ async function runFastify (args, additionalOptions = {}, serverOptions = {}, bui
     done()
   })
 
-  if (additionalOptions.ready) {
+  if (additionalOptions && additionalOptions.ready) {
     await fastify.ready()
   } else if (opts.address) {
     await fastify.listen({ port: opts.port, host: opts.address })
