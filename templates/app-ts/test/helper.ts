@@ -17,14 +17,13 @@ async function config () {
 
 // Automatically build and tear down our instance
 async function build (t: TestContext) {
-  // You can set all the options supported by the fastify CLI command
+  // you can set all the options supported by the fastify CLI command
   const argv = [AppPath]
 
+  // fastify-plugin ensures that all decorators
+  // are exposed for testing purposes, this is
+  // different from the production setup
   const app = await helper.build(argv, await config())
-
-  // Ensures that all decorators are exposed for testing purposes, 
-  // this is different from the production setup
-  app[Symbol.for("skip-override")] = true;
 
   // Tear down our app after we are done
   t.after(() => void app.close())
