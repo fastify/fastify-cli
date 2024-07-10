@@ -10,12 +10,7 @@ module.exports = {
       writable: false
     })
 
-    const buildOpts = {
-      skipOverride: true,
-      ...buildOptions
-    }
-
-    return runFastify(args, additionalOptions, serverOptions, buildOpts)
+    return runFastify(args, additionalOptions, serverOptions, buildOptions)
   },
   listen: runFastify
 }

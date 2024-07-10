@@ -95,7 +95,7 @@ async function preloadESModules (opts) {
   })
 }
 
-async function runFastify (args, additionalOptions = {}, serverOptions = {}, buildOptions = {}) {
+async function runFastify (args, additionalOptions, serverOptions, buildOptions = {}) {
   const opts = parseArgs(args)
 
   if (opts.require) {
@@ -156,7 +156,9 @@ async function runFastify (args, additionalOptions = {}, serverOptions = {}, bui
     }
   }
 
-  options = deepmerge(options, serverOptions)
+  if (serverOptions) {
+    options = deepmerge(options, serverOptions)
+  }
 
   if (opts.options && file.options) {
     options = deepmerge(options, file.options)
@@ -171,7 +173,7 @@ async function runFastify (args, additionalOptions = {}, serverOptions = {}, bui
   const appConfig = Object.assign({}, opts.options ? file.options : {}, opts.pluginOptions, additionalOptions)
 
   const appFn = file.default || file
-  const appPlugin = buildOptions.skipOverride ? fp(appFn) : appFn
+  const appPlugin = appConfig.skipOverride ? fp(appFn) : appFn
   await fastify.register(appPlugin, appConfig)
 
   const closeListeners = closeWithGrace({ delay: opts.closeGraceDelay }, async function ({ signal, err, manual }) {
@@ -186,7 +188,7 @@ async function runFastify (args, additionalOptions = {}, serverOptions = {}, bui
     done()
   })
 
-  if (additionalOptions.ready) {
+  if (additionalOptions && additionalOptions.ready) {
     await fastify.ready()
   } else if (opts.address) {
     await fastify.listen({ port: opts.port, host: opts.address })
