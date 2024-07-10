@@ -21,6 +21,7 @@ const {
   showHelpForCommand,
   isKubernetes
 } = require('./util')
+const fp = require('fastify-plugin')
 
 let Fastify = null
 
@@ -94,7 +95,7 @@ async function preloadESModules (opts) {
   })
 }
 
-async function runFastify (args, additionalOptions, serverOptions) {
+async function runFastify (args, additionalOptions = {}, serverOptions = {}, buildOptions = {}) {
   const opts = parseArgs(args)
 
   if (opts.require) {
@@ -155,9 +156,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     }
   }
 
-  if (serverOptions) {
-    options = deepmerge(options, serverOptions)
-  }
+  options = deepmerge(options, serverOptions)
 
   if (opts.options && file.options) {
     options = deepmerge(options, file.options)
@@ -170,7 +169,11 @@ async function runFastify (args, additionalOptions, serverOptions) {
   }
 
   const appConfig = Object.assign({}, opts.options ? file.options : {}, opts.pluginOptions, additionalOptions)
-  await fastify.register(file.default || file, appConfig)
+
+  const fn = file.default || file
+  const app = buildOptions.skipOverride ? fp(fn) : fn
+
+  await fastify.register(app, appConfig)
 
   const closeListeners = closeWithGrace({ delay: opts.closeGraceDelay }, async function ({ signal, err, manual }) {
     if (err) {
@@ -184,7 +187,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
     done()
   })
 
-  if (additionalOptions && additionalOptions.ready) {
+  if (additionalOptions.ready) {
     await fastify.ready()
   } else if (opts.address) {
     await fastify.listen({ port: opts.port, host: opts.address })

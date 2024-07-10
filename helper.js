@@ -3,13 +3,19 @@
 const { runFastify } = require('./start')
 
 module.exports = {
-  build (args, additionalOptions = {}, serverOptions = {}) {
+  build (args, additionalOptions = {}, serverOptions = {}, buildOptions = {}) {
     Object.defineProperty(additionalOptions, 'ready', {
       value: true,
       enumerable: false,
       writable: false
     })
-    return runFastify(args, additionalOptions, serverOptions)
+
+    const buildOpts = {
+      skipOverride: true,
+      ...buildOptions
+    }
+
+    return runFastify(args, additionalOptions, serverOptions, buildOpts)
   },
   listen: runFastify
 }
