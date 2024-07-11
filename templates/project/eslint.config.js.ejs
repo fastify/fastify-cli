@@ -1,0 +1,26 @@
+<% if (lint === 'eslint') { %>
+const js = require('@eslint/js') 
+const globals = require('globals')
+
+module.exports = [ 
+  {
+    files: ["**/*.js"<%= language === 'TypeScript' ? ", '**/*.ts'" : "" %>],
+    languageOptions: {
+      globals: {
+        ...globals.node
+      }
+    },
+    rules: js.configs.recommended.rules
+  }
+]
+<% } %>
+<% if (lint === 'neostandard') { %>
+const neostandard = require('neostandard')
+
+module.exports = [
+  {
+    files: ['**/*.js'<%= language === 'TypeScript' ? ", '**/*.ts'" : "" %>],
+  },
+  ...neostandard(<%= language === 'TypeScript' ? " ts: true " : "" %>),
+]
+<% } %>
