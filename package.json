@@ -1,100 +1,77 @@
 {
   "name": "fastify-cli",
-  "version": "6.2.1",
-  "description": "Run a fastify route with one command!",
-  "main": "cli.js",
-  "type": "commonjs",
+  "description": "A new CLI generated with oclif",
+  "version": "0.0.0",
+  "author": "KaKa",
   "bin": {
-    "fastify": "cli.js"
+    "fastify": "./bin/run.js",
+    "fastify-dev": "./bin/dev.js"
   },
-  "scripts": {
-    "lint": "standard",
-    "lint:fix": "standard --fix",
-    "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
-    "test": "npm run unit:suites && c8 --clean npm run test:cli-and-typescript",
-    "unit:cjs": "node suite-runner.js \"templates/app/test/**/*.test.js\"",
-    "unit:esm": "node suite-runner.js \"templates/app-esm/test/**/*.test.js\"",
-    "unit:ts-cjs": "cross-env TS_NODE_PROJECT=./test/configs/ts-cjs.tsconfig.json node -r ts-node/register suite-runner.js \"templates/app-ts/test/**/*.test.ts\"",
-    "unit:ts-esm": "cross-env TS_NODE_PROJECT=./test/configs/ts-esm.tsconfig.json FASTIFY_AUTOLOAD_TYPESCRIPT=1 node -r ts-node/register --loader ts-node/esm suite-runner.js \"templates/app-ts-esm/test/**/*.test.ts\"",
-    "unit:suites": "node should-skip-test-suites.js || npm run all-suites",
-    "all-suites": "npm run unit:cjs && npm run unit:esm && npm run unit:ts-cjs && npm run unit:ts-esm",
-    "unit:cli-js-esm": "node suite-runner.js \"test/esm/**/*.test.js\"",
-    "unit:cli-js": "tap \"test/**/*.test.js\" --no-coverage --timeout 400 --jobs 1 --color -R specy",
-    "unit:cli-ts": "cross-env TS_NODE_PROJECT=./test/configs/ts-cjs.tsconfig.json tap \"test/**/*.test.ts\" --no-coverage --timeout 400 --jobs 1 --color -R specy",
-    "unit:cli": "npm run unit:cli-js && npm run unit:cli-ts && npm run unit:cli-js-esm",
-    "test:cli-and-typescript": "npm run unit:cli && npm run test:typescript",
-    "test:typescript": "tsd templates/plugin -t ./../../index.d.ts && tsc --project templates/app-ts/tsconfig.json --noEmit && tsc --project templates/app-ts-esm/tsconfig.json --noEmit"
-  },
-  "keywords": [
-    "fastify",
-    "cli",
-    "one command"
-  ],
-  "author": "Tomas Della Vedova - @delvedor (http://delved.org)",
-  "contributors": [
-    {
-      "name": "Matteo Collina",
-      "email": "hello@matteocollina.com"
-    }
-  ],
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/fastify/fastify-cli.git"
-  },
-  "bugs": {
-    "url": "https://github.com/fastify/fastify-cli/issues"
-  },
-  "homepage": "https://github.com/fastify/fastify-cli#readme",
-  "standard": {
-    "ignore": [
-      "test/data/parsing-error.js",
-      "test/data/undefinedVariable.js"
-    ]
-  },
+  "bugs": "https://github.com/fastify/fastify-cli/issues",
   "dependencies": {
-    "@fastify/deepmerge": "^2.0.0",
-    "chalk": "^4.1.2",
-    "chokidar": "^3.5.2",
-    "close-with-grace": "^1.1.0",
-    "commist": "^3.0.0",
-    "dotenv": "^16.0.0",
-    "fastify": "^4.26.1",
-    "fastify-plugin": "^4.0.0",
-    "generify": "^4.0.0",
-    "help-me": "^4.0.1",
-    "is-docker": "^2.0.0",
-    "pino-pretty": "^11.2.0",
-    "pkg-up": "^3.1.0",
+    "@inquirer/prompts": "^5.1.2",
+    "@oclif/core": "^4",
+    "@oclif/plugin-help": "^6",
+    "chokidar": "^3.6.0",
+    "close-with-grace": "^1.3.0",
+    "colorette": "^2.0.20",
+    "ejs": "^3.1.10",
+    "fastify": "^4.28.1",
+    "pkg-up": "^5.0.0",
     "resolve-from": "^5.0.0",
-    "semver": "^7.3.5",
-    "yargs-parser": "^21.1.1"
+    "semver": "^7.6.2",
+    "undici": "^6.19.2"
   },
   "devDependencies": {
-    "@fastify/autoload": "^5.0.0",
-    "@fastify/pre-commit": "^2.0.2",
-    "@fastify/sensible": "^5.0.0",
-    "@types/node": "^20.4.4",
-    "@types/tap": "^15.0.5",
-    "c8": "^10.1.2",
-    "concurrently": "^8.2.2",
-    "cross-env": "^7.0.3",
-    "fastify-tsconfig": "^2.0.0",
-    "minimatch": "^9.0.5",
-    "proxyquire": "^2.1.3",
-    "rimraf": "^3.0.2",
-    "simple-get": "^4.0.0",
-    "sinon": "^18.0.0",
-    "standard": "^17.0.0",
-    "strip-ansi": "^6.0.1",
-    "tap": "^16.1.0",
-    "ts-node": "^10.4.0",
-    "ts-standard": "^12.0.1",
-    "tsd": "^0.31.0",
-    "typescript": "^5.2.2",
-    "walker": "^1.0.8"
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^4",
+    "@types/chai": "^4",
+    "@types/ejs": "^3.1.5",
+    "@types/mocha": "^10",
+    "@types/node": "^18",
+    "@types/semver": "^7.5.8",
+    "chai": "^4",
+    "eslint": "^9",
+    "mocha": "^10",
+    "neostandard": "^0.11.0",
+    "oclif": "^4",
+    "shx": "^0.3.3",
+    "ts-node": "^10",
+    "typescript": "^5"
   },
-  "tsd": {
-    "directory": "test"
-  }
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "/bin",
+    "/dist",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/fastify/fastify-cli",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "type": "module",
+  "oclif": {
+    "bin": "fastify",
+    "dirname": "fastify",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help"
+    ],
+    "topicSeparator": " "
+  },
+  "repository": "fastify/fastify-cli",
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "npm run lint",
+    "prepack": "oclif manifest && oclif readme",
+    "test": "test --test \"test/**/*.test.ts\"",
+    "version": "oclif readme && git add README.md"
+  },
+  "types": "dist/index.d.ts"
 }

@@ -1,4 +1,3 @@
-
 # Logs
 logs
 *.log
@@ -136,9 +135,6 @@ dist
 # macOS files
 .DS_Store
 
-# Clinic
-.clinic
-
 # lock files
 bun.lockb
 package-lock.json
@@ -149,19 +145,16 @@ yarn.lock
 .vscode
 .idea
 
-#tap files
+# tap files
 .tap/
 
-# created by test
-test.sock
+# Optional compressed files (npm generated package, zip, etc)
+/*.zip
 
-# test artifacts
-test/workdir*
-test/fixtures/*.js
-.vscode/launch.json
-.vscode/settings.json
+# 0x
+profile-*
 
-/.idea
-/dist
-/tmp
-oclif.manifest.json
+# clinic
+profile*
+*clinic*
+*flamegraph*

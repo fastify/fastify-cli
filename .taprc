@@ -1,6 +1,0 @@
-ts: true
-jsx: false
-jobs: 1
-reporter: terse
-check-coverage: false
-timeout: 60

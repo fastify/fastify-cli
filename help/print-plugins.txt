@@ -1,1 +1,0 @@
-Usage: fastify print-plugins <file>
