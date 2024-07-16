@@ -328,7 +328,7 @@ if your project uses `@fastify/swagger`, `fastify-cli` can generate and write ou
 
 "scripts": {
 + "pretest": "standard",
-  "test": "tap test/**/*.test.js",
+  "test": "node --test test/**/*.test.js",
   "start": "fastify start -l info app.js",
   "dev": "fastify start -l info -P app.js",
 + "lint": "standard --fix"
@@ -339,7 +339,7 @@ if your project uses `@fastify/swagger`, `fastify-cli` can generate and write ou
 
 When you use `fastify-cli` to run your project you need a way to load your application because you can run the CLI command.
 To do so, you can use the this module to load your application and give you the control to write your assertions.
-These utilities are async functions that you may use with the [`node-tap`](https://www.npmjs.com/package/tap) testing framework.
+These utilities are async functions that you may use with the [`Node Test runner`](https://nodejs.org/api/test.html).
 
 There are two utilities provided:
 
@@ -357,21 +357,23 @@ Both of these utilities have the `function(args, pluginOptions, serverOptions)` 
 const { build, listen } = require('fastify-cli/helper')
 
 // write a test
-const { test } = require('tap')
+const { test } = require('node:test')
+const assert = require('node:assert')
+
 test('test my application', async t => {
   const argv = ['app.js']
   const app = await build(argv, {
     extraParam: 'foo'
   })
-  t.teardown(() => app.close())
+  t.after(() => app.close())
 
   // test your application here:
   const res = await app.inject('/')
-  t.same(res.json(), { hello: 'one' })
+  assert.deepStrictEqual(res.json(), { hello: 'one' })
 })
 ```
 
-Log output is consumed by tap. If log messages should be logged to the console
+Log output is consumed by Node Test runner. If log messages should be logged to the console
 the logger needs to be configured to output to stderr instead of stdout.
 
 ```js
@@ -386,11 +388,11 @@ const logger = {
 const argv = ['app.js']
 test('test my application with logging enabled', async t => {
   const app = await build(argv, {}, { logger })
-  t.teardown(() => app.close())
+  t.after(() => app.close())
 
   // test your application here:
   const res = await app.inject('/')
-  t.same(res.json(), { hello: 'one' })
+  assert.deepStrictEqual(res.json(), { hello: 'one' })
 })
 ```
 
