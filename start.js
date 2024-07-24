@@ -95,7 +95,7 @@ async function preloadESModules (opts) {
   })
 }
 
-async function runFastify (args, additionalOptions, serverOptions, buildOptions = {}) {
+async function runFastify (args, additionalOptions, serverOptions) {
   const opts = parseArgs(args)
 
   if (opts.require) {
