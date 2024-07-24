@@ -361,7 +361,8 @@ const { test } = require('tap')
 test('test my application', async t => {
   const argv = ['app.js']
   const app = await build(argv, {
-    extraParam: 'foo'
+    extraParam: 'foo',
+    skipOverride: true // If you want your application to be registered with fastify-plugin
   })
   t.teardown(() => app.close())
 
