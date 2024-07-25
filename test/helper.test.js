@@ -150,3 +150,14 @@ test('should merge the CLI and FILE configs', async t => {
   t.same(lines.length, 1)
   t.same(lines[0].foo, '***')
 })
+
+test('should ensure can access all decorators', async t => {
+  const argv = ['./examples/plugin.js']
+  const app = await helper.build(argv, { skipOverride: true })
+  t.teardown(() => app.close())
+  t.ok(app.test)
+
+  const app2 = await helper.listen(argv, { skipOverride: true })
+  t.teardown(() => app2.close())
+  t.ok(app2.test)
+})

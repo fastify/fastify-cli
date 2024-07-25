@@ -9,6 +9,7 @@ module.exports = {
       enumerable: false,
       writable: false
     })
+
     return runFastify(args, additionalOptions, serverOptions)
   },
   listen: runFastify

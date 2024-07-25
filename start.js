@@ -21,6 +21,7 @@ const {
   showHelpForCommand,
   isKubernetes
 } = require('./util')
+const fp = require('fastify-plugin')
 
 let Fastify = null
 
@@ -170,7 +171,10 @@ async function runFastify (args, additionalOptions, serverOptions) {
   }
 
   const appConfig = Object.assign({}, opts.options ? file.options : {}, opts.pluginOptions, additionalOptions)
-  await fastify.register(file.default || file, appConfig)
+
+  const appFn = file.default || file
+  const appPlugin = appConfig.skipOverride ? fp(appFn) : appFn
+  await fastify.register(appPlugin, appConfig)
 
   const closeListeners = closeWithGrace({ delay: opts.closeGraceDelay }, async function ({ signal, err, manual }) {
     if (err) {
