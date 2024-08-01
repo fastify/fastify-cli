@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    uses: fastify/workflows/.github/workflows/plugins-ci.yml@04a2d6ae69784b9dd665456e01b45e3b1b839a53
+    uses: fastify/workflows/.github/workflows/plugins-ci.yml@fe0ddd11457da428e0fed73efba2ca36baec15ed
     with:
       lint: true
       auto-merge-exclude: 'help-me'
