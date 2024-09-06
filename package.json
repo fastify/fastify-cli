@@ -59,8 +59,8 @@
     "close-with-grace": "^2.1.0",
     "commist": "^3.0.0",
     "dotenv": "^16.0.0",
-    "fastify": "^4.26.1",
-    "fastify-plugin": "^4.0.0",
+    "fastify": "^5.0.0-alpha.4",
+    "fastify-plugin": "^5.0.0",
     "generify": "^4.0.0",
     "help-me": "^4.0.1",
     "is-docker": "^2.0.0",
@@ -71,9 +71,9 @@
     "yargs-parser": "^21.1.1"
   },
   "devDependencies": {
-    "@fastify/autoload": "^5.0.0",
+    "@fastify/autoload": "^6.0.0",
     "@fastify/pre-commit": "^2.0.2",
-    "@fastify/sensible": "^5.0.0",
+    "@fastify/sensible": "^6.0.0",
     "@types/node": "^22.1.0",
     "@types/tap": "^15.0.5",
     "c8": "^10.1.2",
