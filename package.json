@@ -77,7 +77,7 @@
     "@types/node": "^22.1.0",
     "@types/tap": "^15.0.5",
     "c8": "^10.1.2",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.0.0",
     "cross-env": "^7.0.3",
     "fastify-tsconfig": "^2.0.0",
     "minimatch": "^9.0.5",
