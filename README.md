@@ -21,7 +21,7 @@ project:
 $ fastify
 ```
 
-Will print an help:
+Will print a help message:
 
 ```
 Fastify command line interface, available commands are:
