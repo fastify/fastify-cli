@@ -29,7 +29,7 @@ module.exports = function parseArgs (args) {
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay'],
     string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks'],
+    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks', 'force-close-connections'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -47,6 +47,7 @@ module.exports = function parseArgs (args) {
       'log-level': ['l'],
       'pretty-logs': ['P'],
       'plugin-timeout': ['T'],
+      'force-close-connections': ['f'],
       'close-grace-delay': ['g'],
       'logging-module': ['L'],
       'verbose-watch': ['V']
@@ -73,6 +74,7 @@ module.exports = function parseArgs (args) {
     port: parsedArgs.port,
     bodyLimit: parsedArgs.bodyLimit,
     pluginTimeout: parsedArgs.pluginTimeout,
+    forceCloseConnections: parsedArgs.forceCloseConnections,
     closeGraceDelay: parsedArgs.closeGraceDelay,
     pluginOptions,
     prettyLogs: parsedArgs.prettyLogs,
