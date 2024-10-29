@@ -27,6 +27,7 @@ test('should parse args correctly', t => {
     '--debug-port', 1111,
     '--debug-host', '1.1.1.1',
     '--logging-module', './custom-logger.js',
+    '--trust-proxy-enabled', 'true',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -57,7 +58,8 @@ test('should parse args correctly', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: true
   })
 })
 
@@ -84,6 +86,7 @@ test('should parse args with = assignment correctly', t => {
     '--debug-port', 1111,
     '--debug-host', '1.1.1.1',
     '--logging-module', './custom-logger.js',
+    '--trust-proxy-hop', '2',
     'app.js'
   ]
   const parsedArgs = parseArgs(argv)
@@ -114,7 +117,8 @@ test('should parse args with = assignment correctly', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: 2
   })
 })
 
@@ -190,7 +194,8 @@ test('should parse env vars correctly', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: undefined
   })
 })
 
@@ -284,7 +289,8 @@ test('should parse custom plugin options', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: undefined
   })
 })
 
@@ -323,7 +329,8 @@ test('should parse config file correctly and prefer config values over default o
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: undefined
   })
 })
 
@@ -366,6 +373,98 @@ test('should prefer command line args over config file options', t => {
     lang: 'js',
     method: undefined,
     commonPrefix: false,
-    includeHooks: undefined
+    includeHooks: undefined,
+    trustProxy: undefined
+  })
+})
+
+test('should favor trust proxy enabled over trust proxy ips and trust proxy hop', t => {
+  t.plan(1);
+
+  const argv = [
+    '--port', '4000',
+    '--close-grace-delay', '30000',
+    '--debug-port', '1111',
+    '--debug-host', '1.1.1.1',
+    '--trust-proxy-enabled', 'true',
+    '--trust-proxy-ips', '127.0.0.1',
+    '--trust-proxy-hop', '2',
+    'app.js'
+  ]
+  const parsedArgs = parseArgs(argv)
+
+  t.strictSame(parsedArgs, {
+    _: ['app.js'],
+    '--': [],
+    port: 4000,
+    bodyLimit: undefined,
+    pluginTimeout: 10000,
+    closeGraceDelay: 30000,
+    pluginOptions: {},
+    prettyLogs: false,
+    options: false,
+    watch: false,
+    debug: false,
+    debugPort: 1111,
+    debugHost: '1.1.1.1',
+    ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    verboseWatch: false,
+    logLevel: 'fatal',
+    address: undefined,
+    socket: undefined,
+    require: undefined,
+    import: undefined,
+    prefix: undefined,
+    loggingModule: undefined,
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined,
+    trustProxy: true
+  })
+})
+
+test('should favor trust proxy enabled over trust proxy ips and trust proxy hop', t => {
+  t.plan(1);
+
+  const argv = [
+    '--port', '4000',
+    '--close-grace-delay', '30000',
+    '--debug-port', '1111',
+    '--debug-host', '1.1.1.1',
+    '--trust-proxy-ips', '127.0.0.1',
+    '--trust-proxy-hop', '2',
+    'app.js'
+  ]
+  const parsedArgs = parseArgs(argv)
+
+  t.strictSame(parsedArgs, {
+    _: ['app.js'],
+    '--': [],
+    port: 4000,
+    bodyLimit: undefined,
+    pluginTimeout: 10000,
+    closeGraceDelay: 30000,
+    pluginOptions: {},
+    prettyLogs: false,
+    options: false,
+    watch: false,
+    debug: false,
+    debugPort: 1111,
+    debugHost: '1.1.1.1',
+    ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    verboseWatch: false,
+    logLevel: 'fatal',
+    address: undefined,
+    socket: undefined,
+    require: undefined,
+    import: undefined,
+    prefix: undefined,
+    loggingModule: undefined,
+    lang: 'js',
+    method: undefined,
+    commonPrefix: false,
+    includeHooks: undefined,
+    trustProxy: '127.0.0.1'
   })
 })
