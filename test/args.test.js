@@ -144,6 +144,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_DEBUG_PORT = '1111'
   process.env.FASTIFY_DEBUG_HOST = '1.1.1.1'
   process.env.FASTIFY_LOGGING_MODULE = './custom-logger.js'
+  process.env.FASTIFY_TRUST_PROXY_ENABLED = 'true'
 
   t.teardown(function () {
     delete process.env.FASTIFY_PORT
@@ -164,6 +165,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_DEBUG
     delete process.env.FASTIFY_DEBUG_PORT
     delete process.env.FASTIFY_LOGGING_MODULE
+    delete process.env.FASTIFY_TRUST_PROXY_ENABLED
   })
 
   const parsedArgs = parseArgs([])
@@ -195,7 +197,7 @@ test('should parse env vars correctly', t => {
     method: undefined,
     commonPrefix: false,
     includeHooks: undefined,
-    trustProxy: undefined
+    trustProxy: true
   })
 })
 
