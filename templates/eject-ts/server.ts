@@ -16,7 +16,7 @@ const app = Fastify({
 // Register your application as a normal plugin.
 app.register(import("./app"));
 
-// delay is the number of milliseconds for the graceful close to finish 
+// delay is the number of milliseconds for the graceful close to finish
 closeWithGrace({ delay: parseInt(process.env.FASTIFY_CLOSE_GRACE_DELAY) || 500 }, async function ({ signal, err, manual }) {
   if (err) {
     app.log.error(err)
