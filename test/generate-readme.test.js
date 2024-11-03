@@ -2,15 +2,14 @@
 
 const path = require('node:path')
 const fs = require('node:fs')
-const t = require('tap')
+const {test} = require('node:test')
 const rimraf = require('rimraf')
 const { generate } = require('../generate-readme')
 
 const plugindir = path.join(__dirname, 'plugindir')
 const plugin = require(plugindir)
-const { test } = t
 
-test('should create readme', async (t) => {
+test('should create readme', async (t, done) => {
   t.plan(1)
   const pluginMeta = plugin[Symbol.for('plugin-meta')]
   const encapsulated = !plugin[Symbol.for('skip-override')]
@@ -18,9 +17,9 @@ test('should create readme', async (t) => {
   try {
     await generate(plugindir, { pluginMeta, encapsulated, pluginFileName })
     const readme = path.join(plugindir, 'README.md')
-    t.ok(fs.existsSync(readme))
-    rimraf(readme, () => t.end())
+    t.assert.ok(fs.existsSync(readme))
+    rimraf(readme, done)
   } catch (err) {
-    t.error(err)
+    t.assert.ifError(err)
   }
 })
