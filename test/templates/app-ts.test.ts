@@ -1,9 +1,9 @@
-import { fastify } from 'fastify'
-import { test } from 'tap'
+import { fastify } from 'fastify';
+import { test, TestContext } from 'node:test';
 const sgetOriginal = require('simple-get').concat
 
-import appDefault, { app } from '../../templates/app-ts/src/app'
-import {AddressInfo} from "net";
+import { AddressInfo } from "net";
+import appDefault, { app } from '../../templates/app-ts/src/app';
 
 const sget = (opts: Record<string, any>): Record<string, any> => {
     return new Promise((resolve, reject) => {
@@ -14,7 +14,7 @@ const sget = (opts: Record<string, any>): Record<string, any> => {
     })
 }
 
-test('should print routes for TS app', async t => {
+test('should print routes for TS app', async (t: TestContext)  => {
     t.plan(4)
 
     const fastifyApp = fastify({}, );
@@ -26,15 +26,15 @@ test('should print routes for TS app', async t => {
         method: 'GET',
         url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
     })
-    t.equal(response.statusCode, 200)
-    t.equal(response.headers['content-length'], '' + body.length)
-    t.same(JSON.parse(body), { root: true })
+    t.assert.equal(response.statusCode, 200)
+    t.assert.equal(response.headers['content-length'], '' + body.length)
+    t.assert.deepStrictEqual(JSON.parse(body), { root: true })
 
     await fastifyApp.close();
-    t.pass('server closed')
+    t.assert.ok('server closed')
 })
 
-test('should print routes for default TS app', async t => {
+test('should print routes for default TS app', async (t: TestContext) => {
     t.plan(4)
 
     const fastifyApp = fastify({}, );
@@ -46,10 +46,10 @@ test('should print routes for default TS app', async t => {
         method: 'GET',
         url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
     })
-    t.equal(response.statusCode, 200)
-    t.equal(response.headers['content-length'], '' + body.length)
-    t.same(JSON.parse(body), { root: true })
+    t.assert.equal(response.statusCode, 200)
+    t.assert.equal(response.headers['content-length'], '' + body.length)
+    t.assert.deepStrictEqual(JSON.parse(body), { root: true })
 
     await fastifyApp.close();
-    t.pass('server closed')
+    t.assert.ok('server closed')
 })
