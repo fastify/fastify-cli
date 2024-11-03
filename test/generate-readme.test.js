@@ -2,7 +2,7 @@
 
 const path = require('node:path')
 const fs = require('node:fs')
-const {test} = require('node:test')
+const { test } = require('node:test')
 const rimraf = require('rimraf')
 const { generate } = require('../generate-readme')
 

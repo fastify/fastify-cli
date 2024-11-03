@@ -1,6 +1,6 @@
 'use strict'
 
-const {test} = require('node:test')
+const { test } = require('node:test')
 const { execSync } = require('node:child_process')
 const { mkdirSync, readFileSync } = require('node:fs')
 const path = require('node:path')

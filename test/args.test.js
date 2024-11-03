@@ -1,6 +1,6 @@
 'use strict'
 
-const {test} = require('node:test')
+const { test } = require('node:test')
 const parseArgs = require('../args')
 
 test('should parse args correctly', t => {

@@ -2,7 +2,7 @@
 
 const { arrayToRegExp } = require('../lib/watch/utils')
 
-const {test} = require('node:test')
+const { test } = require('node:test')
 
 test('should equal expect RegExp', t => {
   t.plan(1)
