@@ -171,6 +171,9 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
 | Defines the maximum payload, in bytes,<br>that the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
 | Set the maximum ms delay before forcefully closing pending requests after receiving SIGTERM or SIGINT signals; and uncaughtException or unhandledRejection errors (default: 500)                                                           | `-g`         | `--close-grace-delay`     | `FASTIFY_CLOSE_GRACE_DELAY`     |
+| Set the boolean value for `trustProxy` (1st precedence)                                                                                 |               | `--trust-proxy-enabled` | `FASTIFY_TRUST_PROXY_ENABLED`         |
+| Set the IP/CIDR value for `trustProxy` (2nd precedence)                                                                                 |               | `--trust-proxy-ips` | `FASTIFY_TRUST_PROXY_IPS`             |
+| Set the nth hop value for `trustProxy` (3rd precedence)                                                                                 |               | `--trust-proxy-hop` | `FASTIFY_TRUST_PROXY_HOP`             |
 
 By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 
