@@ -21,6 +21,7 @@ test('should parse args correctly', t => {
     '--options', 'true',
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
+    '--force-close-connections', 'true',
     '--close-grace-delay', '30000',
     '--body-limit', '5242880',
     '--debug', 'true',
@@ -47,6 +48,7 @@ test('should parse args correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    forceCloseConnections: true,
     closeGraceDelay: 30000,
     pluginOptions: {},
     bodyLimit: 5242880,
@@ -78,6 +80,7 @@ test('should parse args with = assignment correctly', t => {
     '--options=true',
     '--prefix=FASTIFY_',
     '--plugin-timeout=500',
+    '--force-close-connections=true',
     '--close-grace-delay=30000',
     '--body-limit=5242880',
     '--debug=true',
@@ -104,6 +107,7 @@ test('should parse args with = assignment correctly', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    forceCloseConnections: true,
     closeGraceDelay: 30000,
     pluginOptions: {},
     bodyLimit: 5242880,
@@ -135,6 +139,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PREFIX = 'FASTIFY_'
   process.env.FASTIFY_BODY_LIMIT = '5242880'
   process.env.FASTIFY_PLUGIN_TIMEOUT = '500'
+  process.env.FASTIFY_FORCE_CLOSE_CONNECTIONS = 'true'
   process.env.FASTIFY_CLOSE_GRACE_DELAY = '30000'
   process.env.FASTIFY_DEBUG = 'true'
   process.env.FASTIFY_DEBUG_PORT = '1111'
@@ -156,6 +161,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PREFIX
     delete process.env.FASTIFY_BODY_LIMIT
     delete process.env.FASTIFY_PLUGIN_TIMEOUT
+    delete process.env.FASTIFY_FORCE_CLOSE_CONNECTIONS
     delete process.env.FASTIFY_CLOSE_GRACE_DELAY
     delete process.env.FASTIFY_DEBUG
     delete process.env.FASTIFY_DEBUG_PORT
@@ -181,6 +187,7 @@ test('should parse env vars correctly', t => {
     require: './require-module.js',
     import: './import-module.js',
     pluginTimeout: 500,
+    forceCloseConnections: true,
     closeGraceDelay: 30000,
     pluginOptions: {},
     debug: true,
@@ -195,7 +202,7 @@ test('should parse env vars correctly', t => {
 })
 
 test('should respect default values', t => {
-  t.plan(14)
+  t.plan(15)
 
   const argv = [
     'app.js'
@@ -211,6 +218,7 @@ test('should respect default values', t => {
   t.equal(parsedArgs.verboseWatch, false)
   t.equal(parsedArgs.logLevel, 'fatal')
   t.equal(parsedArgs.pluginTimeout, 10000)
+  t.equal(parsedArgs.forceCloseConnections, undefined)
   t.equal(parsedArgs.closeGraceDelay, 500)
   t.equal(parsedArgs.debug, false)
   t.equal(parsedArgs.debugPort, 9320)
@@ -236,6 +244,7 @@ test('should parse custom plugin options', t => {
     '--options', 'true',
     '--prefix', 'FASTIFY_',
     '--plugin-timeout', '500',
+    '--force-close-connections', 'true',
     '--close-grace-delay', '30000',
     '--body-limit', '5242880',
     '--debug', 'true',
@@ -269,6 +278,7 @@ test('should parse custom plugin options', t => {
     logLevel: 'info',
     prefix: 'FASTIFY_',
     pluginTimeout: 500,
+    forceCloseConnections: true,
     closeGraceDelay: 30000,
     pluginOptions: {
       a: true,
@@ -303,6 +313,7 @@ test('should parse config file correctly and prefer config values over default o
     port: 5000,
     bodyLimit: undefined,
     pluginTimeout: 9000,
+    forceCloseConnections: true,
     closeGraceDelay: 1000,
     pluginOptions: {},
     prettyLogs: true,
@@ -335,6 +346,7 @@ test('should prefer command line args over config file options', t => {
     '--port', '4000',
     '--debugPort', '9320',
     '--plugin-timeout', '10000',
+    '--force-close-connections', 'false',
     '--close-grace-delay', '30000',
     'app.js'
   ]
@@ -346,6 +358,7 @@ test('should prefer command line args over config file options', t => {
     port: 4000,
     bodyLimit: undefined,
     pluginTimeout: 10000,
+    forceCloseConnections: false,
     closeGraceDelay: 30000,
     pluginOptions: {},
     prettyLogs: true,

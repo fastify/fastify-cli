@@ -169,6 +169,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |
+| Set forceCloseConnections option on fastify instance                                                                                    | `-f`          | `--force-close-connections` | `FASTIFY_FORCE_CLOSE_CONNECTIONS` |
 | Defines the maximum payload, in bytes,<br>that the server is allowed to accept                                                               |               | `--body-limit`     | `FASTIFY_BODY_LIMIT`     |
 | Set the maximum ms delay before forcefully closing pending requests after receiving SIGTERM or SIGINT signals; and uncaughtException or unhandledRejection errors (default: 500)                                                           | `-g`         | `--close-grace-delay`     | `FASTIFY_CLOSE_GRACE_DELAY`     |
 

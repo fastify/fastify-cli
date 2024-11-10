@@ -139,6 +139,10 @@ async function runFastify (args, additionalOptions, serverOptions) {
     options.bodyLimit = opts.bodyLimit
   }
 
+  if (opts.forceCloseConnections) {
+    options.forceCloseConnections = opts.forceCloseConnections
+  }
+
   if (opts.prettyLogs) {
     options.logger.transport = {
       target: 'pino-pretty'
