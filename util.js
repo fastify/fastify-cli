@@ -39,6 +39,22 @@ async function requireESModule (moduleName) {
   }
 }
 
+async function requireModuleDefaultExport (moduleName) {
+  if (fs.existsSync(moduleName)) {
+    const packageType = await getPackageType(path.dirname(moduleName))
+    const type = getScriptType(moduleName, packageType)
+
+    const moduleFilePath = path.resolve(moduleName)
+    if (type === 'module') {
+      return (await import(url.pathToFileURL(moduleFilePath))).default
+    } else {
+      return require(moduleFilePath);
+    }
+  } else {
+    return (await import(moduleName)).default
+  }
+}
+
 function requireFastifyForModule (modulePath) {
   try {
     const basedir = path.resolve(process.cwd(), modulePath)
@@ -118,6 +134,7 @@ module.exports = {
   exit,
   requireModule,
   requireESModule,
+  requireModuleDefaultExport,
   requireFastifyForModule,
   showHelpForCommand,
   requireServerPluginFromPath
