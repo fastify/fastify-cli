@@ -48,7 +48,7 @@ async function requireModuleDefaultExport (moduleName) {
     if (type === 'module') {
       return (await import(url.pathToFileURL(moduleFilePath))).default
     } else {
-      return require(moduleFilePath);
+      return require(moduleFilePath)
     }
   } else {
     return (await import(moduleName)).default
