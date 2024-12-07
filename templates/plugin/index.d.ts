@@ -7,7 +7,7 @@ declare module 'fastify' {
   }
 }
 
-declare const example: FastifyPluginCallback<() => string>
+declare const example: FastifyPluginCallback<{}>
 
 export { example }
 export default example
