@@ -1,7 +1,6 @@
 'use strict'
 
-const t = require('tap')
-const test = t.test
+const { test } = require('node:test')
 const parseArgs = require('../args')
 
 test('should parse args correctly', t => {
@@ -32,7 +31,7 @@ test('should parse args correctly', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
     prettyLogs: true,
@@ -91,7 +90,7 @@ test('should parse args with = assignment correctly', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
     prettyLogs: true,
@@ -146,7 +145,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_LOGGING_MODULE = './custom-logger.js'
   process.env.FASTIFY_TRUST_PROXY_ENABLED = 'true'
 
-  t.teardown(function () {
+  t.after(() => {
     delete process.env.FASTIFY_PORT
     delete process.env.FASTIFY_ADDRESS
     delete process.env.FASTIFY_SOCKET
@@ -170,7 +169,7 @@ test('should parse env vars correctly', t => {
 
   const parsedArgs = parseArgs([])
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: [],
     '--': [],
     prettyLogs: true,
@@ -210,20 +209,20 @@ test('should respect default values', t => {
 
   const parsedArgs = parseArgs(argv)
 
-  t.equal(parsedArgs._[0], 'app.js')
-  t.equal(parsedArgs.options, false)
-  t.equal(parsedArgs.prettyLogs, false)
-  t.equal(parsedArgs.watch, false)
-  t.equal(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
-  t.equal(parsedArgs.verboseWatch, false)
-  t.equal(parsedArgs.logLevel, 'fatal')
-  t.equal(parsedArgs.pluginTimeout, 10000)
-  t.equal(parsedArgs.closeGraceDelay, 500)
-  t.equal(parsedArgs.debug, false)
-  t.equal(parsedArgs.debugPort, 9320)
-  t.equal(parsedArgs.loggingModule, undefined)
-  t.equal(parsedArgs.require, undefined)
-  t.equal(parsedArgs.import, undefined)
+  t.assert.equal(parsedArgs._[0], 'app.js')
+  t.assert.equal(parsedArgs.options, false)
+  t.assert.equal(parsedArgs.prettyLogs, false)
+  t.assert.equal(parsedArgs.watch, false)
+  t.assert.equal(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
+  t.assert.equal(parsedArgs.verboseWatch, false)
+  t.assert.equal(parsedArgs.logLevel, 'fatal')
+  t.assert.equal(parsedArgs.pluginTimeout, 10000)
+  t.assert.equal(parsedArgs.closeGraceDelay, 500)
+  t.assert.equal(parsedArgs.debug, false)
+  t.assert.equal(parsedArgs.debugPort, 9320)
+  t.assert.equal(parsedArgs.loggingModule, undefined)
+  t.assert.equal(parsedArgs.require, undefined)
+  t.assert.equal(parsedArgs.import, undefined)
 })
 
 test('should parse custom plugin options', t => {
@@ -256,7 +255,7 @@ test('should parse custom plugin options', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [
       '-abc',
@@ -305,7 +304,7 @@ test('should parse config file correctly and prefer config values over default o
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
     port: 5000,
@@ -349,7 +348,7 @@ test('should prefer command line args over config file options', t => {
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
     port: 4000,
