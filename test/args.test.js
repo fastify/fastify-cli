@@ -380,7 +380,7 @@ test('should prefer command line args over config file options', t => {
 })
 
 test('should favor trust proxy enabled over trust proxy ips and trust proxy hop', t => {
-  t.plan(1);
+  t.plan(1)
 
   const argv = [
     '--port', '4000',
@@ -394,7 +394,7 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
     port: 4000,
@@ -425,8 +425,8 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
   })
 })
 
-test('should favor trust proxy enabled over trust proxy ips and trust proxy hop', t => {
-  t.plan(1);
+test('should favor trust proxy ips over trust proxy hop', t => {
+  t.plan(1)
 
   const argv = [
     '--port', '4000',
@@ -439,7 +439,7 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
   ]
   const parsedArgs = parseArgs(argv)
 
-  t.strictSame(parsedArgs, {
+  t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
     port: 4000,

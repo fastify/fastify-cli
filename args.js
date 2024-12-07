@@ -68,9 +68,10 @@ module.exports = function parseArgs (args) {
   const parsedArgs = { ...DEFAULT_ARGUMENTS, ...configFileOptions, ...commandLineArguments }
 
   // Set `trustProxy` with enabled taking precedence, followed by IPs and finally hop count
-  const trustProxyEnabled = parsedArgs.trustProxyEnabled === undefined ? undefined :
-    parsedArgs.trustProxyEnabled === true || parsedArgs.trustProxyEnabled === 'true';
-  const trustProxy = trustProxyEnabled || parsedArgs.trustProxyIps || parsedArgs.trustProxyHop;
+  const trustProxyEnabled = parsedArgs.trustProxyEnabled === undefined
+    ? undefined
+    : parsedArgs.trustProxyEnabled === true || parsedArgs.trustProxyEnabled === 'true'
+  const trustProxy = trustProxyEnabled || parsedArgs.trustProxyIps || parsedArgs.trustProxyHop
 
   return {
     _: parsedArgs._,

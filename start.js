@@ -165,7 +165,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
   }
 
   if (opts.trustProxy) {
-    options.trustProxy = opts.trustProxy;
+    options.trustProxy = opts.trustProxy
   }
 
   const fastify = Fastify(options)
