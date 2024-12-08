@@ -947,6 +947,17 @@ test('should support custom logger configuration', async t => {
   t.pass('server closed')
 })
 
+test('should support custom logger configuration in ESM', async t => {
+  t.plan(2)
+
+  const argv = ['-L', './test/data/custom-logger.mjs', './examples/plugin.js']
+  const fastify = await start.start(argv)
+  t.ok(fastify.log.test)
+
+  await fastify.close()
+  t.pass('server closed')
+})
+
 test('preloading a built-in module works', async t => {
   t.plan(1)
 
