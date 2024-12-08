@@ -5,7 +5,7 @@ import * as test from 'node:test'
 
 export type TestContext = {
   after: typeof test.after
-};
+}
 
 const AppPath = path.join(__dirname, '..', 'src', 'app.ts')
 
