@@ -16,6 +16,7 @@ const {
   exit,
   requireModule,
   requireESModule,
+  requireModuleDefaultExport,
   requireFastifyForModule,
   requireServerPluginFromPath,
   showHelpForCommand,
@@ -120,7 +121,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
   let logger
   if (opts.loggingModule) {
     try {
-      logger = requireModule(opts.loggingModule)
+      logger = await requireModuleDefaultExport(opts.loggingModule)
     } catch (e) {
       module.exports.stop(e)
     }
