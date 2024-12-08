@@ -6,21 +6,21 @@ import { AddressInfo } from "net";
 import appDefault, { app } from '../../templates/app-ts/src/app';
 
 const sget = (opts: Record<string, any>): Record<string, any> => {
-    return new Promise((resolve, reject) => {
-        sgetOriginal(opts, (err: Error, response: any, body: any) => {
-            if (err) return reject(err)
-            return resolve({ response, body })
-        })
+  return new Promise((resolve, reject) => {
+    sgetOriginal(opts, (err: Error, response: any, body: any) => {
+      if (err) return reject(err)
+      return resolve({ response, body })
     })
+  })
 }
 
 test('should print routes for TS app', async (t: TestContext)  => {
     t.plan(4)
 
-    const fastifyApp = fastify({}, );
-    await app(fastifyApp, {});
-    await fastifyApp.ready();
-    await fastifyApp.listen({ port: 3000 })
+  const fastifyApp = fastify({})
+  await app(fastifyApp, {})
+  await fastifyApp.ready()
+  await fastifyApp.listen({ port: 3000 })
 
     const { response, body } = await sget({
         method: 'GET',
@@ -37,10 +37,10 @@ test('should print routes for TS app', async (t: TestContext)  => {
 test('should print routes for default TS app', async (t: TestContext) => {
     t.plan(4)
 
-    const fastifyApp = fastify({}, );
-    await appDefault(fastifyApp, {});
-    await fastifyApp.ready();
-    await fastifyApp.listen({ port: 3000 })
+  const fastifyApp = fastify({})
+  await appDefault(fastifyApp, {})
+  await fastifyApp.ready()
+  await fastifyApp.listen({ port: 3000 })
 
     const { response, body } = await sget({
         method: 'GET',
