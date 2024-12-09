@@ -27,9 +27,9 @@ module.exports = function parseArgs (args) {
     configuration: {
       'populate--': true
     },
-    number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks'],
+    number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay', 'trust-proxy-hop'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method', 'trust-proxy-ips'],
+    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks', 'trust-proxy-enabled'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -67,6 +67,12 @@ module.exports = function parseArgs (args) {
   // Merge objects from lower to higher priority
   const parsedArgs = { ...DEFAULT_ARGUMENTS, ...configFileOptions, ...commandLineArguments }
 
+  // Set `trustProxy` with enabled taking precedence, followed by IPs and finally hop count
+  const trustProxyEnabled = parsedArgs.trustProxyEnabled === undefined
+    ? undefined
+    : parsedArgs.trustProxyEnabled === true || parsedArgs.trustProxyEnabled === 'true'
+  const trustProxy = trustProxyEnabled || parsedArgs.trustProxyIps || parsedArgs.trustProxyHop
+
   return {
     _: parsedArgs._,
     '--': additionalArgs,
@@ -93,6 +99,7 @@ module.exports = function parseArgs (args) {
     lang: parsedArgs.lang,
     method: parsedArgs.method,
     commonPrefix: parsedArgs.commonPrefix,
-    includeHooks: parsedArgs.includeHooks
+    includeHooks: parsedArgs.includeHooks,
+    trustProxy
   }
 }
