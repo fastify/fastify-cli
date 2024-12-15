@@ -12,7 +12,9 @@ const AppPath = path.join(__dirname, '..', 'src', 'app.ts')
 // Fill in this config with all the configurations
 // needed for testing the application
 async function config () {
-  return {}
+  return {
+    skipOverride: true // Register our application with fastify-plugin
+  }
 }
 
 // Automatically build and tear down our instance
