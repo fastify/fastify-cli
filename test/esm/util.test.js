@@ -1,7 +1,7 @@
 import { requireModule } from '../../util.js'
 import { resolve, join } from 'node:path'
 import t from 'tap'
-import * as url from 'url'
+import * as url from 'node:url'
 
 const test = t.test
 
