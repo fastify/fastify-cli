@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join } from 'node:path';
 import AutoLoad, {AutoloadPluginOptions} from '@fastify/autoload';
 import { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 
