@@ -1,9 +1,9 @@
-import { fastify } from 'fastify';
-import { test, TestContext } from 'node:test';
-const sgetOriginal = require('simple-get').concat
+import { fastify } from 'fastify'
+import { test, TestContext } from 'node:test'
 
-import { AddressInfo } from "net";
-import appDefault, { app } from '../../templates/app-ts/src/app';
+import { AddressInfo } from 'net'
+import appDefault, { app } from '../../templates/app-ts/src/app'
+const sgetOriginal = require('simple-get').concat
 
 const sget = (opts: Record<string, any>): Record<string, any> => {
   return new Promise((resolve, reject) => {
@@ -14,42 +14,42 @@ const sget = (opts: Record<string, any>): Record<string, any> => {
   })
 }
 
-test('should print routes for TS app', async (t: TestContext)  => {
-    t.plan(4)
+test('should print routes for TS app', async (t: TestContext) => {
+  t.plan(4)
 
   const fastifyApp = fastify({})
   await app(fastifyApp, {})
   await fastifyApp.ready()
   await fastifyApp.listen({ port: 3000 })
 
-    const { response, body } = await sget({
-        method: 'GET',
-        url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
-    })
-    t.assert.equal(response.statusCode, 200)
-    t.assert.equal(response.headers['content-length'], '' + body.length)
-    t.assert.deepStrictEqual(JSON.parse(body), { root: true })
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
+  })
+  t.assert.equal(response.statusCode, 200)
+  t.assert.equal(response.headers['content-length'], '' + body.length)
+  t.assert.deepStrictEqual(JSON.parse(body), { root: true })
 
-    await fastifyApp.close();
-    t.assert.ok('server closed')
+  await fastifyApp.close()
+  t.assert.ok('server closed')
 })
 
 test('should print routes for default TS app', async (t: TestContext) => {
-    t.plan(4)
+  t.plan(4)
 
   const fastifyApp = fastify({})
   await appDefault(fastifyApp, {})
   await fastifyApp.ready()
   await fastifyApp.listen({ port: 3000 })
 
-    const { response, body } = await sget({
-        method: 'GET',
-        url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
-    })
-    t.assert.equal(response.statusCode, 200)
-    t.assert.equal(response.headers['content-length'], '' + body.length)
-    t.assert.deepStrictEqual(JSON.parse(body), { root: true })
+  const { response, body } = await sget({
+    method: 'GET',
+    url: `http://localhost:${(fastifyApp.server.address() as AddressInfo).port}`
+  })
+  t.assert.equal(response.statusCode, 200)
+  t.assert.equal(response.headers['content-length'], '' + body.length)
+  t.assert.deepStrictEqual(JSON.parse(body), { root: true })
 
-    await fastifyApp.close();
-    t.assert.ok('server closed')
+  await fastifyApp.close()
+  t.assert.ok('server closed')
 })
