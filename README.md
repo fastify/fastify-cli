@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/fastify/fastify-cli/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/fastify/fastify-cli/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/fastify-cli.svg?style=flat)](https://www.npmjs.com/package/fastify-cli)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)
+[![neostandard javascript style](https://img.shields.io/badge/code_style-neostandard-brightgreen?style=flat)](https://github.com/neostandard/neostandard)
 
 Command line tools for [Fastify](https://github.com/fastify/fastify).
 Generate, write, and run an application with one single command!
@@ -326,15 +326,15 @@ if your project uses `@fastify/swagger`, `fastify-cli` can generate and write ou
 
 ```diff
 "devDependencies": {
-+ "standard": "^11.0.1",
++ "neostandard": "^0.11.9",
 }
 
 "scripts": {
-+ "pretest": "standard",
++ "pretest": "eslint",
   "test": "node --test test/**/*.test.js",
   "start": "fastify start -l info app.js",
   "dev": "fastify start -l info -P app.js",
-+ "lint": "standard --fix"
++ "lint": "eslint --fix"
 },
 ```
 
