@@ -31,6 +31,7 @@ async function build (t: TestContext) {
   const app = await helper.build(argv, config())
 
   // Tear down our app after we are done
+  // eslint-disable-next-line no-void
   t.after(() => void app.close())
 
   return app
