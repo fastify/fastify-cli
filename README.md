@@ -175,10 +175,10 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Set the IP/CIDR value for `trustProxy` (2nd precedence)                                                                                 |               | `--trust-proxy-ips` | `FASTIFY_TRUST_PROXY_IPS`             |
 | Set the nth hop value for `trustProxy` (3rd precedence)                                                                                 |               | `--trust-proxy-hop` | `FASTIFY_TRUST_PROXY_HOP`             |
 
-By default `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
+By default, `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
 
 The default value for `--plugin-timeout` is 10 seconds.
-By default `--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp' files.
+By default,`--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp' files.
 
 #### Containerization
 
@@ -266,11 +266,11 @@ It is a standard Fastify plugin and you will not need to add the `listen` method
 If the target directory exists `fastify generate` will fail unless the target directory is `.`, as in the current directory.
 
 If the target directory is the current directory (`.`) and it already contains a `package.json` file, `fastify generate` will fail. This can
-be overidden with the `--integrate` flag:
+be overridden with the `--integrate` flag:
 
 `fastify generate . --integrate`
 
-This will add or alter the `main`, `scripts`, `dependencies` and `devDependencies` fields on the `package.json`. In cases of file name collisions
+This will add or alter the `main`, `scripts`, `dependencies`, and `devDependencies` fields on the `package.json`. In cases of file name collisions
 for any files being added, the file will be overwritten with the new file added by `fastify generate`. If there is an existing `app.js` in this scenario,
 it will be overwritten. Use the `--integrate` flag with care.
 
@@ -322,7 +322,7 @@ if your project uses `@fastify/swagger`, `fastify-cli` can generate and write ou
 
 ### linting
 
-`fastify-cli` is unopinionated on the choice of linter. We recommend you to add a linter, like so:
+`fastify-cli` is unopinionated on the choice of linter. We recommend you add a linter, like so:
 
 ```diff
 "devDependencies": {
@@ -341,7 +341,7 @@ if your project uses `@fastify/swagger`, `fastify-cli` can generate and write ou
 ## Test helpers
 
 When you use `fastify-cli` to run your project you need a way to load your application because you can run the CLI command.
-To do so, you can use the this module to load your application and give you the control to write your assertions.
+To do so, you can use this module to load your application and give you the control to write your assertions.
 These utilities are async functions that you may use with the [`Node Test runner`](https://nodejs.org/api/test.html).
 
 There are two utilities provided:
