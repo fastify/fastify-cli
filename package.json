@@ -79,7 +79,7 @@
     "c8": "^10.1.2",
     "concurrently": "^9.0.0",
     "cross-env": "^7.0.3",
-    "fastify-tsconfig": "^2.0.0",
+    "fastify-tsconfig": "^3.0.0",
     "glob": "^11.0.1",
     "minimatch": "^9.0.5",
     "proxyquire": "^2.1.3",
