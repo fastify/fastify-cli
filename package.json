@@ -8,8 +8,8 @@
     "fastify": "cli.js"
   },
   "scripts": {
-    "lint": "standard",
-    "lint:fix": "standard --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "pretest": "xcopy /e /k /i . \"..\\node_modules\\fastify-cli\" || rsync -r --exclude=node_modules ./ node_modules/fastify-cli || echo 'this is fine'",
     "test": "npm run unit:suites && c8 --clean npm run test:cli-and-typescript",
     "unit:cjs": "node suite-runner.js \"templates/app/test/**/*.test.js\"",
@@ -46,12 +46,6 @@
     "url": "https://github.com/fastify/fastify-cli/issues"
   },
   "homepage": "https://github.com/fastify/fastify-cli#readme",
-  "standard": {
-    "ignore": [
-      "test/data/parsing-error.js",
-      "test/data/undefinedVariable.js"
-    ]
-  },
   "dependencies": {
     "@fastify/deepmerge": "^2.0.0",
     "chalk": "^4.1.2",
@@ -79,14 +73,15 @@
     "c8": "^10.1.2",
     "concurrently": "^9.0.0",
     "cross-env": "^7.0.3",
+    "eslint": "^9.17.0",
     "fastify-tsconfig": "^3.0.0",
     "glob": "^11.0.1",
     "minimatch": "^9.0.5",
+    "neostandard": "^0.12.0",
     "proxyquire": "^2.1.3",
     "rimraf": "^3.0.2",
     "simple-get": "^4.0.0",
     "sinon": "^19.0.2",
-    "standard": "^17.0.0",
     "strip-ansi": "^6.0.1",
     "tap": "^16.1.0",
     "ts-node": "^10.4.0",
