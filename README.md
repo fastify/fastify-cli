@@ -165,6 +165,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload                                 | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
+| Watch changes only into the specified files or directories when watch is enabled. (e.g. `--follow-watch='plugins/'` )                   |               | `--follow-watch`   | `FASTIFY_FOLLOW_WATCH`   |
 | Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |     `-V`          | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
