@@ -137,6 +137,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
   process.env.FASTIFY_IGNORE_WATCH = 'ignoreme.js'
+  process.env.FASTIFY_FOLLOW_WATCH = 'plugin/'
   process.env.FASTIFY_VERBOSE_WATCH = 'true'
   process.env.FASTIFY_OPTIONS = 'true'
   process.env.FASTIFY_PREFIX = 'FASTIFY_'
@@ -159,6 +160,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PRETTY_LOGS
     delete process.env.FASTIFY_WATCH
     delete process.env.FASTIFY_IGNORE_WATCH
+    delete process.env.FASTIFY_FOLLOW_WATCH
     delete process.env.FASTIFY_VERBOSE_WATCH
     delete process.env.FASTIFY_OPTIONS
     delete process.env.FASTIFY_PREFIX
@@ -180,7 +182,7 @@ test('should parse env vars correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
-    followWatch: '',
+    followWatch: 'plugin/',
     verboseWatch: true,
     address: 'fastify.dev:9999',
     bodyLimit: 5242880,
