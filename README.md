@@ -1,6 +1,6 @@
 # fastify-cli
 
-[![CI](https://github.com/fastify/fastify-cli/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/fastify/fastify-cli/actions/workflows/ci.yml)
+[![CI](https://github.com/fastify/fastify-cli/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/fastify/fastify-cli/actions/workflows/ci.yml)
 [![NPM version](https://img.shields.io/npm/v/fastify-cli.svg?style=flat)](https://www.npmjs.com/package/fastify-cli)
 [![neostandard javascript style](https://img.shields.io/badge/code_style-neostandard-brightgreen?style=flat)](https://github.com/neostandard/neostandard)
 
@@ -411,4 +411,4 @@ Instead of using the `fastify` keyword before each command, use `node cli.js`
 <br/>Example: replace `fastify start` with `node cli.js start`
 
 ## License
-**[MIT](https://github.com/fastify/fastify-cli/blob/master/LICENSE)**
+**[MIT](https://github.com/fastify/fastify-cli/blob/main/LICENSE)**
