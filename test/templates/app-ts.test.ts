@@ -1,7 +1,7 @@
 import { fastify } from 'fastify'
 import { test, TestContext } from 'node:test'
 
-import { AddressInfo } from 'net'
+import { AddressInfo } from 'node:net'
 import appDefault, { app } from '../../templates/app-ts/src/app'
 const sgetOriginal = require('simple-get').concat
 
