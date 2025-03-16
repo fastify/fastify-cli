@@ -100,15 +100,34 @@ function define (t) {
   })
 
   test('should finish succesfully', async (t) => {
-    t.plan(17 + Object.keys(expected).length)
+    t.plan(18 + Object.keys(expected).length)
     try {
       await generate(workdir, pluginTemplate)
       await verifyPkg(t)
       await verifyCopy(t, expected)
+      await verifyFastifyPluginVersion(t)
     } catch (err) {
       t.error(err)
     }
   })
+
+  function verifyFastifyPluginVersion (t) {
+    return new Promise((resolve, reject) => {
+      const pkgFile = path.join(workdir, 'package.json')
+
+      readFile(pkgFile, function (err, data) {
+        err && reject(err)
+        const pkg = JSON.parse(data)
+        const indexFilePath = path.join(workdir, 'index.js')
+        const indexFile = readFileSync(indexFilePath)
+        const version = pkg.dependencies['fastify-plugin']
+        const majorToMatch = version.split('.')[0]
+        const foundCorrectFastifyVersion = indexFile.toString().indexOf(`fastify: '${majorToMatch}.x'`) >= 0
+        t.equal(foundCorrectFastifyVersion, true)
+        resolve()
+      })
+    })
+  }
 
   function verifyPkg (t) {
     return new Promise((resolve, reject) => {
