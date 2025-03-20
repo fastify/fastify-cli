@@ -19,6 +19,8 @@ const templateDir = path.join(__dirname, '..', 'templates', 'plugin')
 const cliPkg = require('../package')
 const { exec, execSync } = require('node:child_process')
 const strip = require('strip-ansi')
+const semver = require('semver')
+
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
 
@@ -113,19 +115,16 @@ function define (t) {
 
   function verifyFastifyPluginVersion (t) {
     return new Promise((resolve, reject) => {
-      const pkgFile = path.join(workdir, 'package.json')
-
-      readFile(pkgFile, function (err, data) {
-        err && reject(err)
-        const pkg = JSON.parse(data)
-        const indexFilePath = path.join(workdir, 'index.js')
-        const indexFile = readFileSync(indexFilePath)
-        const version = pkg.dependencies['fastify-plugin']
-        const majorToMatch = version.split('.')[0]
-        const foundCorrectFastifyVersion = indexFile.toString().indexOf(`fastify: '${majorToMatch}.x'`) >= 0
-        t.equal(foundCorrectFastifyVersion, true)
-        resolve()
-      })
+      const pluginPath = path.join(workdir, 'index.js')
+      const plugin = require(pluginPath)
+      const pkgPath = path.join(__dirname, '../', 'package.json')
+      const pkg = require(pkgPath)
+      const pluginMeta = plugin[Symbol.for('plugin-meta')]
+      const pluginVersion = pluginMeta.fastify
+      const pkgVersion = pkg.dependencies.fastify
+      const satified = semver.intersects(pluginVersion, pkgVersion)
+      t.ok(satified, 'meta should be the same')
+      resolve()
     })
   }
 
