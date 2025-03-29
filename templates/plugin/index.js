@@ -6,4 +6,4 @@ module.exports = fp(async function (fastify, opts) {
   fastify.decorate('exampleDecorator', () => {
     return 'decorated'
   })
-}, { fastify: '^4.x' })
+}, { fastify: '^5.x' })

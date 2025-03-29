@@ -19,6 +19,8 @@ const templateDir = path.join(__dirname, '..', 'templates', 'plugin')
 const cliPkg = require('../package')
 const { exec, execSync } = require('node:child_process')
 const strip = require('strip-ansi')
+const semver = require('semver')
+
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
 
@@ -100,15 +102,31 @@ function define (t) {
   })
 
   test('should finish succesfully', async (t) => {
-    t.plan(17 + Object.keys(expected).length)
+    t.plan(18 + Object.keys(expected).length)
     try {
       await generate(workdir, pluginTemplate)
       await verifyPkg(t)
       await verifyCopy(t, expected)
+      await verifyFastifyPluginVersion(t)
     } catch (err) {
       t.error(err)
     }
   })
+
+  function verifyFastifyPluginVersion (t) {
+    return new Promise((resolve, reject) => {
+      const pluginPath = path.join(workdir, 'index.js')
+      const plugin = require(pluginPath)
+      const pkgPath = path.join(__dirname, '../', 'package.json')
+      const pkg = require(pkgPath)
+      const pluginMeta = plugin[Symbol.for('plugin-meta')]
+      const pluginVersion = pluginMeta.fastify
+      const pkgVersion = pkg.dependencies.fastify
+      const satified = semver.intersects(pluginVersion, pkgVersion)
+      t.ok(satified, 'meta should be the same')
+      resolve()
+    })
+  }
 
   function verifyPkg (t) {
     return new Promise((resolve, reject) => {
