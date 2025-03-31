@@ -25,4 +25,3 @@ jobs:
     uses: fastify/workflows/.github/workflows/plugins-ci.yml@v5
     with:
       lint: true
-      auto-merge-exclude: 'help-me'
