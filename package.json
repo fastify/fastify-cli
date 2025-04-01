@@ -47,7 +47,7 @@
   },
   "homepage": "https://github.com/fastify/fastify-cli#readme",
   "dependencies": {
-    "@fastify/deepmerge": "^2.0.0",
+    "@fastify/deepmerge": "^3.0.0",
     "chalk": "^4.1.2",
     "chokidar": "^4.0.0",
     "close-with-grace": "^2.1.0",
