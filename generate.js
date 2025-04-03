@@ -162,6 +162,7 @@ function cli (args) {
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
       template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
+      template.scripts.dev = 'NODE_OPTIONS="--experimental-strip-types" FASTIFY_AUTOLOAD_TYPESCRIPT=1 fastify start -l info src/app.ts'
     }
   } else {
     template = { ...javascriptTemplate }
