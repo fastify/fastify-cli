@@ -16,6 +16,7 @@ test('should parse args correctly', t => {
     '--pretty-logs', 'true',
     '--watch', 'true',
     '--ignore-watch', 'ignoreme.js',
+    '--follow-watch', 'watchme.js',
     '--verbose-watch', 'true',
     '--options', 'true',
     '--prefix', 'FASTIFY_',
@@ -38,6 +39,7 @@ test('should parse args correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
+    followWatch: 'watchme.js',
     verboseWatch: true,
     port: 7777,
     address: 'fastify.dev:9999',
@@ -75,6 +77,7 @@ test('should parse args with = assignment correctly', t => {
     '--pretty-logs=true',
     '--watch=true',
     '--ignore-watch=ignoreme.js',
+    '--follow-watch=watchme.js',
     '--verbose-watch=true',
     '--options=true',
     '--prefix=FASTIFY_',
@@ -97,6 +100,7 @@ test('should parse args with = assignment correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
+    followWatch: 'watchme.js',
     verboseWatch: true,
     port: 7777,
     address: 'fastify.dev:9999',
@@ -133,6 +137,7 @@ test('should parse env vars correctly', t => {
   process.env.FASTIFY_PRETTY_LOGS = 'true'
   process.env.FASTIFY_WATCH = 'true'
   process.env.FASTIFY_IGNORE_WATCH = 'ignoreme.js'
+  process.env.FASTIFY_FOLLOW_WATCH = 'plugin/'
   process.env.FASTIFY_VERBOSE_WATCH = 'true'
   process.env.FASTIFY_OPTIONS = 'true'
   process.env.FASTIFY_PREFIX = 'FASTIFY_'
@@ -155,6 +160,7 @@ test('should parse env vars correctly', t => {
     delete process.env.FASTIFY_PRETTY_LOGS
     delete process.env.FASTIFY_WATCH
     delete process.env.FASTIFY_IGNORE_WATCH
+    delete process.env.FASTIFY_FOLLOW_WATCH
     delete process.env.FASTIFY_VERBOSE_WATCH
     delete process.env.FASTIFY_OPTIONS
     delete process.env.FASTIFY_PREFIX
@@ -176,6 +182,7 @@ test('should parse env vars correctly', t => {
     options: true,
     watch: true,
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
+    followWatch: 'plugin/',
     verboseWatch: true,
     address: 'fastify.dev:9999',
     bodyLimit: 5242880,
@@ -238,6 +245,7 @@ test('should parse custom plugin options', t => {
     '--pretty-logs', 'true',
     '--watch', 'true',
     '--ignore-watch', 'ignoreme.js',
+    '--follow-watch', 'watchme.js',
     '--verbose-watch', 'true',
     '--options', 'true',
     '--prefix', 'FASTIFY_',
@@ -266,6 +274,7 @@ test('should parse custom plugin options', t => {
     options: true,
     watch: true,
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
+    followWatch: 'watchme.js',
     verboseWatch: true,
     port: 7777,
     address: 'fastify.dev:9999',
@@ -319,6 +328,7 @@ test('should parse config file correctly and prefer config values over default o
     debugPort: 4000,
     debugHost: '1.1.1.1',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    followWatch: '',
     verboseWatch: false,
     logLevel: 'fatal',
     address: 'fastify.dev:9999',
@@ -363,6 +373,7 @@ test('should prefer command line args over config file options', t => {
     debugPort: 9320,
     debugHost: '1.1.1.1',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    followWatch: '',
     verboseWatch: false,
     logLevel: 'fatal',
     address: 'fastify.dev:9999',
@@ -409,6 +420,7 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
     debugPort: 1111,
     debugHost: '1.1.1.1',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    followWatch: '',
     verboseWatch: false,
     logLevel: 'fatal',
     address: undefined,
@@ -454,6 +466,7 @@ test('should favor trust proxy ips over trust proxy hop', t => {
     debugPort: 1111,
     debugHost: '1.1.1.1',
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output',
+    followWatch: '',
     verboseWatch: false,
     logLevel: 'fatal',
     address: undefined,
