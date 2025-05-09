@@ -65,6 +65,10 @@ async function runFastify (opts) {
     return module.exports.stop(e)
   }
 
+  if(opts.options && file.options) {
+    opts.options = file.options
+  }
+
   const fastify = Fastify(opts.options)
 
   const pluginOptions = {}
