@@ -2,7 +2,7 @@ import fastify from 'fastify'
 
 declare module 'fastify-cli/helper.js' {
   module helper {
-    export function build (args: Array<string>, additionalOptions?: Object, serverOptions?: Object, module?: Object): ReturnType<typeof fastify>
+    export function build (args: Array<string>, additionalOptions?: Object, serverOptions?: Object, serverModule?: Object): ReturnType<typeof fastify>
   }
 
   export = helper
