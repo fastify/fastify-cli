@@ -96,7 +96,7 @@ async function preloadESModules (opts) {
   })
 }
 
-async function runFastify (args, additionalOptions, serverOptions) {
+async function runFastify (args, additionalOptions, serverOptions, module) {
   const opts = parseArgs(args)
 
   if (opts.require) {
@@ -113,7 +113,11 @@ async function runFastify (args, additionalOptions, serverOptions) {
   let file = null
 
   try {
-    file = await requireServerPluginFromPath(opts._[0])
+    if (module != null) {
+      file = module
+    } else {
+      file = await requireServerPluginFromPath(opts._[0])
+    }
   } catch (e) {
     return module.exports.stop(e)
   }
