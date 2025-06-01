@@ -26,7 +26,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
     options: opts
   })
 
-  // This loads all plugins defined in routes
+  // This loads all routes defined in routes
   // define your routes in one of these
   // eslint-disable-next-line no-void
   void fastify.register(AutoLoad, {
