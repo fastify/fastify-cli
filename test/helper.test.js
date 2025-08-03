@@ -161,3 +161,10 @@ test('should ensure can access all decorators', async t => {
   t.teardown(() => app2.close())
   t.ok(app2.test)
 })
+
+test('should return the fastify instance when using serverModule', async t => {
+  const argv = ['']
+  const app = await helper.build(argv, {}, {}, require('../examples/plugin.js'))
+  t.teardown(() => app.close())
+  t.notOk(app.server.listening)
+})
