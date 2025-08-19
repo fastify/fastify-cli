@@ -1,10 +1,7 @@
 'use strict'
 
-// bailout if a test is broken
-// so that the folder can be inspected
-process.env.TAP_BAIL = true
-
-const t = require('tap')
+const { test } = require('node:test')
+const assert = require('node:assert')
 const {
   mkdirSync,
   readFileSync,
@@ -45,8 +42,8 @@ const expected = {};
     })
     .on('error', cb)
 })(function (err) {
-  t.error(err)
-  define(t)
+  assert.ifError(err)
+  define(test)
 })
 
 function define (t) {
@@ -63,7 +60,7 @@ function define (t) {
       await eject(workdir, template)
       await verifyCopy(t, expected)
     } catch (err) {
-      t.error(err)
+      t.assert.ifError(err)
     }
   })
 
@@ -73,7 +70,7 @@ function define (t) {
       await cli(['--esm'])
       await verifyCopy(t, expected)
     } catch (err) {
-      t.error(err)
+      t.assert.ifError(err)
     }
   })
 
@@ -86,7 +83,7 @@ function define (t) {
           try {
             const data = readFileSync(file)
             file = file.replace(workdir, '')
-            t.same(
+            t.assert.deepStrictEqual(
               data.toString().replace(/\r\n/g, '\n'),
               expected[file],
               file + ' matching'
@@ -96,7 +93,7 @@ function define (t) {
           }
         })
         .on('end', function () {
-          t.equal(Object.keys(expected).length, count)
+          t.assert.strictEqual(Object.keys(expected).length, count)
           resolve()
         })
         .on('error', function (err, entry, stat) {
