@@ -32,6 +32,7 @@ afterEach(async () => {
 })
 
 conditionalTest('should add and remove SIGINT listener as expected', async (t) => {
+  t.plan(2)
   assert.strictEqual(process.listenerCount('SIGINT'), signalCounter + 1)
 
   await fastify.close()
@@ -40,6 +41,7 @@ conditionalTest('should add and remove SIGINT listener as expected', async (t) =
 })
 
 conditionalTest('should call fastify.close() on SIGINT', async (t) => {
+  t.plan(1)
   const sigintHandler = () => {
     try {
       sinon.assert.called(spy)
