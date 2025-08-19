@@ -43,7 +43,7 @@ conditionalTest('should call fastify.close() on SIGINT', async (t) => {
   const sigintHandler = () => {
     try {
       sinon.assert.called(spy)
-      t.pass('fastify.close() was called on SIGINT')
+      t.assert.ok('fastify.close() was called on SIGINT')
     } finally {
       process.exit() // Clean exit
     }
