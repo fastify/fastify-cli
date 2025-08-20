@@ -32,6 +32,7 @@ afterEach(async () => {
   sandbox.restore()
 })
 
+// Tests skip on win32 platforms due SIGINT signal is not supported across all windows platforms
 test('should add and remove SIGINT listener as expected', { skip: isWindows }, async (t) => {
   t.plan(2)
   const initialCount = process.listenerCount('SIGINT')
