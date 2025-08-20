@@ -1,7 +1,6 @@
 'use strict'
 
 const { test, beforeEach, afterEach } = require('node:test')
-const assert = require('assert')
 const sinon = require('sinon')
 const start = require('../start')
 
@@ -33,21 +32,20 @@ afterEach(async () => {
 
 conditionalTest('should add and remove SIGINT listener as expected', async (t) => {
   t.plan(2)
-  assert.strictEqual(process.listenerCount('SIGINT'), signalCounter + 1)
-
+  const initialCount = process.listenerCount('SIGINT')
+  t.assert.strictEqual(initialCount, signalCounter + 1)
   await fastify.close()
-
-  assert.strictEqual(process.listenerCount('SIGINT'), signalCounter)
+  t.assert.strictEqual(process.listenerCount('SIGINT'), signalCounter)
 })
 
-conditionalTest('should call fastify.close() on SIGINT', async (t) => {
-  t.plan(1)
-  const sigintHandler = () => {
+conditionalTest('should call fastify.close() on SIGINT', (t) => {
+  const sigintHandler = async () => {
     try {
       sinon.assert.called(spy)
       t.assert.ok('fastify.close() was called on SIGINT')
     } finally {
-      process.exit() // Clean exit
+      process.removeListener('SIGINT', sigintHandler)
+      await fastify.close()
     }
   }
 
