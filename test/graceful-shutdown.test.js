@@ -30,7 +30,7 @@ afterEach(async () => {
   sandbox.restore()
 })
 
-conditionalTest('should add and remove SIGINT listener as expected', async (t) => {
+test('should add and remove SIGINT listener as expected', { skip: isWindows }, async (t) => {
   t.plan(2)
   const initialCount = process.listenerCount('SIGINT')
   t.assert.strictEqual(initialCount, signalCounter + 1)
