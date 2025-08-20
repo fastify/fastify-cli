@@ -18,7 +18,6 @@ const sandbox = sinon.createSandbox()
 const isWindows = process.platform === 'win32'
 const isMacOS = process.platform === 'darwin'
 const isLinux = process.platform === 'linux'
-const conditionalTest = (isWindows || isMacOS || isLinux) ? test.skip : test
 
 beforeEach(async () => {
   signalCounter = process.listenerCount('SIGINT')
