@@ -41,7 +41,7 @@ test('should add and remove SIGINT listener as expected', { skip: isWindows }, a
   t.assert.strictEqual(process.listenerCount('SIGINT'), signalCounter)
 })
 
-conditionalTest('should call fastify.close() on SIGINT', (t) => {
+test('should call fastify.close() on SIGINT', { skip: isWindows || isMacOS || isLinux }, (t) => {
   const sigintHandler = async () => {
     try {
       sinon.assert.called(spy)
