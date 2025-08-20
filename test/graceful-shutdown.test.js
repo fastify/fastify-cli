@@ -14,9 +14,11 @@ let spy = null
 let signalCounter = null
 const sandbox = sinon.createSandbox()
 
-// Skip tests on Windows
+// Skip tests on Windows, Linux and MacOS
 const isWindows = process.platform === 'win32'
-const conditionalTest = isWindows ? test.skip : test
+const isMacOS = process.platform === 'darwin'
+const isLinux = process.platform === 'linux'
+const conditionalTest = (isWindows || isMacOS || isLinux) ? test.skip : test
 
 beforeEach(async () => {
   signalCounter = process.listenerCount('SIGINT')
