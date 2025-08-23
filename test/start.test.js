@@ -56,10 +56,10 @@ test('should start the server', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   await fastify.close()
@@ -73,10 +73,10 @@ test('should start the server with a typescript compiled module', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   await fastify.close()
@@ -90,10 +90,10 @@ test('should start the server with pretty output', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   await fastify.close()
@@ -129,10 +129,10 @@ test('should start fastify with custom plugin options', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     a: true,
     b: true,
@@ -140,7 +140,7 @@ test('should start fastify with custom plugin options', async t => {
     hello: 'world'
   })
 
-  await fastify.close()
+  t.after(async () => await fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -156,10 +156,10 @@ test('should start fastify with default custom plugin options', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     hello: 'test'
   })
@@ -175,7 +175,7 @@ test('should start fastify with custom options with a typescript compiled plugin
   try {
     const argv = ['-p', getPort(), '-o', 'true', './examples/ts-plugin-with-options.js']
     await start.start(argv)
-    t.assert.fail('Custom options')
+    t.assert.rejects('Custom options')
   } catch (e) {
     t.assert.ok('Custom options')
   }
@@ -196,10 +196,10 @@ test('should start fastify with custom plugin options with a typescript compiled
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     a: true,
     b: true,
@@ -223,10 +223,10 @@ test('should start fastify with custom plugin default exported options with a ty
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     hello: 'test'
   })
@@ -242,10 +242,10 @@ test('should start the server at the given prefix', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}/api/hello`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   t.after(async () => await fastify.close())
@@ -275,7 +275,7 @@ test('should start fastify at given socket path', { skip: process.platform === '
       path: '/',
       socketPath: sockFile
     }, function (response) {
-      t.assert.deepStrictEqual(response.statusCode, 200)
+      t.assert.strictEqual(response.statusCode, 200)
       return resolve()
     })
     request.end()
@@ -290,7 +290,7 @@ test('should error with a good timeout value', async t => {
   const start = proxyquire('../start', {
     assert: {
       ifError (err) {
-        t.assert.equal(err.code, 'AVV_ERR_PLUGIN_EXEC_TIMEOUT')
+        t.assert.strictEqual(err.code, 'AVV_ERR_PLUGIN_EXEC_TIMEOUT')
       }
     }
   })
@@ -301,7 +301,7 @@ test('should error with a good timeout value', async t => {
     const argv = ['-p', port, '-T', '100', './test/data/timeout-plugin.js']
     await start.start(argv)
   } catch (err) {
-    t.assert.equal(err.code, 'AVV_ERR_PLUGIN_EXEC_TIMEOUT')
+    t.assert.strictEqual(err.code, 'AVV_ERR_PLUGIN_EXEC_TIMEOUT')
   }
 })
 
@@ -338,7 +338,7 @@ test('should throw on parsing error', (t, done) => {
   const oldStop = start.stop
   t.after(() => { start.stop = oldStop })
   start.stop = function (err) {
-    t.assert.equal(err.constructor, SyntaxError)
+    t.assert.strictEqual(err.constructor, SyntaxError)
     done()
   }
 
@@ -358,10 +358,10 @@ test('should start the server with an async/await plugin', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   t.after(async () => await fastify.close())
@@ -380,7 +380,7 @@ test('should exit without error on help', t => {
   start.start(argv)
 
   t.assert.ok(process.exit.called)
-  t.assert.equal(process.exit.lastCall.args[0], undefined)
+  t.assert.strictEqual(process.exit.lastCall.args[0], undefined)
 })
 
 test('should throw the right error on require file', (t, done) => {
@@ -412,13 +412,13 @@ test('should respond 413 - Payload too large', async t => {
     body: bodyTooLarge,
   })
 
-  t.assert.equal(responseFail.status, 413)
+  t.assert.strictEqual(responseFail.status, 413)
 
   const responseOk = await fetch(`http://localhost:${fastify.server.address().port}`, {
     method: 'POST',
     body: bodySmaller,
   })
-  t.assert.equal(responseOk.status, 200)
+  t.assert.strictEqual(responseOk.status, 200)
 
   t.after(async () => await fastify.close())
   t.assert.ok('server closed')
@@ -432,10 +432,10 @@ test('should start the server (using env var)', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${process.env.FASTIFY_PORT}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   delete process.env.FASTIFY_PORT
@@ -452,10 +452,10 @@ test('should start the server (using PORT-env var)', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${process.env.PORT}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   delete process.env.PORT
@@ -473,10 +473,10 @@ test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', 
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${process.env.FASTIFY_PORT}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   delete process.env.FASTIFY_PORT
@@ -495,10 +495,10 @@ test('should start the server (using -p preceding FASTIFY_PORT-env var)', async 
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   delete process.env.FASTIFY_PORT
@@ -516,10 +516,10 @@ test('should start the server at the given prefix (using env var)', async t => {
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${process.env.FASTIFY_PORT}/api/hello`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
   delete process.env.FASTIFY_PORT
@@ -542,7 +542,7 @@ test('should start the server at the given prefix (using env var read from doten
   })
   const argv = ['./examples/plugin.js']
   const fastify = await start.start(argv)
-  t.assert.equal(fastify.server.address().port, 8080)
+  t.assert.strictEqual(fastify.server.address().port, 8080)
   delete process.env.FASTIFY_PORT
 
   t.after(async () => await fastify.close())
@@ -561,7 +561,7 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
   const argv = ['-p', getPort(), './examples/plugin.js']
   const fastify = await start.start(argv)
 
-  t.assert.equal(fastify.server.address().address, '0.0.0.0')
+  t.assert.strictEqual(fastify.server.address().address, '0.0.0.0')
 
   t.after(async () => await fastify.close())
   t.assert.ok('server closed')
@@ -582,7 +582,7 @@ test('should start the server listening on 0.0.0.0 when running in kubernetes', 
   const argv = ['-p', getPort(), './examples/plugin.js']
   const fastify = await start.start(argv)
 
-  t.assert.equal(fastify.server.address().address, '0.0.0.0')
+  t.assert.strictEqual(fastify.server.address().address, '0.0.0.0')
 
   t.after(async () => await fastify.close())
   t.assert.ok('server closed')
@@ -679,7 +679,7 @@ test('should reload the env on restart when watching', { skip: process.platform 
   await once(fastifyEmitter, 'ready')
 
   const r1 = await fetch(`http://localhost:${port}`)
-  t.assert.equal(r1.status, 200)
+  t.assert.strictEqual(r1.status, 200)
 
   const body1 = await r1.text()
   t.assert.deepStrictEqual(JSON.parse(body1), { hello: 'world' })
@@ -689,7 +689,7 @@ test('should reload the env on restart when watching', { skip: process.platform 
   await once(fastifyEmitter, 'restart')
 
   const r2 = await fetch(`http://localhost:${port}`)
-  t.assert.equal(r2.status, 200)
+  t.assert.strictEqual(r2.status, 200)
 
   const body2 = await r2.text()
   t.assert.deepStrictEqual(JSON.parse(body2), { hello: 'world' }) /* world because when making a restart the server still passes the arguments that change the environment variable */
@@ -713,15 +713,15 @@ test('should read env variables from .env file', async (t) => {
   })
 
   const fastify = await requireUncached('../start').start([path.join(testdir, 'plugin.js')])
-  t.assert.equal(fastify.server.address().port, +port)
+  t.assert.strictEqual(fastify.server.address().port, +port)
 
   const res = await fetch(`http://localhost:${port}`)
-  t.assert.equal(res.status, 200)
+  t.assert.strictEqual(res.status, 200)
 
   const body = await res.text()
   t.assert.deepStrictEqual(JSON.parse(body), { hello: 'world' })
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
 })
 
 test('crash on unhandled rejection', (t, done) => {
@@ -730,7 +730,7 @@ test('crash on unhandled rejection', (t, done) => {
   const argv = ['-p', getPort(), './test/data/rejection.js']
   const child = fork(path.join(__dirname, '..', 'start.js'), argv, { silent: true })
   child.on('close', function (code) {
-    t.assert.equal(code, 1)
+    t.assert.strictEqual(code, 1)
     done()
   })
 })
@@ -741,7 +741,7 @@ test('should start the server with inspect options and the defalut port is 9320'
   const start = proxyquire('../start', {
     'node:inspector': {
       open (p) {
-        t.assert.equal(p, 9320)
+        t.assert.strictEqual(p, 9320)
         t.assert.ok('inspect open called')
       }
     }
@@ -760,7 +760,7 @@ test('should start the server with inspect options and use the exactly port', as
   const start = proxyquire('../start', {
     'node:inspector': {
       open (p) {
-        t.assert.equal(p, Number(port))
+        t.assert.strictEqual(p, Number(port))
         t.assert.ok('inspect open called')
       }
     }
@@ -768,7 +768,7 @@ test('should start the server with inspect options and use the exactly port', as
   const argv = ['--d', '--debug-port', port, './examples/plugin.js']
   const fastify = await start.start(argv)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -782,7 +782,7 @@ test('boolean env are not overridden if no arguments are passed', async t => {
   try {
     const argv = ['./examples/plugin-with-options.js']
     await start.start(argv)
-    t.assert.fail('Custom options')
+    t.assert.rejects('Custom options')
   } catch (e) {
     t.assert.ok('Custom options')
   }
@@ -795,7 +795,7 @@ test('should support preloading custom module', async t => {
   const fastify = await start.start(argv)
   t.assert.ok(GLOBAL_MODULE_1)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -806,7 +806,7 @@ test('should support preloading custom ES module', async t => {
   const fastify = await start.start(argv)
   t.assert.ok(globalThis.GLOBAL_MODULE_3)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -818,7 +818,7 @@ test('should support preloading multiple custom modules', async t => {
   t.assert.ok(GLOBAL_MODULE_1)
   t.assert.ok(GLOBAL_MODULE_2)
 
-  await fastify.close()
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -840,7 +840,7 @@ test('preloading custom module with empty and trailing require flags should not 
   const fastify = await start.start(argv)
   t.assert.ok(GLOBAL_MODULE_1)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -851,7 +851,7 @@ test('preloading custom ES module with empty and trailing import flags should no
   const fastify = await start.start(argv)
   t.assert.ok(GLOBAL_MODULE_3)
 
-  await fastify.close()
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -867,7 +867,7 @@ test('preloading custom module that is not found should throw', async t => {
   const argv = ['-r', './test/data/require-missing.js', './examples/plugin.js']
   const fastify = await start.start(argv)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -883,7 +883,7 @@ test('preloading custom ES module that is not found should throw', async t => {
   const argv = ['-i', './test/data/import-missing.mjs', './examples/plugin.js']
   const fastify = await start.start(argv)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -894,13 +894,13 @@ test('preloading custom module should be done before starting server', async t =
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), { hasPreloaded: true })
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -911,7 +911,7 @@ test('should support custom logger configuration', async t => {
   const fastify = await start.start(argv)
   t.assert.ok(fastify.log.test)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -922,7 +922,7 @@ test('should support custom logger configuration in ESM', async t => {
   const fastify = await start.start(argv)
   t.assert.ok(fastify.log.test)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -931,7 +931,7 @@ test('preloading a built-in module works', async t => {
 
   const argv = ['-r', 'path', './examples/plugin.js']
   const fastify = await start.start(argv)
-  await fastify.close()
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -940,7 +940,7 @@ test('preloading a module in node_modules works', async t => {
 
   const argv = ['-r', 'tap', './examples/plugin.js']
   const fastify = await start.start(argv)
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -956,7 +956,7 @@ test('should throw on logger configuration module not found', async t => {
   const argv = ['-L', './test/data/missing.js', './examples/plugin.js']
   const fastify = await start.start(argv)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -988,10 +988,10 @@ test('should start fastify with custom plugin options with a ESM typescript comp
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     a: true,
     b: true,
@@ -999,7 +999,7 @@ test('should start fastify with custom plugin options with a ESM typescript comp
     hello: 'world'
   })
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -1015,15 +1015,15 @@ test('should start fastify with custom plugin default options with a ESM typescr
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     hello: 'test'
   })
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -1055,10 +1055,10 @@ test('should start fastify with custom plugin options with a ESM plugin with pac
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     a: true,
     b: true,
@@ -1066,7 +1066,7 @@ test('should start fastify with custom plugin options with a ESM plugin with pac
     hello: 'world'
   })
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -1082,18 +1082,18 @@ test('should start fastify with custom server options (ignoreTrailingSlash) with
   const fastify = await start.start(argv)
 
   const result1 = await fetch(`http://localhost:${fastify.server.address().port}/foo`)
-  t.assert.equal(result1.status, 200)
+  t.assert.strictEqual(result1.status, 200)
 
   const body1 = await result1.text()
-  t.assert.equal(result1.headers.get('content-length'), '' + body1.length)
+  t.assert.strictEqual(result1.headers.get('content-length'), '' + body1.length)
 
   const result2 = await fetch(`http://localhost:${fastify.server.address().port}/foo/`)
-  t.assert.equal(result2.status, 200)
+  t.assert.strictEqual(result2.status, 200)
 
   const body2 = await result2.text()
-  t.assert.equal(result2.headers.get('content-length'), '' + body2.length)
+  t.assert.strictEqual(result2.headers.get('content-length'), '' + body2.length)
 
-  t.after(async () => await fastify.close())
+  t.after(() => fastify.close())
   t.assert.ok('server closed')
 })
 
@@ -1112,10 +1112,10 @@ test('should start fastify with custom plugin options with a CJS plugin with pac
   const fastify = await start.start(argv)
 
   const result = await fetch(`http://localhost:${fastify.server.address().port}`)
-  t.assert.equal(result.status, 200)
+  t.assert.strictEqual(result.status, 200)
 
   const body = await result.text()
-  t.assert.equal(result.headers.get('content-length'), '' + body.length)
+  t.assert.strictEqual(result.headers.get('content-length'), '' + body.length)
   t.assert.deepStrictEqual(JSON.parse(body), {
     a: true,
     b: true,
@@ -1133,8 +1133,8 @@ test('should throw error for invalid fastify plugin (object)', async t => {
     const port = getPort()
     const argv = ['-p', port, '-T', '100', './test/data/object.js']
     await start.start(argv)
-    t.assert.fail('should not start')
+    t.assert.rejects('should not start')
   } catch (err) {
-    t.assert.equal(err.code, 'AVV_ERR_PLUGIN_NOT_VALID')
+    t.assert.strictEqual(err.code, 'AVV_ERR_PLUGIN_NOT_VALID')
   }
 })
