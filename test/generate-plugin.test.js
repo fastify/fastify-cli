@@ -1,10 +1,7 @@
 'use strict'
 
-// bailout if a test is broken
-// so that the folder can be inspected
-process.env.TAP_BAIL = true
-
-const t = require('tap')
+const { test } = require('node:test')
+const assert = require('node:assert')
 const {
   mkdirSync,
   readFileSync,
@@ -49,8 +46,8 @@ const initVersion = execSync('npm get init-version').toString().trim()
     })
     .on('error', cb)
 })(function (err) {
-  t.error(err)
-  define(t)
+  assert.ifError(err)
+  define(test)
 })
 
 function define (t) {
@@ -61,43 +58,48 @@ function define (t) {
     mkdirSync(workdir, { recursive: true })
   })
 
-  test('errors if directory exists', (t) => {
+  test('errors if directory exists', (t, done) => {
     t.plan(2)
     exec('node generate-plugin.js ./test/workdir', (err, stdout) => {
-      t.equal('directory ./test/workdir already exists', strip(stdout.toString().trim()))
-      t.equal(1, err.code)
+      t.assert.strictEqual('directory ./test/workdir already exists', strip(stdout.toString().trim()))
+      t.assert.strictEqual(1, err.code)
+      done()
     })
   })
 
-  test('errors if generate doesn\'t have <folder> arguments', (t) => {
+  test('errors if generate doesn\'t have <folder> arguments', (t, done) => {
     t.plan(2)
     exec('node generate-plugin.js', (err, stdout) => {
-      t.equal('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
-      t.equal(1, err.code)
+      t.assert.strictEqual('must specify a directory to \'fastify generate\'', strip(stdout.toString().trim()))
+      t.assert.strictEqual(1, err.code)
+      done()
     })
   })
 
-  test('errors if package.json exists when use generate .', (t) => {
+  test('errors if package.json exists when use generate .', (t, done) => {
     t.plan(2)
     exec('node generate-plugin.js .', (err, stdout) => {
-      t.equal('a package.json file already exists in target directory. retry with the --integrate flag to proceed', strip(stdout.toString().trim()))
-      t.equal(1, err.code)
+      t.assert.strictEqual('a package.json file already exists in target directory. retry with the --integrate flag to proceed', strip(stdout.toString().trim()))
+      t.assert.strictEqual(1, err.code)
+      done()
     })
   })
 
-  test('errors if package.json exists when use generate ./', (t) => {
+  test('errors if package.json exists when use generate ./', (t, done) => {
     t.plan(2)
     exec('node generate-plugin.js ./', (err, stdout) => {
-      t.equal('a package.json file already exists in target directory. retry with the --integrate flag to proceed', strip(stdout.toString().trim()))
-      t.equal(1, err.code)
+      t.assert.strictEqual('a package.json file already exists in target directory. retry with the --integrate flag to proceed', strip(stdout.toString().trim()))
+      t.assert.strictEqual(1, err.code)
+      done()
     })
   })
 
-  test('errors if folder exists', (t) => {
+  test('errors if folder exists', (t, done) => {
     t.plan(2)
     exec('node generate-plugin.js test', (err, stdout) => {
-      t.equal('directory test already exists', strip(stdout.toString().trim()))
-      t.equal(1, err.code)
+      t.assert.strictEqual('directory test already exists', strip(stdout.toString().trim()))
+      t.assert.strictEqual(1, err.code)
+      done()
     })
   })
 
@@ -109,7 +111,7 @@ function define (t) {
       await verifyCopy(t, expected)
       await verifyFastifyPluginVersion(t)
     } catch (err) {
-      t.error(err)
+      t.assert.ifError(err)
     }
   })
 
@@ -123,7 +125,7 @@ function define (t) {
       const pluginVersion = pluginMeta.fastify
       const pkgVersion = pkg.dependencies.fastify
       const satified = semver.intersects(pluginVersion, pkgVersion)
-      t.ok(satified, 'meta should be the same')
+      t.assert.ok(satified, 'meta should be the same')
       resolve()
     })
   }
@@ -135,25 +137,25 @@ function define (t) {
       readFile(pkgFile, function (err, data) {
         err && reject(err)
         const pkg = JSON.parse(data)
-        t.equal(pkg.name, 'workdir')
-        t.equal(pkg.main, 'index.js')
-        t.equal(pkg.types, 'index.d.ts')
+        t.assert.strictEqual(pkg.name, 'workdir')
+        t.assert.strictEqual(pkg.main, 'index.js')
+        t.assert.strictEqual(pkg.types, 'index.d.ts')
         // we are not checking author because it depends on global npm configs
-        t.equal(pkg.version, initVersion)
-        t.equal(pkg.description, '')
-        t.ok(pkg.license === 'MIT')
-        t.equal(pkg.scripts.lint, 'standard && npm run lint:typescript')
-        t.equal(pkg.scripts['lint:typescript'], 'ts-standard')
-        t.equal(pkg.scripts.test, 'npm run lint && npm run unit && npm run test:typescript')
-        t.equal(pkg.scripts['test:typescript'], 'tsd')
-        t.equal(pkg.scripts.unit, 'node --test')
-        t.equal(pkg.dependencies['fastify-plugin'], cliPkg.dependencies['fastify-plugin'])
-        t.equal(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
-        t.equal(pkg.devDependencies.fastify, cliPkg.devDependencies.fastify)
-        t.equal(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
-        t.equal(pkg.devDependencies.tsd, cliPkg.devDependencies.tsd)
-        t.equal(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
-        t.same(pkg.tsd, pluginTemplate.tsd)
+        t.assert.strictEqual(pkg.version, initVersion)
+        t.assert.strictEqual(pkg.description, '')
+        t.assert.ok(pkg.license === 'MIT')
+        t.assert.strictEqual(pkg.scripts.lint, 'standard && npm run lint:typescript')
+        t.assert.strictEqual(pkg.scripts['lint:typescript'], 'ts-standard')
+        t.assert.strictEqual(pkg.scripts.test, 'npm run lint && npm run unit && npm run test:typescript')
+        t.assert.strictEqual(pkg.scripts['test:typescript'], 'tsd')
+        t.assert.strictEqual(pkg.scripts.unit, 'node --test')
+        t.assert.strictEqual(pkg.dependencies['fastify-plugin'], cliPkg.dependencies['fastify-plugin'])
+        t.assert.strictEqual(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
+        t.assert.strictEqual(pkg.devDependencies.fastify, cliPkg.devDependencies.fastify)
+        t.assert.strictEqual(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
+        t.assert.strictEqual(pkg.devDependencies.tsd, cliPkg.devDependencies.tsd)
+        t.assert.strictEqual(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
+        t.assert.deepStrictEqual(pkg.tsd, pluginTemplate.tsd)
 
         resolve()
       })
@@ -172,7 +174,7 @@ function define (t) {
           try {
             const data = readFileSync(file)
             file = file.replace(workdir, '')
-            t.same(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
+            t.assert.strictEqual(data.toString().replace(/\r\n/g, '\n'), expected[file], file + ' matching')
           } catch (err) {
             reject(err)
           }
