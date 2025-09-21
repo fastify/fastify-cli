@@ -66,7 +66,6 @@
   },
   "devDependencies": {
     "@fastify/autoload": "^6.0.0",
-    "@fastify/pre-commit": "^2.0.2",
     "@fastify/sensible": "^6.0.0",
     "@types/node": "^24.0.8",
     "@types/tap": "^15.0.5",
