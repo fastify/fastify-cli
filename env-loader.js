@@ -1,5 +1,5 @@
 module.exports = {
-  safeLoad: () => {
+  loadEnvQuitely: () => {
     try {
       process.loadEnvFile()
     } catch { }

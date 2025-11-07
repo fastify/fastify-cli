@@ -2,8 +2,8 @@
 
 'use strict'
 
-const { safeLoad } = require('./env-loader')
-safeLoad()
+const { loadEnvQuitely } = require('./env-loader')
+loadEnvQuitely()
 const isDocker = require('is-docker')
 
 const closeWithGrace = require('close-with-grace')
