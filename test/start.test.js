@@ -520,14 +520,11 @@ test('should start the server at the given prefix (using env var)', async t => {
 test('should start the server at the given prefix (using env var read from dotenv)', async t => {
   t.plan(3)
 
-  const start = proxyquire('../start', {
-    dotenv: {
-      config () {
-        t.pass('config called')
-        process.env.FASTIFY_PORT = 8080
-      }
-    }
+  sinon.stub(process, 'loadEnvFile').callsFake(() => {
+    t.pass('config called')
+    process.env.FASTIFY_PORT = 8080
   })
+
   const argv = ['./examples/plugin.js']
   const fastify = await start.start(argv)
   t.equal(fastify.server.address().port, 8080)

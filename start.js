@@ -2,7 +2,7 @@
 
 'use strict'
 
-require('dotenv').config()
+process.loadEnvFile()
 const isDocker = require('is-docker')
 const closeWithGrace = require('close-with-grace')
 const deepmerge = require('@fastify/deepmerge')({

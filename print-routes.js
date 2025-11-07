@@ -38,7 +38,7 @@ function printRoutes (args) {
 }
 
 async function runFastify (opts) {
-  require('dotenv').config()
+  process.loadEnvFile()
 
   let file = null
 
