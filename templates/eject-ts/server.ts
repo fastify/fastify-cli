@@ -3,7 +3,9 @@ import Fastify from 'fastify'
 
 // Require library to exit fastify process, gracefully (if possible)
 import closeWithGrace from 'close-with-grace'
-process.loadEnvFile()
+try {
+  process.loadEnvFile()
+} catch {}
 
 // Instantiate Fastify with some config
 const app = Fastify({

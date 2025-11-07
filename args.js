@@ -2,6 +2,7 @@
 
 const argv = require('yargs-parser')
 const { requireModule } = require('./util')
+const { safeParse } = require('./env-parser')
 
 const DEFAULT_IGNORE = 'node_modules build dist .git bower_components logs .swp .nyc_output'
 
@@ -21,7 +22,7 @@ const DEFAULT_ARGUMENTS = {
 }
 
 module.exports = function parseArgs (args) {
-  process.loadEnvFile()
+  safeParse()
   const commandLineArguments = argv(args, {
     configuration: {
       'populate--': true

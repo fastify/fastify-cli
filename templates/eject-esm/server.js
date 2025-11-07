@@ -8,7 +8,9 @@ import closeWithGrace from 'close-with-grace'
 import appService from './app.js'
 
 // Dotenv config
-process.loadEnvFile()
+try {
+  process.loadEnvFile()
+} catch {}
 
 // Instantiate Fastify with some config
 const app = Fastify({

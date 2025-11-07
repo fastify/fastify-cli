@@ -1,7 +1,9 @@
 'use strict'
 
 // Read the .env file.
-process.loadEnvFile()
+try {
+  process.loadEnvFile()
+} catch {}
 
 // Require the framework
 const Fastify = require('fastify')

@@ -2,8 +2,10 @@
 
 'use strict'
 
-process.loadEnvFile()
+const { safeParse } = require('./env-parser')
+safeParse()
 const isDocker = require('is-docker')
+
 const closeWithGrace = require('close-with-grace')
 const deepmerge = require('@fastify/deepmerge')({
   cloneProtoObject (obj) { return obj }
