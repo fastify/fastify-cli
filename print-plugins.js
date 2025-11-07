@@ -3,7 +3,7 @@
 'use strict'
 
 const parseArgs = require('./args')
-const { safeParse } = require('./env-parser')
+const { safeLoad } = require('./env-loader')
 const log = require('./log')
 const {
   exit,
@@ -39,7 +39,7 @@ function printPlugins (args) {
 }
 
 async function runFastify (opts) {
-  safeParse()
+  safeLoad()
 
   let file = null
 

@@ -12,7 +12,7 @@ const {
   showHelpForCommand
 } = require('./util')
 const fp = require('fastify-plugin')
-const { safeParse } = require('./env-parser')
+const { safeLoad } = require('./env-loader')
 
 let Fastify = null
 
@@ -56,7 +56,7 @@ async function generateSwagger (args) {
 }
 
 async function runFastify (opts) {
-  safeParse()
+  safeLoad()
 
   let file = null
 

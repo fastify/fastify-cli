@@ -1,5 +1,5 @@
 module.exports = {
-  safeParse: () => {
+  safeLoad: () => {
     try {
       process.loadEnvFile()
     } catch { }

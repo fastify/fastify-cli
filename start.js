@@ -2,8 +2,8 @@
 
 'use strict'
 
-const { safeParse } = require('./env-parser')
-safeParse()
+const { safeLoad } = require('./env-loader')
+safeLoad()
 const isDocker = require('is-docker')
 
 const closeWithGrace = require('close-with-grace')
