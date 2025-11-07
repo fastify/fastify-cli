@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import sensible, { FastifySensibleOptions } from '@fastify/sensible'
+import sensible, { type FastifySensibleOptions } from '@fastify/sensible'
 
 /**
  * This plugins adds some utilities to handle http errors
