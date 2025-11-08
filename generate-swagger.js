@@ -12,6 +12,7 @@ const {
   showHelpForCommand
 } = require('./util')
 const fp = require('fastify-plugin')
+const { loadEnvQuitely } = require('./env-loader')
 
 let Fastify = null
 
@@ -55,7 +56,7 @@ async function generateSwagger (args) {
 }
 
 async function runFastify (opts) {
-  require('dotenv').config()
+  loadEnvQuitely()
 
   let file = null
 

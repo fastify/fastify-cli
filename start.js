@@ -2,8 +2,10 @@
 
 'use strict'
 
-require('dotenv').config()
+const { loadEnvQuitely } = require('./env-loader')
+loadEnvQuitely()
 const isDocker = require('is-docker')
+
 const closeWithGrace = require('close-with-grace')
 const deepmerge = require('@fastify/deepmerge')({
   cloneProtoObject (obj) { return obj }

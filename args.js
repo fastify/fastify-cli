@@ -1,8 +1,8 @@
 'use strict'
 
 const argv = require('yargs-parser')
-const dotenv = require('dotenv')
 const { requireModule } = require('./util')
+const { loadEnvQuitely } = require('./env-loader')
 
 const DEFAULT_IGNORE = 'node_modules build dist .git bower_components logs .swp .nyc_output'
 
@@ -22,7 +22,7 @@ const DEFAULT_ARGUMENTS = {
 }
 
 module.exports = function parseArgs (args) {
-  dotenv.config()
+  loadEnvQuitely()
   const commandLineArguments = argv(args, {
     configuration: {
       'populate--': true

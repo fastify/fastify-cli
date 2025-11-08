@@ -3,6 +3,7 @@
 'use strict'
 
 const parseArgs = require('./args')
+const { loadEnvQuitely } = require('./env-loader')
 const log = require('./log')
 const {
   exit,
@@ -38,7 +39,7 @@ function printRoutes (args) {
 }
 
 async function runFastify (opts) {
-  require('dotenv').config()
+  loadEnvQuitely()
 
   let file = null
 

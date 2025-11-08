@@ -1,12 +1,11 @@
-// Read the .env file.
-import * as dotenv from 'dotenv'
-
 // Require the framework
 import Fastify from 'fastify'
 
 // Require library to exit fastify process, gracefully (if possible)
 import closeWithGrace from 'close-with-grace'
-dotenv.config()
+try {
+  process.loadEnvFile()
+} catch {}
 
 // Instantiate Fastify with some config
 const app = Fastify({
