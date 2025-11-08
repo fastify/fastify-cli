@@ -55,7 +55,7 @@
     "fastify-plugin": "^5.0.0",
     "generify": "^4.0.0",
     "help-me": "^5.0.0",
-    "is-docker": "^2.0.0",
+    "is-docker": "^4.0.0",
     "pino-pretty": "^13.0.0",
     "pkg-up": "^3.1.0",
     "resolve-from": "^5.0.0",
