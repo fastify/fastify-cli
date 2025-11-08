@@ -113,11 +113,7 @@ async function runFastify (args, additionalOptions, serverOptions, serverModule)
   let file = null
 
   try {
-    if (serverModule != null) {
-      file = serverModule
-    } else {
-      file = await requireServerPluginFromPath(opts._[0])
-    }
+    file = serverModule ?? await requireServerPluginFromPath(opts._[0])
   } catch (e) {
     return module.exports.stop(e)
   }
