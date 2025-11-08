@@ -354,7 +354,7 @@ Both of these utilities have the `function(args, pluginOptions, serverOptions, s
 - `args`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
 - `pluginOptions`: is an object containing the options provided to the started plugin (eg: `app.js`).
 - `serverOptions`: is an object containing the additional options provided to fastify server, similar to the `--options` command line argument
-- `serverModule`: is optionally the the already imported main server plugin module, instead of letting the helper import it.
+- `serverModule`: is an optional parameter used to provide the already imported main server plugin module, instead of letting the helper import it.
 
 ```js
 // load the utility helper functions
