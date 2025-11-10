@@ -164,7 +164,10 @@ test('should ensure can access all decorators', async t => {
 
 test('should return the fastify instance when using serverModule', async t => {
   const argv = ['']
-  const app = await helper.build(argv, {}, {}, require('../examples/plugin.js'))
+  const app = await helper.build(argv, { skipOverride: true }, {}, (app, opts, next) => {
+    app.decorate('foo', 'bar')
+    next()
+  })
   t.teardown(() => app.close())
-  t.notOk(app.server.listening)
+  t.equals(app.foo, 'bar')
 })
