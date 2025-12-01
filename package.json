@@ -72,7 +72,7 @@
     "cross-env": "^10.0.0",
     "eslint": "^9.17.0",
     "fastify-tsconfig": "^3.0.0",
-    "glob": "^11.0.1",
+    "glob": "^13.0.0",
     "minimatch": "^10.0.1",
     "neostandard": "^0.12.0",
     "proxyquire": "^2.1.3",
