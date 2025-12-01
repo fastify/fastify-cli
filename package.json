@@ -48,7 +48,7 @@
   "dependencies": {
     "@fastify/deepmerge": "^3.0.0",
     "chalk": "^4.1.2",
-    "chokidar": "^4.0.0",
+    "chokidar": "^5.0.0",
     "close-with-grace": "^2.1.0",
     "commist": "^3.0.0",
     "fastify": "^5.0.0",
