@@ -3,6 +3,8 @@ import Fastify from 'fastify'
 
 // Require library to exit fastify process, gracefully (if possible)
 import closeWithGrace from 'close-with-grace'
+
+// Read and load environment variables from .env files (ignore if not present)
 try {
   process.loadEnvFile()
 } catch {}
@@ -12,7 +14,7 @@ const app = Fastify({
   logger: true,
 })
 
-// Register your application as a normal plugin.
+// Register your application as a normal plugin
 app.register(import('./app'))
 
 // delay is the number of milliseconds for the graceful close to finish
@@ -23,7 +25,7 @@ closeWithGrace({ delay: parseInt(process.env.FASTIFY_CLOSE_GRACE_DELAY) || 500 }
   await app.close()
 } as closeWithGrace.CloseWithGraceAsyncCallback)
 
-// Start listening.
+// Start listening
 app.listen({ port: parseInt(process.env.PORT) || 3000 }, (err: any) => {
   if (err) {
     app.log.error(err)
