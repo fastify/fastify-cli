@@ -175,7 +175,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Set the IP/CIDR value for `trustProxy` (2nd precedence)                                                                                 |               | `--trust-proxy-ips` | `FASTIFY_TRUST_PROXY_IPS`             |
 | Set the nth hop value for `trustProxy` (3rd precedence)                                                                                 |               | `--trust-proxy-hop` | `FASTIFY_TRUST_PROXY_HOP`             |
 
-By default, `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
+By default, `fastify-cli` loads environment variables from `.env` in your current working directory using Node.js's built-in `process.loadEnvFile()` (requires Node.js >= 20.6.0).
 
 The default value for `--plugin-timeout` is 10 seconds.
 By default,`--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp' files.
