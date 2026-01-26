@@ -3,8 +3,9 @@
 const util = require('node:util')
 const fs = require('node:fs')
 const path = require('node:path')
-const { test } = require('tap')
+const { test } = require('node:test')
 const stream = require('node:stream')
+const os = require('node:os')
 
 const helper = require('../helper')
 
@@ -14,37 +15,49 @@ const readFile = util.promisify(fs.readFile)
 test('should return the fastify instance', async t => {
   const argv = ['./examples/plugin.js']
   const app = await helper.build(argv, {})
-  t.teardown(() => app.close())
-  t.notOk(app.server.listening)
+  t.after(() => app.close())
+  t.assert.ok(!app.server.listening)
 })
 
 test('should reload the env at each build', async t => {
-  const testdir = t.testdir({
-    '.env': 'GREETING=world',
-    'plugin.js': await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
+  const testdir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'fastify-cli-'))
+  t.after(async () => {
+    await fs.promises.rm(testdir, { recursive: true, force: true })
   })
+
+  await writeFile(path.join(testdir, '.env'), 'GREETING=world')
+  await writeFile(
+    path.join(testdir, 'plugin.js'),
+    await readFile(path.join(__dirname, '../examples/plugin-with-env.js'))
+  )
 
   const argv = [path.join(testdir, 'plugin.js')]
   const cwd = process.cwd()
 
   process.chdir(testdir)
-  t.teardown(() => { process.chdir(cwd) })
+  t.after(() => { process.chdir(cwd) })
 
   {
     await writeFile(path.join(testdir, '.env'), 'GREETING=one')
     const app = await helper.build(argv)
-    t.teardown(() => app.close())
-    const res = await app.inject('/')
-    t.same(res.json(), { hello: 'one' })
+    try {
+      const res = await app.inject('/')
+      t.assert.deepStrictEqual(res.json(), { hello: 'one' })
+    } finally {
+      await app.close()
+    }
   }
 
   {
     delete process.env.GREETING // dotenv will not overwrite the env if set
     await writeFile(path.join(testdir, '.env'), 'GREETING=two')
     const app = await helper.build(argv)
-    t.teardown(() => app.close())
-    const res = await app.inject('/')
-    t.same(res.json(), { hello: 'two' })
+    try {
+      const res = await app.inject('/')
+      t.assert.deepStrictEqual(res.json(), { hello: 'two' })
+    } finally {
+      await app.close()
+    }
   }
 })
 
@@ -57,15 +70,18 @@ test('setting plugin options', async t => {
     'world'
   ]
   const app = await helper.build(argv, { from: 'build' })
-  t.teardown(() => app.close())
-  const res = await app.inject('/')
-  t.same(res.json(), {
-    a: true,
-    b: true,
-    c: true,
-    hello: 'world',
-    from: 'build'
-  })
+  try {
+    const res = await app.inject('/')
+    t.assert.deepStrictEqual(res.json(), {
+      a: true,
+      b: true,
+      c: true,
+      hello: 'world',
+      from: 'build'
+    })
+  } finally {
+    await app.close()
+  }
 })
 
 test('setting plugin options, extra has priority', async t => {
@@ -76,29 +92,35 @@ test('setting plugin options, extra has priority', async t => {
     'world'
   ]
   const app = await helper.build(argv, { hello: 'planet' })
-  t.teardown(() => app.close())
-  const res = await app.inject('/')
-  t.same(res.json(), {
-    hello: 'planet'
-  })
+  try {
+    const res = await app.inject('/')
+    t.assert.deepStrictEqual(res.json(), {
+      hello: 'planet'
+    })
+  } finally {
+    await app.close()
+  }
 })
 
 test('setting plugin options, extra has priority', async t => {
   const args = './examples/plugin-with-custom-options.js -- --hello world --from args'
   const app = await helper.build(args, { hello: 'planet' })
-  t.teardown(() => app.close())
-  const res = await app.inject('/')
-  t.same(res.json(), {
-    hello: 'planet',
-    from: 'args'
-  })
+  try {
+    const res = await app.inject('/')
+    t.assert.deepStrictEqual(res.json(), {
+      hello: 'planet',
+      from: 'args'
+    })
+  } finally {
+    await app.close()
+  }
 })
 
 test('should start fastify', async t => {
   const argv = ['./examples/plugin.js']
   const app = await helper.listen(argv, {})
-  t.teardown(() => app.close())
-  t.ok(app.server.listening)
+  t.after(() => app.close())
+  t.assert.ok(app.server.listening)
 })
 
 test('should start fastify with custom logger configuration', async t => {
@@ -117,12 +139,12 @@ test('should start fastify with custom logger configuration', async t => {
       stream: dest
     }
   })
-  t.teardown(() => app.close())
+  t.after(() => app.close())
   app.log.info('test')
-  t.same(lines.length, 0)
+  t.assert.strictEqual(lines.length, 0)
   app.log.warn('test')
-  t.same(lines.length, 1)
-  t.same(app.log.level, 'warn')
+  t.assert.strictEqual(lines.length, 1)
+  t.assert.strictEqual(app.log.level, 'warn')
 })
 
 test('should merge the CLI and FILE configs', async t => {
@@ -142,24 +164,24 @@ test('should merge the CLI and FILE configs', async t => {
       stream: dest
     }
   })
-  t.teardown(() => app.close())
+  t.after(() => app.close())
   app.log.info('test')
-  t.same(lines.length, 0)
+  t.assert.strictEqual(lines.length, 0)
   app.log.warn({ foo: 'test' })
-  t.same(app.log.level, 'warn')
-  t.same(lines.length, 1)
-  t.same(lines[0].foo, '***')
+  t.assert.strictEqual(app.log.level, 'warn')
+  t.assert.strictEqual(lines.length, 1)
+  t.assert.strictEqual(lines[0].foo, '***')
 })
 
 test('should ensure can access all decorators', async t => {
   const argv = ['./examples/plugin.js']
   const app = await helper.build(argv, { skipOverride: true })
-  t.teardown(() => app.close())
-  t.ok(app.test)
+  t.after(() => app.close())
+  t.assert.ok(app.test)
 
   const app2 = await helper.listen(argv, { skipOverride: true })
-  t.teardown(() => app2.close())
-  t.ok(app2.test)
+  t.after(() => app2.close())
+  t.assert.ok(app2.test)
 })
 
 test('should return the fastify instance when using serverModule', async t => {
@@ -168,6 +190,6 @@ test('should return the fastify instance when using serverModule', async t => {
     app.decorate('foo', 'bar')
     next()
   })
-  t.teardown(() => app.close())
-  t.equals(app.foo, 'bar')
+  t.after(() => app.close())
+  t.assert.strictEqual(app.foo, 'bar')
 })
