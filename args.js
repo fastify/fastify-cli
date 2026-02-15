@@ -28,8 +28,8 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay', 'trust-proxy-hop'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method', 'trust-proxy-ips'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks', 'trust-proxy-enabled'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method', 'trust-proxy-ips', 'watch'],
+    boolean: ['pretty-logs', 'options', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks', 'trust-proxy-enabled'],
     envPrefix: 'FASTIFY_',
     alias: {
       port: ['p'],
@@ -73,6 +73,21 @@ module.exports = function parseArgs (args) {
     : parsedArgs.trustProxyEnabled === true || parsedArgs.trustProxyEnabled === 'true'
   const trustProxy = trustProxyEnabled || parsedArgs.trustProxyIps || parsedArgs.trustProxyHop
 
+  const watchRequested = (parsedArgs.watch !== undefined && parsedArgs.watch !== false &&
+    (parsedArgs.watch === true || parsedArgs.watch === 'true' || parsedArgs.watch === '')) ||
+    args.includes('-w') || args.includes('--watch')
+  let watch = false
+  let watchPaths
+  if (watchRequested) {
+    watch = true
+    const watchVal = parsedArgs.watch
+    if (typeof watchVal === 'string' && watchVal !== '' && watchVal !== 'true') {
+      watchPaths = watchVal.split(/\s+/).map((s) => s.trim()).filter(Boolean)
+    } else {
+      watchPaths = []
+    }
+  }
+
   return {
     _: parsedArgs._,
     '--': additionalArgs,
@@ -83,7 +98,8 @@ module.exports = function parseArgs (args) {
     pluginOptions,
     prettyLogs: parsedArgs.prettyLogs,
     options: parsedArgs.options,
-    watch: parsedArgs.watch,
+    watch,
+    watchPaths,
     debug: parsedArgs.debug,
     debugPort: parsedArgs.debugPort,
     debugHost: parsedArgs.debugHost,

@@ -37,6 +37,7 @@ test('should parse args correctly', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    watchPaths: [],
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
@@ -96,6 +97,7 @@ test('should parse args with = assignment correctly', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    watchPaths: [],
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
@@ -175,6 +177,7 @@ test('should parse env vars correctly', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    watchPaths: [],
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     address: 'fastify.dev:9999',
@@ -201,7 +204,7 @@ test('should parse env vars correctly', t => {
 })
 
 test('should respect default values', t => {
-  t.plan(14)
+  t.plan(15)
 
   const argv = [
     'app.js'
@@ -213,6 +216,7 @@ test('should respect default values', t => {
   t.assert.equal(parsedArgs.options, false)
   t.assert.equal(parsedArgs.prettyLogs, false)
   t.assert.equal(parsedArgs.watch, false)
+  t.assert.equal(parsedArgs.watchPaths, undefined)
   t.assert.equal(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
   t.assert.equal(parsedArgs.verboseWatch, false)
   t.assert.equal(parsedArgs.logLevel, 'fatal')
@@ -265,6 +269,7 @@ test('should parse custom plugin options', t => {
     prettyLogs: true,
     options: true,
     watch: true,
+    watchPaths: [],
     ignoreWatch: 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js',
     verboseWatch: true,
     port: 7777,
@@ -315,6 +320,7 @@ test('should parse config file correctly and prefer config values over default o
     prettyLogs: true,
     options: false,
     watch: true,
+    watchPaths: [],
     debug: false,
     debugPort: 4000,
     debugHost: '1.1.1.1',
@@ -359,6 +365,7 @@ test('should prefer command line args over config file options', t => {
     prettyLogs: true,
     options: false,
     watch: true,
+    watchPaths: [],
     debug: false,
     debugPort: 9320,
     debugHost: '1.1.1.1',
@@ -405,6 +412,7 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
     prettyLogs: false,
     options: false,
     watch: false,
+    watchPaths: undefined,
     debug: false,
     debugPort: 1111,
     debugHost: '1.1.1.1',
@@ -423,6 +431,29 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
     includeHooks: undefined,
     trustProxy: true
   })
+})
+
+test('should parse --watch with single directory', t => {
+  t.plan(4)
+
+  const argv = ['--watch', 'api', 'api/server.js']
+  const parsedArgs = parseArgs(argv)
+
+  t.assert.deepStrictEqual(parsedArgs._, ['api/server.js'])
+  t.assert.equal(parsedArgs.watch, true)
+  t.assert.deepStrictEqual(parsedArgs.watchPaths, ['api'])
+  t.assert.equal(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output')
+})
+
+test('should parse --watch with multiple space-separated directories', t => {
+  t.plan(3)
+
+  const argv = ['--watch', 'api lib', 'server.js']
+  const parsedArgs = parseArgs(argv)
+
+  t.assert.equal(parsedArgs.watch, true)
+  t.assert.deepStrictEqual(parsedArgs.watchPaths, ['api', 'lib'])
+  t.assert.deepStrictEqual(parsedArgs._[0], 'server.js')
 })
 
 test('should favor trust proxy ips over trust proxy hop', t => {
@@ -450,6 +481,7 @@ test('should favor trust proxy ips over trust proxy hop', t => {
     prettyLogs: false,
     options: false,
     watch: false,
+    watchPaths: undefined,
     debug: false,
     debugPort: 1111,
     debugHost: '1.1.1.1',

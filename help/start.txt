@@ -38,9 +38,9 @@ OPTS
   [env: FASTIFY_OPTIONS]
       Use custom options
 
-  -w, --watch
+  -w, --watch [dirs...]
   [env: FASTIFY_WATCH]
-      Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.
+      Watch for file changes and auto reload. With no value, watches process.cwd(); pass dir(s) (e.g. --watch api) to watch only those.
 
   -x, --prefix
   [env: FASTIFY_PREFIX]
@@ -74,3 +74,7 @@ Examples:
   start plugin.js passing custom options to it
 
     fastify start plugin.js -- --custom-plugin-option-1 --custom-plugin-option-2
+
+  watch only the api directory
+
+    fastify start --watch api api/server.js
