@@ -48,10 +48,11 @@ async function generateSwagger (args) {
       process.exit(1)
     }
 
+    const decorator = extraOpts.decorator || 'swagger'
     if (extraOpts.yaml) {
-      return fastify.swagger({ yaml: true })
+      return await fastify[decorator]({ yaml: true })
     } else {
-      return JSON.stringify(fastify.swagger(), undefined, 2)
+      return JSON.stringify(await fastify[decorator](), undefined, 2)
     }
   } finally {
     fastify.close()

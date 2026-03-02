@@ -59,6 +59,48 @@ paths:
       }
     }
   })
+
+  fastify.decorate('alternateSwagger', function (opts) {
+    if (opts && opts.yaml) {
+      return `\
+openapi: 3.0.3
+info:
+  version: 8.1.0
+  title: "@fastify/swagger alternate"
+components:
+  schemas: {}
+paths:
+"/alternate":
+  get:
+    responses:
+      '200':
+        description: Default Response
+`
+    } else {
+      return {
+        openapi: '3.0.3',
+        info: {
+          version: '8.1.0',
+          title: '@fastify/swagger alternate',
+        },
+        components: {
+          schemas: {}
+        },
+        paths: {
+          '/alternate': {
+            get: {
+              responses: {
+                200: {
+                  description: 'Default Response'
+                }
+              }
+            }
+          },
+        }
+      }
+    }
+  })
+
   next()
 })
 

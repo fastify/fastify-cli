@@ -322,7 +322,9 @@ If your project uses `@fastify/swagger`, `fastify-cli` can generate and write ou
 
 `fastify generate-swagger app.js`
 
-To generate in YAML format add `--yaml=true`, to use the custom options from the main plugin file add `-o/--options`.
+To generate in YAML format add `--yaml=true`, to use the custom options from the
+main plugin file add `-o/--options`. To use a custom decorator (The
+`@fastify/swagger` `decorator` option), use `--decorator`.
 
 The schema is written to stdout.
 

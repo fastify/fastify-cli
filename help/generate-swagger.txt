@@ -7,6 +7,9 @@ OPTS
   --yaml=true
       generate in YAML format
 
+  --decorator <name>
+      Use a custom swagger decorator name
+
   -o, --options
   [env: FASTIFY_OPTIONS]
       Use custom options

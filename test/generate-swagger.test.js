@@ -50,3 +50,14 @@ test('should use custom options', async (t) => {
     t.assert.ifError(err)
   }
 })
+
+test('should use custom decorator', async (t) => {
+  t.plan(1)
+
+  try {
+    const swagger = JSON.parse(await generateSwagger(['--decorator', 'alternateSwagger', swaggerplugin]))
+    t.assert.equal(swagger.info.title, '@fastify/swagger alternate')
+  } catch (err) {
+    t.assert.ifError(err)
+  }
+})
