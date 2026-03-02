@@ -28,7 +28,7 @@ module.exports = function parseArgs (args) {
       'populate--': true
     },
     number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay', 'trust-proxy-hop'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method', 'trust-proxy-ips'],
+    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method', 'trust-proxy-ips', 'follow-watch'],
     boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks', 'trust-proxy-enabled'],
     envPrefix: 'FASTIFY_',
     alias: {
@@ -58,7 +58,7 @@ module.exports = function parseArgs (args) {
   const additionalArgs = commandLineArguments['--'] || []
   const { _, ...pluginOptions } = argv(additionalArgs)
   const ignoreWatchArg = commandLineArguments.ignoreWatch || configFileOptions?.ignoreWatch || ''
-
+  const followWatchArg = commandLineArguments.followWatch || configFileOptions?.followWatch || ''
   let ignoreWatch = `${DEFAULT_IGNORE} ${ignoreWatchArg}`.trim()
   if (ignoreWatchArg.includes('.ts$')) {
     ignoreWatch = ignoreWatch.replace('dist', '')
@@ -100,6 +100,7 @@ module.exports = function parseArgs (args) {
     method: parsedArgs.method,
     commonPrefix: parsedArgs.commonPrefix,
     includeHooks: parsedArgs.includeHooks,
+    followWatch: followWatchArg,
     trustProxy
   }
 }
