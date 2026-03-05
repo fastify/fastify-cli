@@ -1,10 +1,10 @@
 'use strict'
 
 const { once } = require('node:events')
-const { test, beforeEach, afterEach } = require('node:test')
+const { test: nodeTest, beforeEach, afterEach } = require('node:test')
 const assert = require('node:assert/strict')
 // Tests skip on win32 platforms due SIGINT signal is not supported across all windows platforms
-const testFn = (process.platform === 'win32') ? (name, fn) => test(name, { skip: true }, fn) : test
+const test = (process.platform === 'win32') ? (name, fn) => nodeTest(name, { skip: true }, fn) : nodeTest
 const sinon = require('sinon')
 const start = require('../start')
 
@@ -31,7 +31,7 @@ afterEach(async () => {
   sandbox.restore()
 })
 
-testFn('should add and remove SIGINT listener as expected ', async () => {
+test('should add and remove SIGINT listener as expected ', async () => {
   assert.equal(process.listenerCount('SIGINT'), signalCounter + 1)
 
   await fastify.close()
@@ -39,7 +39,7 @@ testFn('should add and remove SIGINT listener as expected ', async () => {
   assert.equal(process.listenerCount('SIGINT'), signalCounter)
 })
 
-testFn('should have called fastify.close() when receives a SIGINT signal', async (t) => {
+test('should have called fastify.close() when receives a SIGINT signal', async (t) => {
   const exit = process.exit
   process.exit = sinon.spy()
 
