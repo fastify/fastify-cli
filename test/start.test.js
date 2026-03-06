@@ -7,18 +7,75 @@ const fs = require('node:fs')
 const path = require('node:path')
 const crypto = require('node:crypto')
 const semver = require('semver')
+const os = require('node:os')
 const baseFilename = path.join(__dirname, 'fixtures', `test_${crypto.randomBytes(16).toString('hex')}`)
 const { fork } = require('node:child_process')
+const { test: nodeTest } = require('node:test')
+const assert = require('node:assert/strict')
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
-const t = require('tap')
-const test = t.test
 const sinon = require('sinon')
 const proxyquire = require('proxyquire').noPreserveCache()
 const start = require('../start')
 
 const writeFile = util.promisify(fs.writeFile)
 const readFile = util.promisify(fs.readFile)
+
+function createTestDir (fixtures) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'fastify-cli-'))
+
+  function writeFixtures (baseDir, entries) {
+    for (const [name, value] of Object.entries(entries)) {
+      const filename = path.join(baseDir, name)
+      if (value && typeof value === 'object' && !Buffer.isBuffer(value)) {
+        fs.mkdirSync(filename, { recursive: true })
+        writeFixtures(filename, value)
+      } else {
+        fs.mkdirSync(path.dirname(filename), { recursive: true })
+        fs.writeFileSync(filename, value)
+      }
+    }
+  }
+
+  writeFixtures(dir, fixtures)
+  return dir
+}
+
+function tapCompatTest (name, options, fn) {
+  if (typeof options === 'function') {
+    fn = options
+    options = undefined
+  }
+
+  return nodeTest(name, options, async (t) => {
+    let planned = null
+    let assertions = 0
+    const count = (method) => (...args) => {
+      assertions++
+      return method(...args)
+    }
+
+    t.plan = (total) => {
+      planned = total
+    }
+    t.equal = count(assert.strictEqual)
+    t.same = count(assert.deepStrictEqual)
+    t.ok = count(assert.ok)
+    t.pass = count(() => assert.ok(true))
+    t.fail = count((message) => assert.fail(message))
+    t.end = () => {}
+    t.teardown = (hook) => t.after(async () => hook())
+    t.testdir = createTestDir
+
+    await fn(t)
+
+    if (planned !== null) {
+      assert.strictEqual(assertions, planned, `plan expected ${planned} assertions but received ${assertions}`)
+    }
+  })
+}
+
+const test = tapCompatTest
 
 function requireUncached (module) {
   delete require.cache[require.resolve(module)]
@@ -307,30 +364,38 @@ test('should warn on file not found', t => {
   start.start(argv)
 })
 
-test('should throw on package not found', t => {
+test('should throw on package not found', async t => {
   t.plan(1)
 
   const oldStop = start.stop
   t.teardown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
-  }
 
-  const argv = ['-p', getPort(), './test/data/package-not-found.js']
-  start.start(argv)
+  await new Promise((resolve) => {
+    start.stop = function (err) {
+      t.ok(/Cannot find module 'unknown-package'/.test(err.message), err.message)
+      resolve()
+    }
+
+    const argv = ['-p', getPort(), './test/data/package-not-found.js']
+    start.start(argv)
+  })
 })
 
-test('should throw on parsing error', t => {
+test('should throw on parsing error', async t => {
   t.plan(1)
 
   const oldStop = start.stop
   t.teardown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.equal(err.constructor, SyntaxError)
-  }
 
-  const argv = ['-p', getPort(), './test/data/parsing-error.js']
-  start.start(argv)
+  await new Promise((resolve) => {
+    start.stop = function (err) {
+      t.equal(err.constructor, SyntaxError)
+      resolve()
+    }
+
+    const argv = ['-p', getPort(), './test/data/parsing-error.js']
+    start.start(argv)
+  })
 })
 
 test('should start the server with an async/await plugin', async t => {
@@ -372,17 +437,21 @@ test('should exit without error on help', t => {
   t.end()
 })
 
-test('should throw the right error on require file', t => {
+test('should throw the right error on require file', async t => {
   t.plan(1)
 
   const oldStop = start.stop
   t.teardown(() => { start.stop = oldStop })
-  start.stop = function (err) {
-    t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
-  }
 
-  const argv = ['-p', getPort(), './test/data/undefinedVariable.js']
-  start.start(argv)
+  await new Promise((resolve) => {
+    start.stop = function (err) {
+      t.ok(/undefinedVariable is not defined/.test(err.message), err.message)
+      resolve()
+    }
+
+    const argv = ['-p', getPort(), './test/data/undefinedVariable.js']
+    start.start(argv)
+  })
 })
 
 test('should respond 413 - Payload too large', async t => {
@@ -712,14 +781,13 @@ test('should read env variables from .env file', async (t) => {
   await fastify.close()
 })
 
-test('crash on unhandled rejection', t => {
+test('crash on unhandled rejection', async t => {
   t.plan(1)
 
   const argv = ['-p', getPort(), './test/data/rejection.js']
   const child = fork(path.join(__dirname, '..', 'start.js'), argv, { silent: true })
-  child.on('close', function (code) {
-    t.equal(code, 1)
-  })
+  const [code] = await once(child, 'close')
+  t.equal(code, 1)
 })
 
 test('should start the server with inspect options and the defalut port is 9320', async t => {
@@ -925,7 +993,7 @@ test('preloading a built-in module works', async t => {
 test('preloading a module in node_modules works', async t => {
   t.plan(1)
 
-  const argv = ['-r', 'tap', './examples/plugin.js']
+  const argv = ['-r', 'semver', './examples/plugin.js']
   const fastify = await start.start(argv)
   await fastify.close()
   t.pass('server closed')
