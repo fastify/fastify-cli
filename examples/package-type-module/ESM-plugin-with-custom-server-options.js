@@ -13,4 +13,4 @@ export const options = {
   routerOptions: {
     ignoreTrailingSlash: true
   }
-};
+}
