@@ -13,6 +13,9 @@ const {
 } = require('./util')
 const fp = require('fastify-plugin')
 const { loadEnvQuitely } = require('./env-loader')
+const deepmerge = require('@fastify/deepmerge')({
+  cloneProtoObject (obj) { return obj }
+})
 
 let Fastify = null
 
@@ -66,7 +69,13 @@ async function runFastify (opts) {
     return module.exports.stop(e)
   }
 
-  const fastify = Fastify(opts.options)
+  let options = {}
+
+  if (opts.options && file.options) {
+    options = deepmerge(options, file.options)
+  }
+
+  const fastify = Fastify(options)
 
   const pluginOptions = {}
   if (opts.prefix) {
