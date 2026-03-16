@@ -13,6 +13,9 @@ const {
 } = require('./util')
 const fp = require('fastify-plugin')
 const { loadEnvQuitely } = require('./env-loader')
+const deepmerge = require('@fastify/deepmerge')({
+  cloneProtoObject (obj) { return obj }
+})
 
 let Fastify = null
 
@@ -45,10 +48,11 @@ async function generateSwagger (args) {
       process.exit(1)
     }
 
+    const decorator = extraOpts.decorator || 'swagger'
     if (extraOpts.yaml) {
-      return fastify.swagger({ yaml: true })
+      return await fastify[decorator]({ yaml: true })
     } else {
-      return JSON.stringify(fastify.swagger(), undefined, 2)
+      return JSON.stringify(await fastify[decorator](), undefined, 2)
     }
   } finally {
     fastify.close()
@@ -66,7 +70,13 @@ async function runFastify (opts) {
     return module.exports.stop(e)
   }
 
-  const fastify = Fastify(opts.options)
+  let options = {}
+
+  if (opts.options && file.options) {
+    options = deepmerge(options, file.options)
+  }
+
+  const fastify = Fastify(options)
 
   const pluginOptions = {}
   if (opts.prefix) {
