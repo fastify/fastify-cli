@@ -162,7 +162,7 @@ function cli (args) {
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
       template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
-      template.scripts.dev = 'fastify start --ignore-watch=.ts$ -w -l info src/app.ts'
+      template.scripts.dev = 'fastify start -w -l info src/app.ts'
       delete template.scripts['dev:start']
     }
   } else {
