@@ -22,7 +22,7 @@
     "unit:cli-ts": "cross-env TS_NODE_PROJECT=./test/configs/ts-cjs.tsconfig.json node -r ts-node/register suite-runner.js \"test/**/*.test.ts\"",
     "unit:cli": "npm run unit:cli-js && npm run unit:cli-ts && npm run unit:cli-js-esm",
     "test:cli-and-typescript": "npm run unit:cli && npm run test:typescript",
-    "test:typescript": "tsd templates/plugin -t ./../../index.d.ts && tsc --project templates/app-ts/tsconfig.json --noEmit && tsc --project templates/app-ts-esm/tsconfig.json --noEmit"
+    "test:typescript": "tstyche"
   },
   "keywords": [
     "fastify",
@@ -80,11 +80,8 @@
     "strip-ansi": "^6.0.1",
     "ts-node": "^10.4.0",
     "ts-standard": "^12.0.1",
-    "tsd": "^0.33.0",
+    "tstyche": "^7.0.0",
     "typescript": "~6.0.2",
     "walker": "^1.0.8"
-  },
-  "tsd": {
-    "directory": "test"
   }
 }
