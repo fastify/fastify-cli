@@ -2,7 +2,7 @@
 
 const path = require('node:path')
 const generify = require('generify')
-const argv = require('yargs-parser')
+const parseArgs = require('./lib/parse-args')
 const log = require('./log')
 
 function eject (dir, template) {
@@ -19,7 +19,12 @@ function eject (dir, template) {
 }
 
 function cli (args) {
-  const opts = argv(args)
+  const opts = parseArgs(args, {
+    options: {
+      lang: { type: 'string' },
+      esm: { type: 'boolean' }
+    }
+  })
 
   let template
   if (opts.lang === 'ts' || opts.lang === 'typescript') {

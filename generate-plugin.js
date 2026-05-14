@@ -8,7 +8,7 @@ const { existsSync } = require('node:fs')
 const path = require('node:path')
 const chalk = require('chalk')
 const generify = require('generify')
-const argv = require('yargs-parser')
+const parseArgs = require('./lib/parse-args')
 const cliPkg = require('./package')
 const { execSync } = require('node:child_process')
 const { promisify } = require('node:util')
@@ -79,7 +79,11 @@ async function generate (dir, template) {
 }
 
 function cli (args) {
-  const opts = argv(args)
+  const opts = parseArgs(args, {
+    options: {
+      integrate: { type: 'boolean' }
+    }
+  })
   const dir = opts._[0]
 
   if (dir && existsSync(dir)) {
