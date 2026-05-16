@@ -42,6 +42,18 @@ OPTS
   [env: FASTIFY_WATCH]
       Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload.
 
+  --follow-watch
+  [env: FASTIFY_FOLLOW_WATCH]
+      Specify directory or file to watch for changes (default to process.cwd())
+
+  --ignore-watch
+  [env: FASTIFY_IGNORE_WATCH]
+      Specify directories or files to ignore when watching for changes
+
+  -V, --verbose-watch
+  [env: FASTIFY_VERBOSE_WATCH]
+      Print all watch events to the console
+
   -x, --prefix
   [env: FASTIFY_PREFIX]
       Set the prefix
