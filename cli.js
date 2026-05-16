@@ -4,7 +4,8 @@
 
 const path = require('node:path')
 const commist = require('commist')()
-const argv = require('yargs-parser')(process.argv)
+const { parseArgs } = require('node:util')
+const argv = parseArgs({ args: process.argv.slice(2), strict: false, allowPositionals: true }).values
 const help = require('help-me')({
   // the default
   dir: path.join(path.dirname(require.main.filename), 'help')
