@@ -10,5 +10,7 @@ export default async function plugin (fastify, options) {
 }
 
 export const options = {
-  ignoreTrailingSlash: true
+  routerOptions: {
+    ignoreTrailingSlash: true
+  }
 }
