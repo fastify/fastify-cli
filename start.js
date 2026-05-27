@@ -2,8 +2,10 @@
 
 'use strict'
 
-require('dotenv').config()
+const { loadEnvQuitely } = require('./env-loader')
+loadEnvQuitely()
 const isDocker = require('is-docker')
+
 const closeWithGrace = require('close-with-grace')
 const deepmerge = require('@fastify/deepmerge')({
   cloneProtoObject (obj) { return obj }
@@ -50,7 +52,7 @@ async function start (args) {
   loadModules(opts)
 
   if (opts.watch) {
-    return watch(args, opts.ignoreWatch, opts.verboseWatch)
+    return watch(args, opts.ignoreWatch, opts.verboseWatch, opts.followWatch)
   }
 
   return runFastify(args)
@@ -96,7 +98,7 @@ async function preloadESModules (opts) {
   })
 }
 
-async function runFastify (args, additionalOptions, serverOptions) {
+async function runFastify (args, additionalOptions, serverOptions, serverModule) {
   const opts = parseArgs(args)
 
   if (opts.require) {
@@ -113,7 +115,7 @@ async function runFastify (args, additionalOptions, serverOptions) {
   let file = null
 
   try {
-    file = await requireServerPluginFromPath(opts._[0])
+    file = serverModule ?? await requireServerPluginFromPath(opts._[0])
   } catch (e) {
     return module.exports.stop(e)
   }

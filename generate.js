@@ -8,7 +8,7 @@ const {
 const path = require('node:path')
 const chalk = require('chalk')
 const generify = require('generify')
-const argv = require('yargs-parser')
+const parseArgs = require('./lib/parse-args')
 const cliPkg = require('./package')
 const { execSync } = require('node:child_process')
 const log = require('./log')
@@ -134,7 +134,14 @@ function generate (dir, template) {
 }
 
 function cli (args) {
-  const opts = argv(args)
+  const opts = parseArgs(args, {
+    options: {
+      lang: { type: 'string' },
+      esm: { type: 'boolean' },
+      standardlint: { type: 'boolean' },
+      integrate: { type: 'boolean' }
+    }
+  })
   const dir = opts._[0]
 
   if (dir && existsSync(dir)) {
@@ -162,6 +169,8 @@ function cli (args) {
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
       template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
+      template.scripts.dev = 'fastify start -w -l info src/app.ts'
+      delete template.scripts['dev:start']
     }
   } else {
     template = { ...javascriptTemplate }

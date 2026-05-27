@@ -3,7 +3,7 @@
 'use strict'
 
 const parseArgs = require('./args')
-const argv = require('yargs-parser')
+const parseArgsLib = require('./lib/parse-args')
 const log = require('./log')
 const {
   exit,
@@ -12,6 +12,7 @@ const {
   showHelpForCommand
 } = require('./util')
 const fp = require('fastify-plugin')
+const { loadEnvQuitely } = require('./env-loader')
 
 let Fastify = null
 
@@ -25,7 +26,11 @@ function loadModules (opts) {
 
 async function generateSwagger (args) {
   const opts = parseArgs(args)
-  const extraOpts = argv(args)
+  const extraOpts = parseArgsLib(args, {
+    options: {
+      yaml: { type: 'boolean' }
+    }
+  })
   if (opts.help) {
     return showHelpForCommand('generate-swagger')
   }
@@ -55,7 +60,7 @@ async function generateSwagger (args) {
 }
 
 async function runFastify (opts) {
-  require('dotenv').config()
+  loadEnvQuitely()
 
   let file = null
 

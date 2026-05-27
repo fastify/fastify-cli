@@ -11,10 +11,10 @@ const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 1
 
 function exit (message) {
   if (message instanceof Error) {
-    console.log(message)
+    console.error(message)
     return process.exit(1)
   } else if (message) {
-    console.log(`Warn: ${message}`)
+    console.warn(`Warn: ${message}`)
     return process.exit(1)
   }
 

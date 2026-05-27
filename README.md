@@ -165,6 +165,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Prints pretty logs                                                                                                                      | `-P`          | `--pretty-logs`    | `FASTIFY_PRETTY_LOGS`    |
 | Watch process.cwd() directory for changes, recursively; when that happens, the process will auto reload                                 | `-w`          | `--watch`          | `FASTIFY_WATCH`          |
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
+| Watch changes only into the specified files or directories when watch is enabled. (e.g. `--follow-watch='plugins/'` )                   |               | `--follow-watch`   | `FASTIFY_FOLLOW_WATCH`   |
 | Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |     `-V`          | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
@@ -175,7 +176,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Set the IP/CIDR value for `trustProxy` (2nd precedence)                                                                                 |               | `--trust-proxy-ips` | `FASTIFY_TRUST_PROXY_IPS`             |
 | Set the nth hop value for `trustProxy` (3rd precedence)                                                                                 |               | `--trust-proxy-hop` | `FASTIFY_TRUST_PROXY_HOP`             |
 
-By default, `fastify-cli` runs [`dotenv`](https://www.npmjs.com/package/dotenv), so it will load all the env variables stored in `.env` in your current working directory.
+By default, `fastify-cli` loads environment variables from `.env` in your current working directory using Node.js's built-in `process.loadEnvFile()` (requires Node.js >= 20.6.0).
 
 The default value for `--plugin-timeout` is 10 seconds.
 By default,`--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp' files.
@@ -203,7 +204,9 @@ just add the following `server.js`:
 'use strict'
 
 // Read the .env file.
-require('dotenv').config()
+try {
+  process.loadEnvFile()
+} catch {}
 
 // Require the framework
 const Fastify = require('fastify')
@@ -349,11 +352,12 @@ There are two utilities provided:
 - `build`: builds your application and returns the `fastify` instance without calling the `listen` method.
 - `listen`: starts your application and returns the `fastify` instance listening on the configured port.
 
-Both of these utilities have the `function(args, pluginOptions, serverOptions)` parameters:
+Both of these utilities have the `function(args, pluginOptions, serverOptions, serverModule)` parameters:
 
 - `args`: is a string or a string array within the same arguments passed to the `fastify-cli` command.
 - `pluginOptions`: is an object containing the options provided to the started plugin (eg: `app.js`).
 - `serverOptions`: is an object containing the additional options provided to fastify server, similar to the `--options` command line argument
+- `serverModule`: is an optional parameter used to provide the already imported main server plugin module, instead of letting the helper import it.
 
 ```js
 // load the utility helper functions

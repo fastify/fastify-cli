@@ -1,8 +1,8 @@
 'use strict'
 
-const argv = require('yargs-parser')
-const dotenv = require('dotenv')
+const parseArgs = require('./lib/parse-args')
 const { requireModule } = require('./util')
+const { loadEnvQuitely } = require('./env-loader')
 
 const DEFAULT_IGNORE = 'node_modules build dist .git bower_components logs .swp .nyc_output'
 
@@ -21,44 +21,57 @@ const DEFAULT_ARGUMENTS = {
   commonPrefix: false
 }
 
-module.exports = function parseArgs (args) {
-  dotenv.config()
-  const commandLineArguments = argv(args, {
-    configuration: {
-      'populate--': true
-    },
-    number: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay', 'trust-proxy-hop'],
-    string: ['log-level', 'address', 'socket', 'prefix', 'ignore-watch', 'logging-module', 'debug-host', 'lang', 'require', 'import', 'config', 'method', 'trust-proxy-ips'],
-    boolean: ['pretty-logs', 'options', 'watch', 'verbose-watch', 'debug', 'standardlint', 'common-prefix', 'include-hooks', 'trust-proxy-enabled'],
+const CLI_OPTIONS = {
+  port: { type: 'string', short: 'p' },
+  'inspect-port': { type: 'string' },
+  'body-limit': { type: 'string' },
+  'plugin-timeout': { type: 'string', short: 'T' },
+  'close-grace-delay': { type: 'string', short: 'g' },
+  'trust-proxy-hop': { type: 'string' },
+  'log-level': { type: 'string', short: 'l' },
+  address: { type: 'string', short: 'a' },
+  socket: { type: 'string', short: 's' },
+  prefix: { type: 'string', short: 'x' },
+  'ignore-watch': { type: 'string' },
+  'logging-module': { type: 'string', short: 'L' },
+  'debug-host': { type: 'string' },
+  lang: { type: 'string' },
+  require: { type: 'string', short: 'r' },
+  import: { type: 'string', short: 'i' },
+  config: { type: 'string', short: 'c' },
+  method: { type: 'string' },
+  'trust-proxy-ips': { type: 'string' },
+  'follow-watch': { type: 'string' },
+  'pretty-logs': { type: 'boolean', short: 'P' },
+  options: { type: 'boolean', short: 'o' },
+  watch: { type: 'boolean', short: 'w' },
+  'verbose-watch': { type: 'boolean', short: 'V' },
+  debug: { type: 'boolean', short: 'd' },
+  standardlint: { type: 'boolean' },
+  'common-prefix': { type: 'boolean' },
+  'include-hooks': { type: 'boolean' },
+  'trust-proxy-enabled': { type: 'boolean' },
+  help: { type: 'boolean', short: 'h' },
+  'debug-port': { type: 'string', short: 'I' }
+}
+
+module.exports = function parseCliArgs (args) {
+  loadEnvQuitely()
+  const commandLineArguments = parseArgs(args, {
+    populateRest: true,
     envPrefix: 'FASTIFY_',
-    alias: {
-      port: ['p'],
-      socket: ['s'],
-      help: ['h'],
-      config: ['c'],
-      options: ['o'],
-      address: ['a'],
-      watch: ['w'],
-      prefix: ['x'],
-      require: ['r'],
-      import: ['i'],
-      debug: ['d'],
-      'debug-port': ['I'],
-      'log-level': ['l'],
-      'pretty-logs': ['P'],
-      'plugin-timeout': ['T'],
-      'close-grace-delay': ['g'],
-      'logging-module': ['L'],
-      'verbose-watch': ['V']
-    }
+    tokenize: true,
+    coerceNumbers: ['port', 'inspect-port', 'body-limit', 'plugin-timeout', 'close-grace-delay', 'trust-proxy-hop', 'debug-port'],
+    options: CLI_OPTIONS
   })
 
   const configFileOptions = commandLineArguments.config ? requireModule(commandLineArguments.config) : undefined
 
   const additionalArgs = commandLineArguments['--'] || []
-  const { _, ...pluginOptions } = argv(additionalArgs)
+  const pluginParsed = parseArgs(additionalArgs, { options: {}, strict: false })
+  const { _, ...pluginOptions } = pluginParsed
   const ignoreWatchArg = commandLineArguments.ignoreWatch || configFileOptions?.ignoreWatch || ''
-
+  const followWatchArg = commandLineArguments.followWatch || configFileOptions?.followWatch || ''
   let ignoreWatch = `${DEFAULT_IGNORE} ${ignoreWatchArg}`.trim()
   if (ignoreWatchArg.includes('.ts$')) {
     ignoreWatch = ignoreWatch.replace('dist', '')
@@ -76,6 +89,7 @@ module.exports = function parseArgs (args) {
   return {
     _: parsedArgs._,
     '--': additionalArgs,
+    help: parsedArgs.help,
     port: parsedArgs.port,
     bodyLimit: parsedArgs.bodyLimit,
     pluginTimeout: parsedArgs.pluginTimeout,
@@ -100,6 +114,7 @@ module.exports = function parseArgs (args) {
     method: parsedArgs.method,
     commonPrefix: parsedArgs.commonPrefix,
     includeHooks: parsedArgs.includeHooks,
+    followWatch: followWatchArg,
     trustProxy
   }
 }
