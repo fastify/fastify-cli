@@ -30,6 +30,13 @@ test('--help', async t => {
   )
 })
 
+test('--help generate', async t => {
+  t.assert.equal(
+    execSync('node cli.js --help generate', { encoding: 'utf-8' }),
+    readFileSync(path.join(__dirname, '../help/generate.txt'), 'utf-8')
+  )
+})
+
 test('generate --help', async t => {
   t.assert.equal(
     execSync('node cli.js generate --help', { encoding: 'utf-8' }),
