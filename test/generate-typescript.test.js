@@ -141,11 +141,12 @@ function define (t) {
         t.assert.strictEqual(pkg.dependencies['@fastify/sensible'], cliPkg.devDependencies['@fastify/sensible'])
         t.assert.strictEqual(pkg.devDependencies['@types/node'], cliPkg.devDependencies['@types/node'])
         t.assert.strictEqual(pkg.devDependencies.c8, cliPkg.devDependencies.c8)
+        t.assert.strictEqual(pkg.devDependencies['cross-env'], cliPkg.devDependencies['cross-env'])
         t.assert.strictEqual(pkg.devDependencies['ts-node'], cliPkg.devDependencies['ts-node'])
         t.assert.strictEqual(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.assert.strictEqual(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
-        const testGlob = pkg.scripts.test.split(' ', 14)[13].replaceAll('"', '')
+        const testGlob = pkg.scripts.test.match(/"?test\/\*\*\/\*\.ts"?$/)[0].replaceAll('"', '')
 
         t.assert.strictEqual(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1, 'should match glob')
         resolve()
