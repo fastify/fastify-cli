@@ -8,10 +8,11 @@ module.exports = fp(function (fastify, opts, next) {
       return `\
 openapi: 3.0.3
 info:
-version: 8.1.0
-title: "@fastify/swagger"
+  version: 8.1.0
+  title: "@fastify/swagger"
+  description: "Body limit: ${fastify.initialConfig.bodyLimit}"
 components:
-schemas: {}
+  schemas: {}
 paths:
 "/":
   get:
@@ -29,7 +30,8 @@ paths:
         openapi: '3.0.3',
         info: {
           version: '8.1.0',
-          title: '@fastify/swagger'
+          title: '@fastify/swagger',
+          description: `Body limit: ${fastify.initialConfig.bodyLimit}`
         },
         components: {
           schemas: {}
@@ -59,3 +61,7 @@ paths:
   })
   next()
 })
+
+module.exports.options = {
+  bodyLimit: 2097152
+}
