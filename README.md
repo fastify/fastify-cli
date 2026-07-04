@@ -179,7 +179,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 By default, `fastify-cli` loads environment variables from `.env` in your current working directory using Node.js's built-in `process.loadEnvFile()` (requires Node.js >= 20.6.0).
 
 The default value for `--plugin-timeout` is 10 seconds.
-By default,`--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp' files.
+By default,`--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp .nyc_output` files.
 
 #### Containerization
 
