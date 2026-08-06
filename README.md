@@ -319,9 +319,15 @@ Finally, there will be a new `README.md` file, which provides internal informati
 
 ### generate-swagger
 
-if your project uses `@fastify/swagger`, `fastify-cli` can generate and write out the resulting Swagger/OpenAPI schema for you.
+If your project uses `@fastify/swagger`, `fastify-cli` can generate and write out the resulting Swagger/OpenAPI schema for you.
 
 `fastify generate-swagger app.js`
+
+To generate in YAML format add `--yaml=true`, to use the custom options from the
+main plugin file add `-o/--options`. To use a custom decorator (The
+`@fastify/swagger` `decorator` option), use `--decorator`.
+
+The schema is written to stdout.
 
 ### linting
 
