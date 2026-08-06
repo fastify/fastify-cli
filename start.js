@@ -84,7 +84,7 @@ async function preloadESModules (opts) {
   if (typeof opts.import === 'string') {
     opts.import = [opts.import]
   }
-  opts.import.forEach(async (m) => {
+  await Promise.all(opts.import.map(async (m) => {
     if (m) {
       /* This check ensures we ignore `-i ""`, trailing `-i`, or
        * other silly things the user might (inadvertently) be doing.
@@ -95,7 +95,7 @@ async function preloadESModules (opts) {
         module.exports.stop(e)
       }
     }
-  })
+  }))
 }
 
 async function runFastify (args, additionalOptions, serverOptions, serverModule) {
