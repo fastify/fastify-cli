@@ -64,6 +64,7 @@ const typescriptTemplate = {
   devDependencies: {
     '@types/node': cliPkg.devDependencies['@types/node'],
     c8: cliPkg.devDependencies.c8,
+    'cross-env': cliPkg.devDependencies['cross-env'],
     'ts-node': cliPkg.devDependencies['ts-node'],
     concurrently: cliPkg.devDependencies.concurrently,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
@@ -168,7 +169,7 @@ function cli (args) {
       template.type = 'module'
 
       template.devDependencies.c8 = cliPkg.devDependencies.c8
-      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
+      template.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && cross-env FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
       template.scripts.dev = 'fastify start -w -l info src/app.ts'
       delete template.scripts['dev:start']
     }
