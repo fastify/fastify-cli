@@ -5,7 +5,7 @@ import Fastify from 'fastify'
 import closeWithGrace from 'close-with-grace'
 
 // Import your application
-import appService from './app.js'
+import { app as serviceApp, options as serviceOptions} from './app.js'
 
 // Read and load environment variables from .env files (ignore if not present)
 try {
@@ -13,12 +13,12 @@ try {
 } catch {}
 
 // Instantiate Fastify with some config
-const app = Fastify({
+const app = Fastify(serviceOptions || {
   logger: true
 })
 
 // Register your application as a normal plugin
-app.register(appService)
+app.register(serviceApp)
 
 // delay is the number of milliseconds for the graceful close to finish
 closeWithGrace({ delay: process.env.FASTIFY_CLOSE_GRACE_DELAY || 500 }, async function ({ signal, err, manual }) {
