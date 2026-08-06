@@ -47,9 +47,10 @@ const typescriptTemplate = {
   dir: 'app-ts',
   main: 'app.ts',
   scripts: {
+    clean: 'node -e "require(\'fs\').rmSync(\'dist\', {recursive: true, force: true})"',
     test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register "test/**/*.ts"',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
-    'build:ts': 'tsc',
+    'build:ts': 'npm run clean && tsc',
     'watch:ts': 'tsc -w',
     dev: 'npm run build:ts && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "npm:watch:ts" "npm:dev:start"',
     'dev:start': 'fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js'
@@ -78,7 +79,8 @@ const typescriptTemplate = {
     log('info', `project ${pkg.name} generated successfully`)
     log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
     log('debug', `run '${chalk.bold('npm start')}' to start the application`)
-    log('debug', `run '${chalk.bold('npm build:ts')}' to compile the typescript application`)
+    log('debug', `run '${chalk.bold('npm run clean')}' to remove the compiled output directory`)
+    log('debug', `run '${chalk.bold('npm run build:ts')}' to compile the typescript application`)
     log('debug', `run '${chalk.bold('npm run dev')}' to start the application with pino-pretty pretty logging (not suitable for production)`)
     log('debug', `run '${chalk.bold('npm test')}' to execute the unit tests`)
   }
