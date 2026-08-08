@@ -6,3 +6,7 @@ OPTS
 
   --yaml=true
       generate in YAML format
+
+  -o, --options
+  [env: FASTIFY_OPTIONS]
+      Use custom options
