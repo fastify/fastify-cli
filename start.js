@@ -163,7 +163,7 @@ async function runFastify (args, additionalOptions, serverOptions, serverModule)
     options = deepmerge(options, serverOptions)
   }
 
-  if (opts.options && file.options) {
+  if (opts.options || file.options) {
     options = deepmerge(options, file.options)
   }
 
