@@ -171,6 +171,13 @@ async function runFastify (args, additionalOptions, serverOptions, serverModule)
     options.trustProxy = opts.trustProxy
   }
 
+  // fastify v5 only accepts a configuration object in `logger`;
+  // logger instances must be passed via `loggerInstance`
+  if (options.logger && typeof options.logger.child === 'function') {
+    options.loggerInstance = options.logger
+    delete options.logger
+  }
+
   const fastify = Fastify(options)
 
   if (opts.prefix) {
