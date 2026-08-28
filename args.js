@@ -52,7 +52,8 @@ const CLI_OPTIONS = {
   'include-hooks': { type: 'boolean' },
   'trust-proxy-enabled': { type: 'boolean' },
   help: { type: 'boolean', short: 'h' },
-  'debug-port': { type: 'string', short: 'I' }
+  'debug-port': { type: 'string', short: 'I' },
+  yaml: { type: 'boolean' }
 }
 
 module.exports = function parseCliArgs (args) {
