@@ -69,7 +69,9 @@ async function generate (dir, template) {
   pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
   pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
   pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
-  pkg.tstyche = Object.assign(pkg.tstyche || {}, template.tstyche)
+  if (template.tstyche) {
+    pkg.tstyche = Object.assign(pkg.tstyche || {}, template.tstyche)
+  }
 
   log('debug', 'edited package.json, saving')
 
