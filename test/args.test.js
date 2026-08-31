@@ -293,7 +293,7 @@ test('should parse custom plugin options', t => {
       a: true,
       b: true,
       c: true,
-      hello: true
+      hello: 'world'
     },
     bodyLimit: 5242880,
     debug: true,
@@ -306,6 +306,17 @@ test('should parse custom plugin options', t => {
     includeHooks: undefined,
     trustProxy: undefined
   })
+})
+
+test('should parse plugin options with negative values', t => {
+  const parsedArgs = parseArgs([
+    'app.js',
+    '--',
+    '--offset',
+    '-1'
+  ])
+
+  t.assert.equal(parsedArgs.pluginOptions.offset, '-1')
 })
 
 test('should parse config file correctly and prefer config values over default ones', t => {

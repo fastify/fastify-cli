@@ -69,7 +69,10 @@ module.exports = function parseCliArgs (args) {
   const configFileOptions = commandLineArguments.config ? requireModule(commandLineArguments.config) : undefined
 
   const additionalArgs = commandLineArguments['--'] || []
-  const pluginParsed = parseArgs(additionalArgs, { options: {}, strict: false })
+  const pluginParsed = parseArgs(additionalArgs, {
+    inferUnknownOptions: true,
+    strict: true
+  })
   const { _, ...pluginOptions } = pluginParsed
   const ignoreWatchArg = commandLineArguments.ignoreWatch || configFileOptions?.ignoreWatch || ''
   const followWatchArg = commandLineArguments.followWatch || configFileOptions?.followWatch || ''
