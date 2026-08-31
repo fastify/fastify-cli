@@ -70,6 +70,7 @@ module.exports = function parseCliArgs (args) {
 
   const additionalArgs = commandLineArguments['--'] || []
   const pluginParsed = parseArgs(additionalArgs, {
+    coerceUnknownNumbers: true,
     inferUnknownOptions: true,
     strict: true
   })

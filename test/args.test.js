@@ -316,7 +316,7 @@ test('should parse plugin options with negative values', t => {
     '-1'
   ])
 
-  t.assert.equal(parsedArgs.pluginOptions.offset, '-1')
+  t.assert.equal(parsedArgs.pluginOptions.offset, -1)
 })
 
 test('should parse config file correctly and prefer config values over default ones', t => {
