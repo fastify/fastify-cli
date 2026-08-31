@@ -5,9 +5,8 @@
 const path = require('node:path')
 const commist = require('commist')()
 const { parseArgs } = require('node:util')
-const parsed = parseArgs({ args: process.argv.slice(2), strict: false, allowPositionals: true })
-const argv = parsed.values
-const positionals = parsed.positionals
+const parsedArgs = parseArgs({ args: process.argv.slice(2), strict: false, allowPositionals: true })
+const argv = parsedArgs.values
 const help = require('help-me')({
   // the default
   dir: path.join(path.dirname(require.main.filename), 'help')
@@ -34,7 +33,7 @@ commist.register('print-routes', printRoutes.cli)
 commist.register('print-plugins', printPlugins.cli)
 
 if (argv.help) {
-  const command = positionals[0]
+  const command = parsedArgs.positionals[0]
 
   help.toStdout(command)
 } else {
