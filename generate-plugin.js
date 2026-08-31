@@ -8,7 +8,7 @@ const { existsSync } = require('node:fs')
 const path = require('node:path')
 const chalk = require('chalk')
 const generify = require('generify')
-const argv = require('yargs-parser')
+const parseArgs = require('./lib/parse-args')
 const cliPkg = require('./package')
 const { execSync } = require('node:child_process')
 const { promisify } = require('node:util')
@@ -22,7 +22,7 @@ const pluginTemplate = {
     lint: 'standard && npm run lint:typescript',
     'lint:typescript': 'ts-standard',
     test: 'npm run lint && npm run unit && npm run test:typescript',
-    'test:typescript': 'tsd',
+    'test:typescript': 'tstyche',
     unit: 'node --test'
   },
   dependencies: {
@@ -34,16 +34,16 @@ const pluginTemplate = {
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
     standard: cliPkg.devDependencies.standard,
     'ts-standard': cliPkg.devDependencies['ts-standard'],
-    tsd: cliPkg.devDependencies.tsd,
+    tstyche: cliPkg.devDependencies.tstyche,
     typescript: cliPkg.devDependencies.typescript
-  },
-  tsd: {
-    directory: 'test'
   },
   logInstructions: function (pkg) {
     log('debug', 'saved package.json')
     log('info', `project ${pkg.name} generated successfully`)
-    log('debug', `run '${chalk.bold('npm install')}' to install the dependencies`)
+    log(
+      'debug',
+      `run '${chalk.bold('npm install')}' to install the dependencies`
+    )
     log('debug', `run '${chalk.bold('npm test')}' to execute the tests`)
   }
 }
@@ -69,7 +69,7 @@ async function generate (dir, template) {
   pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
   pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
   pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
-  pkg.tsd = Object.assign(pkg.tsd || {}, template.tsd)
+  pkg.tstyche = Object.assign(pkg.tstyche || {}, template.tstyche)
 
   log('debug', 'edited package.json, saving')
 
@@ -79,7 +79,11 @@ async function generate (dir, template) {
 }
 
 function cli (args) {
-  const opts = argv(args)
+  const opts = parseArgs(args, {
+    options: {
+      integrate: { type: 'boolean' }
+    }
+  })
   const dir = opts._[0]
 
   if (dir && existsSync(dir)) {

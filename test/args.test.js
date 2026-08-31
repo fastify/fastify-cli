@@ -35,6 +35,7 @@ test('should parse args correctly', t => {
   t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
+    help: undefined,
     prettyLogs: true,
     options: true,
     watch: true,
@@ -96,6 +97,7 @@ test('should parse args with = assignment correctly', t => {
   t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
+    help: undefined,
     prettyLogs: true,
     options: true,
     watch: true,
@@ -178,6 +180,7 @@ test('should parse env vars correctly', t => {
   t.assert.deepStrictEqual(parsedArgs, {
     _: [],
     '--': [],
+    help: undefined,
     prettyLogs: true,
     options: true,
     watch: true,
@@ -270,6 +273,7 @@ test('should parse custom plugin options', t => {
       '--hello',
       'world'
     ],
+    help: undefined,
     prettyLogs: true,
     options: true,
     watch: true,
@@ -289,7 +293,7 @@ test('should parse custom plugin options', t => {
       a: true,
       b: true,
       c: true,
-      hello: 'world'
+      hello: true
     },
     bodyLimit: 5242880,
     debug: true,
@@ -316,6 +320,7 @@ test('should parse config file correctly and prefer config values over default o
   t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
+    help: undefined,
     port: 5000,
     bodyLimit: undefined,
     pluginTimeout: 9000,
@@ -361,6 +366,7 @@ test('should prefer command line args over config file options', t => {
   t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
+    help: undefined,
     port: 4000,
     bodyLimit: undefined,
     pluginTimeout: 10000,
@@ -408,6 +414,7 @@ test('should favor trust proxy enabled over trust proxy ips and trust proxy hop'
   t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
+    help: undefined,
     port: 4000,
     bodyLimit: undefined,
     pluginTimeout: 10000,
@@ -454,6 +461,7 @@ test('should favor trust proxy ips over trust proxy hop', t => {
   t.assert.deepStrictEqual(parsedArgs, {
     _: ['app.js'],
     '--': [],
+    help: undefined,
     port: 4000,
     bodyLimit: undefined,
     pluginTimeout: 10000,

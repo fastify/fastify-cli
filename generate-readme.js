@@ -3,7 +3,7 @@
 const { readFileSync, existsSync } = require('node:fs')
 const path = require('node:path')
 const generify = require('generify')
-const argv = require('yargs-parser')
+const parseArgs = require('./lib/parse-args')
 const { execSync } = require('node:child_process')
 const log = require('./log')
 
@@ -86,7 +86,11 @@ function showHelp () {
 }
 
 function cli (args) {
-  const opts = argv(args)
+  const opts = parseArgs(args, {
+    options: {
+      help: { type: 'boolean' }
+    }
+  })
 
   const dir = process.cwd()
 

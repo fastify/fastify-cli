@@ -3,7 +3,7 @@
 'use strict'
 
 const parseArgs = require('./args')
-const argv = require('yargs-parser')
+const parseArgsLib = require('./lib/parse-args')
 const log = require('./log')
 const {
   exit,
@@ -26,7 +26,11 @@ function loadModules (opts) {
 
 async function generateSwagger (args) {
   const opts = parseArgs(args)
-  const extraOpts = argv(args)
+  const extraOpts = parseArgsLib(args, {
+    options: {
+      yaml: { type: 'boolean' }
+    }
+  })
   if (opts.help) {
     return showHelpForCommand('generate-swagger')
   }

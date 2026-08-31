@@ -1,5 +1,5 @@
 // Module code is always strict mode code.
-// http://www.ecma-international.org/ecma-262/6.0/#sec-strict-mode-code
+// https://262.ecma-international.org/6.0/#sec-strict-mode-code
 //
 // this file has a .js extension, but the package.json in this folder contains '"type":"module"'
 
@@ -10,5 +10,7 @@ export default async function plugin (fastify, options) {
 }
 
 export const options = {
-  ignoreTrailingSlash: true
+  routerOptions: {
+    ignoreTrailingSlash: true
+  }
 }

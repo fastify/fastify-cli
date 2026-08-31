@@ -1,6 +1,6 @@
 import fastify from 'fastify'
 import example from '..'
-import { expectType } from 'tsd'
+import { expect } from 'tstyche'
 
 let app
 try {
@@ -9,7 +9,7 @@ try {
   void app.ready()
   // eslint-disable-next-line no-void
   void app.register(example)
-  expectType<() => string>(app.exampleDecorator)
+  expect(app.exampleDecorator).type.toBe<() => string>()
 } catch (err) {
   console.error(err)
 }
