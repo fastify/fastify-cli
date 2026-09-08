@@ -51,6 +51,7 @@ const CLI_OPTIONS = {
   'common-prefix': { type: 'boolean' },
   'include-hooks': { type: 'boolean' },
   'trust-proxy-enabled': { type: 'boolean' },
+  yaml: { type: 'boolean' },
   help: { type: 'boolean', short: 'h' },
   'debug-port': { type: 'string', short: 'I' }
 }

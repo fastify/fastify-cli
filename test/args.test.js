@@ -210,6 +210,18 @@ test('should parse env vars correctly', t => {
   })
 })
 
+test('should preserve explicit false boolean values', t => {
+  const parsedArgs = parseArgs([
+    '--watch=false',
+    '--pretty-logs', 'false',
+    'app.js'
+  ])
+
+  t.assert.strictEqual(parsedArgs.watch, false)
+  t.assert.strictEqual(parsedArgs.prettyLogs, false)
+  t.assert.deepStrictEqual(parsedArgs._, ['app.js'])
+})
+
 test('should respect default values', t => {
   t.plan(14)
 
@@ -293,7 +305,7 @@ test('should parse custom plugin options', t => {
       a: true,
       b: true,
       c: true,
-      hello: true
+      hello: 'world'
     },
     bodyLimit: 5242880,
     debug: true,
