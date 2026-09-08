@@ -610,7 +610,7 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
   isDocker.returns(true)
 
   const start = proxyquire('../start', {
-    'is-docker': isDocker
+    'is-docker': { default: isDocker }
   })
 
   const argv = ['-p', getPort(), './examples/plugin.js']
@@ -848,7 +848,7 @@ for (const inspectorHostCase of inspectorHostCases) {
     const isDocker = sinon.stub().returns(inspectorHostCase.isDocker)
     const isKubernetes = sinon.stub().returns(inspectorHostCase.isKubernetes)
     const start = proxyquire('../start', {
-      'is-docker': isDocker,
+      'is-docker': { default: isDocker },
       './util': {
         ...require('../util'),
         isKubernetes

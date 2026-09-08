@@ -4,7 +4,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const url = require('node:url')
 const semver = require('semver')
-const pkgUp = require('pkg-up')
+const { pkgUp } = require('pkg-up')
 const resolveFrom = require('resolve-from')
 
 const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
