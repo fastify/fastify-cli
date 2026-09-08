@@ -70,19 +70,11 @@ function generate (dir, { pluginMeta, encapsulated, pluginFileName }) {
   })
 }
 
-function stop (error) {
-  if (error) {
-    console.log(error)
-    process.exit(1)
-  }
-  process.exit()
-}
-
 function showHelp () {
   console.log(
     readFileSync(path.join(__dirname, 'help', 'readme.txt'), 'utf8')
   )
-  return stop()
+  process.exit()
 }
 
 function cli (args) {

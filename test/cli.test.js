@@ -43,3 +43,10 @@ test('generate --help', async t => {
     readFileSync(path.join(__dirname, '../help/generate.txt'), 'utf-8')
   )
 })
+
+test('version', async t => {
+  t.assert.equal(
+    execSync('node cli.js version').toString().trim(),
+    require('../package.json').version
+  )
+})

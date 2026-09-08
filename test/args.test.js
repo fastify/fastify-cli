@@ -558,3 +558,21 @@ test('should collect repeated options into an array', t => {
   t.assert.deepStrictEqual(parsedArgs.require, ['./a.js', './b.js'])
   t.assert.strictEqual(parsedArgs.import, './c.mjs')
 })
+
+test('should drop dist from the ignore list when watching typescript sources', t => {
+  t.plan(1)
+
+  const parsedArgs = parseArgs(['--ignore-watch', '.ts$', 'app.ts'])
+
+  t.assert.strictEqual(parsedArgs.ignoreWatch, 'node_modules build  .git bower_components logs .swp .nyc_output .ts$')
+})
+
+test('should read the ignore and follow watch options from the config file', t => {
+  t.plan(3)
+
+  const parsedArgs = parseArgs(['--config', './test/data/watch-config.js', 'app.js'])
+
+  t.assert.strictEqual(parsedArgs.ignoreWatch, 'node_modules build dist .git bower_components logs .swp .nyc_output ignoreme.js')
+  t.assert.strictEqual(parsedArgs.followWatch, 'followme.js')
+  t.assert.strictEqual(parsedArgs.trustProxy, true)
+})

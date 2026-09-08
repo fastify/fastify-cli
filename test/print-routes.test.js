@@ -8,9 +8,6 @@ const exec = util.promisify(require('node:child_process').exec)
 
 const printRoutes = require('../print-routes')
 
-const { NYC_PROCESS_ID, NODE_V8_COVERAGE } = process.env
-const SHOULD_SKIP = NYC_PROCESS_ID || NODE_V8_COVERAGE
-
 test('should print routes', async t => {
   t.plan(2)
 
@@ -26,7 +23,7 @@ test('should print routes', async t => {
 })
 
 // This never exits in CI for some reason
-test('should print routes via cli', { skip: SHOULD_SKIP }, async t => {
+test('should print routes via cli', async t => {
   t.plan(1)
   const { stdout } = await exec('node cli.js print-routes ./examples/plugin.js', { encoding: 'utf-8', timeout: 10000 })
   t.assert.deepStrictEqual(
@@ -149,4 +146,60 @@ test('should print routes with hooks with --include-hooks flag', async t => {
 
   t.assert.ok(spy.called)
   t.assert.deepStrictEqual(spy.args, [['debug', '└── / (GET, POST)\n    / (HEAD)\n    • (onSend) ["headRouteOnSendHandler()"]\n']])
+})
+
+test('should print the help when the file parameter is missing', t => {
+  t.mock.method(process, 'exit', () => {})
+  t.mock.method(console, 'error', () => {})
+  t.mock.method(console, 'log', () => {})
+
+  printRoutes.printRoutes([])
+
+  t.assert.strictEqual(console.error.mock.calls[0].arguments[0], 'Missing the required file parameter\n')
+  t.assert.match(console.log.mock.calls[0].arguments[0], /Usage:/)
+  t.assert.strictEqual(process.exit.mock.calls[0].arguments[0], undefined)
+})
+
+test('should register the plugin with a prefix', async t => {
+  const spy = sinon.spy()
+  const command = proxyquire('../print-routes', {
+    './log': spy
+  })
+  const fastify = await command.printRoutes(['./examples/plugin.js', '--prefix', '/api'])
+  await fastify.close()
+
+  t.assert.ok(spy.called)
+  t.assert.match(spy.args[0][1], /api|root/)
+})
+
+test('should stop when fastify cannot be loaded', t => {
+  t.mock.method(process, 'exit', () => {})
+  t.mock.method(console, 'warn', () => {})
+  const command = proxyquire('../print-routes', {
+    './util': {
+      ...require('../util'),
+      requireFastifyForModule () { throw new Error('nope') }
+    }
+  })
+  const stop = t.mock.method(command, 'stop', () => {})
+
+  command.printRoutes(['./examples/plugin.js']).catch(() => {})
+
+  t.assert.strictEqual(stop.mock.calls[0].arguments[0].message, 'nope')
+})
+
+test('should exit with an error when run directly on a missing file', async t => {
+  await t.assert.rejects(
+    exec('node print-routes.js ./test/data/not-found.js', { encoding: 'utf-8', timeout: 10000 }),
+    err => {
+      t.assert.strictEqual(err.code, 1)
+      t.assert.match(err.stderr, /not-found\.js doesn't exist within/)
+      return true
+    }
+  )
+})
+
+test('should print routes when run directly', async t => {
+  const { stdout } = await exec('node print-routes.js ./examples/plugin.js', { encoding: 'utf-8', timeout: 10000 })
+  t.assert.ok(stdout.length > 0)
 })
