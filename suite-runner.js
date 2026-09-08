@@ -5,21 +5,40 @@ const { glob } = require('glob')
 
 const pattern = process.argv[process.argv.length - 1]
 
-console.info(`Running tests matching ${pattern}`)
-const timeout = 10 * 60 * 1000 // 10 minutes
-glob(pattern, { ignore: ['**/node_modules/**', 'test/workdir*/**'] }).then((matches) => {
+async function main () {
+  console.info(`Running tests matching ${pattern}`)
+  const timeout = 10 * 60 * 1000 // 10 minutes
+  const matches = await glob(pattern, {
+    ignore: ['**/node_modules/**', 'test/workdir*/**']
+  })
   if (matches.length === 0) {
-    console.error(`No test files matched ${pattern}`)
-    process.exit(1)
+    throw new Error(`No test files matched ${pattern}`)
   }
+
   const resolved = matches.map(file => path.resolve(file))
-  const testRs = run({ files: resolved, timeout, concurrency: 1 })
+  const runOptions = {
+    files: resolved,
+    timeout,
+    concurrency: 1
+  }
+  if (pattern.endsWith('.ts') && process.execArgv.some(arg => arg.includes('ts-node/esm'))) {
+    runOptions.isolation = 'none'
+  }
+
+  const testRs = run(runOptions)
     .on('test:fail', () => {
       process.exitCode = 1
     })
     .compose(spec)
-  testRs.pipe(process.stdout)
-}, (err) => {
+
+  await new Promise((resolve, reject) => {
+    testRs.once('error', reject)
+    testRs.once('end', resolve)
+    testRs.pipe(process.stdout, { end: false })
+  })
+}
+
+main().catch(err => {
   console.error(err)
-  process.exit(1)
+  process.exitCode = 1
 })
