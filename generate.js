@@ -6,7 +6,7 @@ const {
   existsSync
 } = require('node:fs')
 const path = require('node:path')
-const chalk = require('chalk')
+const chalk = require('chalk').default
 const generify = require('generify')
 const parseArgs = require('./lib/parse-args')
 const cliPkg = require('./package')

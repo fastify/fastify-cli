@@ -4,7 +4,7 @@
 
 const { loadEnvQuitely } = require('./env-loader')
 loadEnvQuitely()
-const isDocker = require('is-docker')
+const isDocker = require('is-docker').default
 
 const closeWithGrace = require('close-with-grace')
 const deepmerge = require('@fastify/deepmerge')({
