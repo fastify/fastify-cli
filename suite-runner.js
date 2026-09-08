@@ -13,7 +13,7 @@ glob(pattern, { ignore: ['**/node_modules/**', 'test/workdir*/**'] }).then((matc
     process.exit(1)
   }
   const resolved = matches.map(file => path.resolve(file))
-  const testRs = run({ files: resolved, timeout })
+  const testRs = run({ files: resolved, timeout, concurrency: 1 })
     .on('test:fail', () => {
       process.exitCode = 1
     })
