@@ -293,7 +293,7 @@ test('should parse custom plugin options', t => {
       a: true,
       b: true,
       c: true,
-      hello: true
+      hello: 'world'
     },
     bodyLimit: 5242880,
     debug: true,
@@ -489,4 +489,72 @@ test('should favor trust proxy ips over trust proxy hop', t => {
     includeHooks: undefined,
     trustProxy: '127.0.0.1'
   })
+})
+
+test('should treat explicit false boolean values as false', t => {
+  t.plan(8)
+
+  const parsedArgs = parseArgs([
+    '--watch=false',
+    '--debug', 'false',
+    '--pretty-logs', '0',
+    '-P', 'false',
+    '--options=1',
+    '--verbose-watch', 'true',
+    'app.js'
+  ])
+
+  t.assert.strictEqual(parsedArgs.watch, false)
+  t.assert.strictEqual(parsedArgs.debug, false)
+  t.assert.strictEqual(parsedArgs.prettyLogs, false)
+  t.assert.strictEqual(parsedArgs.options, true)
+  t.assert.strictEqual(parsedArgs.verboseWatch, true)
+  t.assert.deepStrictEqual(parsedArgs._, ['app.js'])
+  t.assert.deepStrictEqual(parsedArgs['--'], [])
+  t.assert.deepStrictEqual(parsedArgs.pluginOptions, {})
+})
+
+test('should accept unknown options like yargs-parser did', t => {
+  t.plan(3)
+
+  const parsedArgs = parseArgs(['--yaml=true', '--custom', 'value', 'app.js'])
+
+  t.assert.deepStrictEqual(parsedArgs._, ['app.js'])
+  t.assert.strictEqual(parsedArgs.watch, false)
+  t.assert.strictEqual(parsedArgs.help, undefined)
+})
+
+test('should preserve plugin option values', t => {
+  t.plan(2)
+
+  const parsedArgs = parseArgs(['app.js', '--', '--hello', 'world', '--flag', '--foo=bar', '-abc', 'positional'])
+
+  t.assert.deepStrictEqual(parsedArgs.pluginOptions, {
+    hello: 'world',
+    flag: true,
+    foo: 'bar',
+    a: true,
+    b: true,
+    c: true
+  })
+  t.assert.deepStrictEqual(parsedArgs['--'], ['--hello', 'world', '--flag', '--foo=bar', '-abc', 'positional'])
+})
+
+test('should accept a string of arguments', t => {
+  t.plan(3)
+
+  const parsedArgs = parseArgs('--port 7777 --watch=false "./my app.js" -- --hello world')
+
+  t.assert.strictEqual(parsedArgs.port, 7777)
+  t.assert.strictEqual(parsedArgs.watch, false)
+  t.assert.deepStrictEqual(parsedArgs._, ['./my app.js'])
+})
+
+test('should collect repeated options into an array', t => {
+  t.plan(2)
+
+  const parsedArgs = parseArgs(['-r', './a.js', '--require', './b.js', '--import', './c.mjs', 'app.js'])
+
+  t.assert.deepStrictEqual(parsedArgs.require, ['./a.js', './b.js'])
+  t.assert.strictEqual(parsedArgs.import, './c.mjs')
 })

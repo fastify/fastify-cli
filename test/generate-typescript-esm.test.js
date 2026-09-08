@@ -106,7 +106,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(24 + Object.keys(expected).length)
+    t.plan(25 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -133,7 +133,8 @@ function define (t) {
         t.assert.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
         t.assert.strictEqual(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts')
         t.assert.strictEqual(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
-        t.assert.strictEqual(pkg.scripts['build:ts'], 'tsc')
+        t.assert.strictEqual(pkg.scripts.clean, 'node -e "require(\'fs\').rmSync(\'dist\', {recursive: true, force: true})"')
+        t.assert.strictEqual(pkg.scripts['build:ts'], 'npm run clean && tsc')
         t.assert.strictEqual(pkg.scripts['watch:ts'], 'tsc -w')
         t.assert.strictEqual(pkg.scripts.dev, 'npm run build:ts && concurrently -k -p "[{name}]" -n "TypeScript,App" -c "yellow.bold,cyan.bold" "npm:watch:ts" "npm:dev:start"')
         t.assert.strictEqual(pkg.scripts['dev:start'], 'fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js')

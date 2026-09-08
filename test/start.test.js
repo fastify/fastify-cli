@@ -610,7 +610,7 @@ test('should start the server listening on 0.0.0.0 when running in docker', asyn
   isDocker.returns(true)
 
   const start = proxyquire('../start', {
-    'is-docker': isDocker
+    'is-docker': { default: isDocker }
   })
 
   const argv = ['-p', getPort(), './examples/plugin.js']
@@ -790,42 +790,91 @@ test('crash on unhandled rejection', async t => {
   t.equal(code, 1)
 })
 
-test('should start the server with inspect options and the defalut port is 9320', async t => {
-  t.plan(3)
+const inspectorHostCases = [
+  {
+    name: 'uses the default inspector port and host',
+    isDocker: false,
+    isKubernetes: false,
+    expectedHost: undefined
+  },
+  {
+    name: 'preserves an explicit loopback inspector host outside containers',
+    debugPort: Number(getPort()),
+    debugHost: '127.0.0.1',
+    isDocker: false,
+    isKubernetes: false,
+    expectedHost: '127.0.0.1'
+  },
+  {
+    name: 'preserves an explicit loopback inspector host in Docker',
+    debugHost: '127.0.0.1',
+    isDocker: true,
+    isKubernetes: false,
+    expectedHost: '127.0.0.1'
+  },
+  {
+    name: 'preserves an explicit loopback inspector host in Kubernetes',
+    debugHost: '127.0.0.1',
+    isDocker: false,
+    isKubernetes: true,
+    expectedHost: '127.0.0.1'
+  },
+  {
+    name: 'preserves an explicit non-loopback inspector host',
+    debugHost: '192.0.2.10',
+    isDocker: false,
+    isKubernetes: false,
+    expectedHost: '192.0.2.10'
+  },
+  {
+    name: 'uses 0.0.0.0 as the inspector host in Docker when no host is provided',
+    isDocker: true,
+    isKubernetes: false,
+    expectedHost: '0.0.0.0'
+  },
+  {
+    name: 'uses 0.0.0.0 as the inspector host in Kubernetes when no host is provided',
+    isDocker: false,
+    isKubernetes: true,
+    expectedHost: '0.0.0.0'
+  }
+]
 
-  const start = proxyquire('../start', {
-    'node:inspector': {
-      open (p) {
-        t.equal(p, 9320)
-        t.pass('inspect open called')
+for (const inspectorHostCase of inspectorHostCases) {
+  test(`inspector ${inspectorHostCase.name}`, async t => {
+    t.plan(3)
+
+    const debugPort = inspectorHostCase.debugPort ?? 9320
+    const isDocker = sinon.stub().returns(inspectorHostCase.isDocker)
+    const isKubernetes = sinon.stub().returns(inspectorHostCase.isKubernetes)
+    const start = proxyquire('../start', {
+      'is-docker': { default: isDocker },
+      './util': {
+        ...require('../util'),
+        isKubernetes
+      },
+      'node:inspector': {
+        open (port, host) {
+          t.equal(port, debugPort)
+          t.equal(host, inspectorHostCase.expectedHost)
+        }
       }
+    })
+    const argv = ['--debug']
+    if (inspectorHostCase.debugPort !== undefined) {
+      argv.push('--debug-port', inspectorHostCase.debugPort)
     }
-  })
-  const argv = ['--d', './examples/plugin.js']
-  const fastify = await start.start(argv)
-
-  await fastify.close()
-  t.pass('server closed')
-})
-
-test('should start the server with inspect options and use the exactly port', async t => {
-  t.plan(3)
-
-  const port = getPort()
-  const start = proxyquire('../start', {
-    'node:inspector': {
-      open (p) {
-        t.equal(p, Number(port))
-        t.pass('inspect open called')
-      }
+    if (inspectorHostCase.debugHost) {
+      argv.push('--debug-host', inspectorHostCase.debugHost)
     }
-  })
-  const argv = ['--d', '--debug-port', port, './examples/plugin.js']
-  const fastify = await start.start(argv)
+    argv.push('./examples/plugin.js')
 
-  await fastify.close()
-  t.pass('server closed')
-})
+    const fastify = await start.runFastify(argv, undefined, undefined, require('../examples/plugin'))
+
+    await fastify.close()
+    t.pass('server closed')
+  })
+}
 
 test('boolean env are not overridden if no arguments are passed', async t => {
   t.plan(1)
