@@ -210,6 +210,18 @@ test('should parse env vars correctly', t => {
   })
 })
 
+test('should preserve explicit false boolean values', t => {
+  const parsedArgs = parseArgs([
+    '--watch=false',
+    '--pretty-logs', 'false',
+    'app.js'
+  ])
+
+  t.assert.strictEqual(parsedArgs.watch, false)
+  t.assert.strictEqual(parsedArgs.prettyLogs, false)
+  t.assert.deepStrictEqual(parsedArgs._, ['app.js'])
+})
+
 test('should respect default values', t => {
   t.plan(14)
 
