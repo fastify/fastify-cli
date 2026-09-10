@@ -51,5 +51,5 @@ module.exports = {
 }
 
 if (require.main === module) {
-  cli()
+  cli(process.argv.slice(2))
 }

@@ -3,11 +3,8 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const url = require('node:url')
-const semver = require('semver')
 const { pkgUp } = require('pkg-up')
 const resolveFrom = require('resolve-from')
-
-const moduleSupport = semver.satisfies(process.version, '>= 14 || >= 12.17.0 < 13.0.0')
 
 function exit (message) {
   if (message instanceof Error) {
@@ -95,11 +92,7 @@ async function requireServerPluginFromPath (modulePath) {
 
   let serverPlugin
   if (type === 'module') {
-    if (moduleSupport) {
-      serverPlugin = await import(url.pathToFileURL(resolvedModulePath).href)
-    } else {
-      throw new Error(`fastify-cli cannot import plugin at '${resolvedModulePath}'. Your version of node does not support ES modules. To fix this error upgrade to Node 14 or use CommonJS syntax.`)
-    }
+    serverPlugin = await import(url.pathToFileURL(resolvedModulePath).href)
   } else {
     serverPlugin = require(resolvedModulePath)
   }
