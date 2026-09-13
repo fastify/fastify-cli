@@ -1,0 +1,25 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      semver:
+        description: 'Release bump type'
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+permissions: {}
+
+jobs:
+  release:
+    permissions:
+      id-token: write # required for npm provenance via OIDC
+      contents: write # required to push the release commit and the tag
+    # TODO: repin to the fastify/workflows release tag once https://github.com/fastify/workflows/pull/237 is released
+    uses: fastify/workflows/.github/workflows/release.yml@663f05653c6c03566b42465f0409879538400acd
+    with:
+      semver: ${{ inputs.semver }}
