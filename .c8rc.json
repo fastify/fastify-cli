@@ -1,0 +1,15 @@
+{
+  "all": false,
+  "check-coverage": true,
+  "statements": 100,
+  "branches": 100,
+  "functions": 100,
+  "lines": 100,
+  "exclude": [
+    "test/**",
+    "templates/**",
+    "examples/**",
+    "suite-runner.js",
+    "coverage/**"
+  ]
+}

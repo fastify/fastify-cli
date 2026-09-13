@@ -66,11 +66,11 @@ async function generate (dir, template) {
   pkg.types = template.types
   pkg.description = ''
   pkg.license = 'MIT'
-  pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
+  pkg.scripts = { ...pkg.scripts, ...template.scripts }
   pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
   pkg.devDependencies = Object.assign(pkg.devDependencies || {}, template.devDependencies)
   if (template.tstyche) {
-    pkg.tstyche = Object.assign(pkg.tstyche || {}, template.tstyche)
+    pkg.tstyche = { ...pkg.tstyche, ...template.tstyche }
   }
 
   log('debug', 'edited package.json, saving')

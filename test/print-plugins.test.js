@@ -8,11 +8,7 @@ const exec = util.promisify(require('node:child_process').exec)
 
 const printPlugins = require('../print-plugins')
 
-const { NYC_PROCESS_ID, NODE_V8_COVERAGE } = process.env
-const SHOULD_SKIP = NYC_PROCESS_ID || NODE_V8_COVERAGE
-
-// This test should be skipped when coverage reporting is used since outputs won't match
-test('should print plugins', { skip: SHOULD_SKIP }, async t => {
+test('should print plugins', async t => {
   t.plan(3)
 
   const spy = sinon.spy()
@@ -27,8 +23,7 @@ test('should print plugins', { skip: SHOULD_SKIP }, async t => {
   t.assert.match(spy.args[0][1], /root \d+ ms\n├── bound _after \d+ ms\n├─┬ function \(fastify, options, next\) { -- fastify\.decorate\('test', true\) \d+ ms\n│ ├── bound _after \d+ ms\n│ ├── bound _after \d+ ms\n│ └── bound _after \d+ ms\n└── bound _after \d+ ms\n/)
 })
 
-// This test should be skipped when coverage reporting is used since outputs won't match
-test('should plugins routes via cli', { skip: SHOULD_SKIP }, async t => {
+test('should plugins routes via cli', async t => {
   t.plan(1)
   const { stdout } = await exec('node cli.js print-plugins ./examples/plugin.js', { encoding: 'utf-8', timeout: 10000 })
   t.assert.match(
@@ -94,8 +89,7 @@ test('should exit without error on help', t => {
   t.assert.strictEqual(process.exit.lastCall.args[0], undefined)
 })
 
-// This test should be skipped when coverage reporting is used since outputs won't match
-test('should print plugins of server with an async/await plugin', { skip: SHOULD_SKIP }, async t => {
+test('should print plugins of server with an async/await plugin', async t => {
   const nodeMajorVersion = process.versions.node.split('.').map(x => parseInt(x, 10))[0]
   if (nodeMajorVersion < 7) {
     t.assert.ok('Skip because Node version < 7')
@@ -115,4 +109,60 @@ test('should print plugins of server with an async/await plugin', { skip: SHOULD
   t.assert.ok(spy.called)
   t.assert.deepStrictEqual(spy.args[0][0], 'debug')
   t.assert.match(spy.args[0][1], /root \d+ ms\n├── bound _after \d+ ms\n├─┬ async function \(fastify, options\) { -- fastify\.get\('\/', async function \(req, reply\) { \d+ ms\n│ ├── bound _after \d+ ms\n│ └── bound _after \d+ ms\n└── bound _after \d+ ms\n/)
+})
+
+test('should print the help when the file parameter is missing', t => {
+  t.mock.method(process, 'exit', () => {})
+  t.mock.method(console, 'error', () => {})
+  t.mock.method(console, 'log', () => {})
+
+  printPlugins.printPlugins([])
+
+  t.assert.strictEqual(console.error.mock.calls[0].arguments[0], 'Missing the required file parameter\n')
+  t.assert.match(console.log.mock.calls[0].arguments[0], /Usage:/)
+  t.assert.strictEqual(process.exit.mock.calls[0].arguments[0], undefined)
+})
+
+test('should register the plugin with a prefix', async t => {
+  const spy = sinon.spy()
+  const command = proxyquire('../print-plugins', {
+    './log': spy
+  })
+  const fastify = await command.printPlugins(['./examples/plugin.js', '--prefix', '/api'])
+  await fastify.close()
+
+  t.assert.ok(spy.called)
+  t.assert.match(spy.args[0][1], /api|root/)
+})
+
+test('should stop when fastify cannot be loaded', t => {
+  t.mock.method(process, 'exit', () => {})
+  t.mock.method(console, 'warn', () => {})
+  const command = proxyquire('../print-plugins', {
+    './util': {
+      ...require('../util'),
+      requireFastifyForModule () { throw new Error('nope') }
+    }
+  })
+  const stop = t.mock.method(command, 'stop', () => {})
+
+  command.printPlugins(['./examples/plugin.js']).catch(() => {})
+
+  t.assert.strictEqual(stop.mock.calls[0].arguments[0].message, 'nope')
+})
+
+test('should exit with an error when run directly on a missing file', async t => {
+  await t.assert.rejects(
+    exec('node print-plugins.js ./test/data/not-found.js', { encoding: 'utf-8', timeout: 10000 }),
+    err => {
+      t.assert.strictEqual(err.code, 1)
+      t.assert.match(err.stderr, /not-found\.js doesn't exist within/)
+      return true
+    }
+  )
+})
+
+test('should print plugins when run directly', async t => {
+  const { stdout } = await exec('node print-plugins.js ./examples/plugin.js', { encoding: 'utf-8', timeout: 10000 })
+  t.assert.ok(stdout.length > 0)
 })

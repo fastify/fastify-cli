@@ -96,7 +96,11 @@ function generate (dir, template) {
       }
 
       process.chdir(dir)
-      execSync('npm init -y')
+      try {
+        execSync('npm init -y')
+      } catch (err) {
+        return reject(err)
+      }
 
       log('info', `reading package.json in ${dir}`)
       readFile('package.json', (err, data) => {
@@ -115,7 +119,7 @@ function generate (dir, template) {
 
         pkg.type = template.type
 
-        pkg.scripts = Object.assign(pkg.scripts || {}, template.scripts)
+        pkg.scripts = { ...pkg.scripts, ...template.scripts }
 
         pkg.dependencies = Object.assign(pkg.dependencies || {}, template.dependencies)
 
