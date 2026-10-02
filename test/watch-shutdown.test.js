@@ -6,50 +6,81 @@ const { once } = require('node:events')
 const path = require('node:path')
 const net = require('node:net')
 
-const cases = ['SIGINT', 'SIGTERM'].flatMap(signal =>
-  (process.platform === 'win32' ? [false] : [false, true]).map(group => ({ signal, group }))
-)
+const cliPath = path.join(__dirname, '..', 'cli.js')
+const pluginPath = path.join(__dirname, 'data', 'delayed-close-plugin.js')
+// Windows kill() terminates processes rather than delivering catchable POSIX signals.
+const testOptions = { timeout: 15000, skip: process.platform === 'win32' }
+const signals = [
+  { signal: 'SIGINT', expectedCode: 130 },
+  { signal: 'SIGTERM', expectedCode: 143 }
+]
+const targets = ['parent only']
+// Negative PIDs address process groups on POSIX, but are not supported on Windows.
+if (process.platform !== 'win32') targets.push('process group')
 
-for (const { signal, group } of cases) {
-  test(`watch supervisor waits for application cleanup on ${signal} (${group ? 'process group' : 'parent only'})`, { timeout: 15000 }, async t => {
-    const reservation = net.createServer().listen(0, '127.0.0.1')
-    await once(reservation, 'listening')
-    const { port } = reservation.address()
-    await new Promise(resolve => reservation.close(resolve))
-    const child = spawn(process.execPath, [
-      path.join(__dirname, '..', 'cli.js'), 'start', '--watch',
-      '--port', String(port), '--address', '127.0.0.1',
-      '--follow-watch', path.join(__dirname, 'data', 'delayed-close-plugin.js'),
-      path.join(__dirname, 'data', 'delayed-close-plugin.js')
-    ], { stdio: ['ignore', 'pipe', 'pipe'], detached: group })
-    t.after(() => {
-      if (group) {
-        try { process.kill(-child.pid, 'SIGKILL') } catch (err) {
-          if (err.code !== 'ESRCH') throw err
-        }
-      } else if (child.exitCode === null && child.signalCode === null) {
-        child.kill('SIGKILL')
-      }
-    })
-    let output = ''
-    let errors = ''
-    child.stderr.on('data', chunk => { errors += chunk })
-    const closed = once(child, 'close')
-    await new Promise((resolve, reject) => {
-      child.once('error', reject)
-      child.once('exit', () => reject(new Error(`Exited before ready: ${errors}`)))
-      child.stdout.on('data', chunk => {
-        output += chunk
-        if (output.includes('application-ready')) resolve()
-      })
-    })
-    let outputAtExit
-    child.once('exit', () => { outputAtExit = output })
-    if (group) process.kill(-child.pid, signal)
-    else child.kill(signal)
-    const [code, exitSignal] = await closed
-    t.assert.match(outputAtExit, /application-closed/)
-    t.assert.strictEqual(code, signal === 'SIGINT' ? 130 : 143, errors)
-    t.assert.strictEqual(exitSignal, null)
+async function getAvailablePort (t) {
+  const server = net.createServer().listen(0, '127.0.0.1')
+  t.after(() => server.close())
+  await once(server, 'listening')
+  const { port } = server.address()
+  await new Promise(resolve => server.close(resolve))
+  return port
+}
+
+async function startWatcher (t) {
+  const port = await getAvailablePort(t)
+  const child = spawn(process.execPath, [
+    cliPath, 'start', '--watch',
+    '--port', String(port), '--address', '127.0.0.1',
+    '--follow-watch', pluginPath,
+    pluginPath
+  ], { stdio: ['ignore', 'pipe', 'pipe'], detached: true })
+
+  t.after(() => {
+    // Clean up the whole tree even when the test signals only the supervisor.
+    try {
+      process.kill(-child.pid, 'SIGKILL')
+    } catch (err) {
+      if (err.code !== 'ESRCH') throw err
+    }
   })
+
+  let stdout = ''
+  let stderr = ''
+  let outputAtExit = ''
+  child.stderr.on('data', chunk => { stderr += chunk })
+  child.once('exit', () => { outputAtExit = stdout })
+  const closed = once(child, 'close')
+  const ready = new Promise((resolve, reject) => {
+    child.once('error', reject)
+    child.once('exit', () => reject(new Error(`Watcher exited before ready: ${stderr}`)))
+    child.stdout.on('data', chunk => {
+      stdout += chunk
+      if (stdout.includes('application-ready')) resolve()
+    })
+  })
+
+  return { child, ready, closed, outputAtExit: () => outputAtExit, errors: () => stderr }
+}
+
+for (const { signal, expectedCode } of signals) {
+  for (const target of targets) {
+    test(`should await application cleanup on ${signal} (${target})`, testOptions, async t => {
+      const processGroup = target === 'process group'
+      const watcher = await startWatcher(t)
+      await watcher.ready
+
+      if (processGroup) {
+        process.kill(-watcher.child.pid, signal)
+      } else {
+        watcher.child.kill(signal)
+      }
+      const [code, exitSignal] = await watcher.closed
+
+      // Checking final stdout alone would also accept cleanup after the parent exited.
+      t.assert.match(watcher.outputAtExit(), /application-closed/)
+      t.assert.strictEqual(code, expectedCode, watcher.errors())
+      t.assert.strictEqual(exitSignal, null)
+    })
+  }
 }
