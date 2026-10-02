@@ -125,7 +125,7 @@ test('should restart the child on an uncaught exception', t => {
 
 for (const signal of ['SIGINT', 'SIGTERM']) {
   test(`should await child close before finishing ${signal} shutdown`, async t => {
-    const { watch, forks, watcher, signals } = setup(t)
+    const { watch, forks, watcher, signals, uncaught } = setup(t)
     const originalExitCode = process.exitCode
     t.after(() => { process.exitCode = originalExitCode })
     watch(['app.js'], 'node_modules', false)
@@ -135,9 +135,11 @@ for (const signal of ['SIGINT', 'SIGTERM']) {
     watcher.emit('all', 'change', 'app.js')
     signals[signal]()
     signals[signal]()
+    uncaught[0](new Error('exception during shutdown'))
     watcher.emit('all', 'change', 'app.js')
 
     t.assert.strictEqual(watcher.close.mock.callCount(), 1)
+    t.assert.strictEqual(forks.length, 1, 'an exception during shutdown must not restart the child')
     t.assert.strictEqual(forks[0].kill.mock.callCount(), 0)
     t.assert.strictEqual(forks[0].send.mock.calls[1].arguments[0], GRACEFUL_SHUT)
     forks[0].emit('exit', 0, null)
