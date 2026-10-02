@@ -19,8 +19,7 @@ const pluginTemplate = {
   main: 'index.js',
   types: 'index.d.ts',
   scripts: {
-    lint: 'standard && npm run lint:typescript',
-    'lint:typescript': 'ts-standard',
+    lint: 'eslint',
     test: 'npm run lint && npm run unit && npm run test:typescript',
     'test:typescript': 'tstyche',
     unit: 'node --test'
@@ -32,8 +31,8 @@ const pluginTemplate = {
     '@types/node': cliPkg.devDependencies['@types/node'],
     fastify: cliPkg.devDependencies.fastify,
     'fastify-tsconfig': cliPkg.devDependencies['fastify-tsconfig'],
-    standard: cliPkg.devDependencies.standard,
-    'ts-standard': cliPkg.devDependencies['ts-standard'],
+    eslint: cliPkg.devDependencies.eslint,
+    neostandard: cliPkg.devDependencies.neostandard,
     tstyche: cliPkg.devDependencies.tstyche,
     typescript: cliPkg.devDependencies.typescript
   },
