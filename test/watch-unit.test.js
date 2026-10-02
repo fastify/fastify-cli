@@ -13,6 +13,7 @@ function setup (t) {
   const childProcessMock = {
     fork () {
       const child = new EventEmitter()
+      child.connected = true
       child.kill = t.mock.fn()
       child.send = t.mock.fn()
       forks.push(child)
@@ -25,8 +26,10 @@ function setup (t) {
   const chokidarMock = { watch: () => watcher }
 
   const uncaught = []
+  const signals = {}
   t.mock.method(process, 'on', (event, listener) => {
     if (event === 'uncaughtException') uncaught.push(listener)
+    if (event === 'SIGINT' || event === 'SIGTERM') signals[event] = listener
   })
   t.mock.method(console, 'log', () => {})
 
@@ -35,7 +38,7 @@ function setup (t) {
     'node:child_process': childProcessMock
   })
 
-  return { watch, forks, watcher, uncaught }
+  return { watch, forks, watcher, uncaught, signals }
 }
 
 test('should restart the child when a watched file changes', t => {
@@ -119,6 +122,33 @@ test('should restart the child on an uncaught exception', t => {
   t.assert.strictEqual(forks[0].kill.mock.callCount(), 1)
   t.assert.strictEqual(forks.length, 2)
 })
+
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  test(`should await child close before finishing ${signal} shutdown`, async t => {
+    const { watch, forks, watcher, signals } = setup(t)
+    const originalExitCode = process.exitCode
+    t.after(() => { process.exitCode = originalExitCode })
+    watch(['app.js'], 'node_modules', false)
+    watcher.emit('ready')
+
+    // A restarting child is no longer in the restart queue but still needs draining.
+    watcher.emit('all', 'change', 'app.js')
+    signals[signal]()
+    signals[signal]()
+    watcher.emit('all', 'change', 'app.js')
+
+    t.assert.strictEqual(watcher.close.mock.callCount(), 1)
+    t.assert.strictEqual(forks[0].kill.mock.callCount(), 0)
+    t.assert.strictEqual(forks[0].send.mock.calls[1].arguments[0], GRACEFUL_SHUT)
+    forks[0].emit('exit', 0, null)
+    await Promise.resolve()
+    t.assert.strictEqual(process.exitCode, originalExitCode)
+    t.assert.strictEqual(forks.length, 1)
+    forks[0].emit('close', 0, null)
+    await new Promise(resolve => setImmediate(resolve))
+    t.assert.strictEqual(process.exitCode, signal === 'SIGINT' ? 130 : 143)
+  })
+}
 
 test('logWatchVerbose should print the relative path', t => {
   t.mock.method(console, 'log', () => {})
