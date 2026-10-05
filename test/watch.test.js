@@ -41,8 +41,20 @@ test('followWatch parameter should set watchDir correctly', async (t) => {
 test('should equal expect RegExp', t => {
   t.plan(1)
 
-  const expectRegExp = /(node_modules|build|dist|\.git|bower_components|logs)/
+  const expectRegExp = /(node_modules|(?:^|[/\\])build(?:[/\\]|$)|dist|\.git|bower_components|logs)/
   const regExp = arrayToRegExp(['node_modules', 'build', 'dist', '.git', 'bower_components', 'logs'])
 
   t.assert.deepStrictEqual(regExp, expectRegExp)
+})
+
+test('build ignore should only match build path segments', t => {
+  const regExp = arrayToRegExp(['build'])
+
+  t.assert.strictEqual(regExp.test('/tmp/any-builder/app.js'), false)
+  t.assert.strictEqual(regExp.test('/tmp/builders/app.js'), false)
+  t.assert.strictEqual(regExp.test('C:\\work\\any-builder\\app.js'), false)
+
+  t.assert.strictEqual(regExp.test('build/app.js'), true)
+  t.assert.strictEqual(regExp.test('/tmp/any-builder/build/app.js'), true)
+  t.assert.strictEqual(regExp.test('C:\\work\\any-builder\\build\\app.js'), true)
 })
