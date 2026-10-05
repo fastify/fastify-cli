@@ -1,6 +1,6 @@
 # __MY_PLUGIN__
 
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://standardjs.com/)  ![CI workflow](__MY_PLUGIN_URL__
+[![neostandard javascript style](https://img.shields.io/badge/code%20style-neostandard-brightgreen?style=flat)](https://github.com/neostandard/neostandard)  ![CI workflow](__MY_PLUGIN_URL__
 /workflows/CI%20workflow/badge.svg)
 
 Supports Fastify versions `4.x`

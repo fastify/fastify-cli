@@ -3,6 +3,7 @@
 const {
   readFile,
   writeFile,
+  writeFileSync,
   existsSync
 } = require('node:fs')
 const path = require('node:path')
@@ -96,6 +97,10 @@ function generate (dir, template) {
       }
 
       process.chdir(dir)
+      if (template.lintConfig) {
+        const configFile = template.type === 'module' ? 'eslint.config.mjs' : 'eslint.config.js'
+        writeFileSync(configFile, template.lintConfig)
+      }
       try {
         execSync('npm init -y')
       } catch (err) {
@@ -192,14 +197,19 @@ function cli (args) {
     if (opts.standardlint) {
       template.scripts = {
         ...template.scripts,
-        pretest: 'standard',
-        lint: 'standard --fix'
+        pretest: 'eslint',
+        lint: 'eslint --fix'
       }
 
       template.devDependencies = {
         ...template.devDependencies,
-        standard: cliPkg.devDependencies.standard
+        eslint: cliPkg.devDependencies.eslint,
+        neostandard: cliPkg.devDependencies.neostandard
       }
+
+      template.lintConfig = template.type === 'module'
+        ? 'import neostandard from \'neostandard\'\n\nexport default neostandard()'
+        : '\'use strict\'\n\nmodule.exports = require(\'neostandard\')()'
     }
   }
 
