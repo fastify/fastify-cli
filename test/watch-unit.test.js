@@ -2,6 +2,7 @@
 
 const { test } = require('node:test')
 const EventEmitter = require('node:events')
+const { setImmediate: nextTurn } = require('node:timers/promises')
 const proxyquire = require('proxyquire')
 const { logWatchVerbose } = require('../lib/watch/utils')
 const { GRACEFUL_SHUT } = require('../lib/watch/constants')
@@ -13,6 +14,7 @@ function setup (t) {
   const childProcessMock = {
     fork () {
       const child = new EventEmitter()
+      child.connected = true
       child.kill = t.mock.fn()
       child.send = t.mock.fn()
       forks.push(child)
@@ -25,8 +27,10 @@ function setup (t) {
   const chokidarMock = { watch: () => watcher }
 
   const uncaught = []
+  const signals = {}
   t.mock.method(process, 'on', (event, listener) => {
     if (event === 'uncaughtException') uncaught.push(listener)
+    if (event === 'SIGINT' || event === 'SIGTERM') signals[event] = listener
   })
   t.mock.method(console, 'log', () => {})
 
@@ -35,7 +39,7 @@ function setup (t) {
     'node:child_process': childProcessMock
   })
 
-  return { watch, forks, watcher, uncaught }
+  return { watch, forks, watcher, uncaught, signals }
 }
 
 test('should restart the child when a watched file changes', t => {
@@ -118,6 +122,87 @@ test('should restart the child on an uncaught exception', t => {
 
   t.assert.strictEqual(forks[0].kill.mock.callCount(), 1)
   t.assert.strictEqual(forks.length, 2)
+})
+
+for (const signal of ['SIGINT', 'SIGTERM']) {
+  test(`should await child close before finishing ${signal} shutdown`, async t => {
+    const { watch, forks, watcher, signals, uncaught } = setup(t)
+    const originalExitCode = process.exitCode
+    t.after(() => { process.exitCode = originalExitCode })
+    watch(['app.js'], 'node_modules', false)
+    watcher.emit('ready')
+    const child = forks[0]
+
+    // A restarting child is no longer in the restart queue but still needs draining.
+    watcher.emit('all', 'change', 'app.js')
+    signals[signal]()
+
+    // Repeated signals, exceptions, and file changes must not start another shutdown or child.
+    signals[signal]()
+    uncaught[0](new Error('exception during shutdown'))
+    watcher.emit('all', 'change', 'app.js')
+    await nextTurn()
+
+    t.assert.strictEqual(watcher.close.mock.callCount(), 1)
+    t.assert.strictEqual(forks.length, 1, 'an exception during shutdown must not restart the child')
+    t.assert.strictEqual(child.kill.mock.callCount(), 0)
+    t.assert.strictEqual(child.send.mock.callCount(), 2, 'one restart request and one shutdown request')
+    t.assert.strictEqual(child.send.mock.calls[1].arguments[0], GRACEFUL_SHUT)
+
+    // Exiting is not enough: the supervisor must also wait for the child's streams to close.
+    child.emit('exit', 0, null)
+    await nextTurn()
+    t.assert.strictEqual(process.exitCode, originalExitCode)
+    t.assert.strictEqual(forks.length, 1)
+
+    child.emit('close', 0, null)
+    await nextTurn()
+    t.assert.strictEqual(process.exitCode, signal === 'SIGINT' ? 130 : 143)
+  })
+}
+
+for (const { name, args, delay } of [
+  { name: 'default', args: [], delay: 500 },
+  { name: 'CLI option', args: ['--close-grace-delay', '2500'], delay: 2500 },
+  { name: 'config file', args: ['--config', './test/data/custom-config.js'], delay: 1000 }
+]) {
+  test(`should use the ${name} shutdown deadline for a disconnected child`, async t => {
+    const { watch, forks, signals } = setup(t)
+    const originalExitCode = process.exitCode
+    t.after(() => { process.exitCode = originalExitCode })
+    t.mock.timers.enable({ apis: ['setTimeout'] })
+    watch([...args, 'app.js'], 'node_modules', false)
+    const child = forks[0]
+    child.connected = false
+
+    signals.SIGINT()
+    t.mock.timers.tick(delay + 999)
+    t.assert.strictEqual(child.kill.mock.callCount(), 0)
+    t.mock.timers.tick(1)
+    t.assert.deepStrictEqual(child.kill.mock.calls[0].arguments, ['SIGKILL'])
+    child.emit('close', null, 'SIGKILL')
+    await nextTurn()
+    t.assert.strictEqual(process.exitCode, 130)
+  })
+}
+
+test('should still drain children when watcher cleanup fails and IPC throws', async t => {
+  const { watch, forks, watcher, signals } = setup(t)
+  const originalExitCode = process.exitCode
+  t.after(() => { process.exitCode = originalExitCode })
+  t.mock.method(console, 'error', () => {})
+  const error = new Error('watcher close failed')
+  watcher.close = () => { throw error }
+  watch(['app.js'], 'node_modules', false)
+  forks[0].send = () => { throw new Error('IPC channel closed') }
+
+  signals.SIGTERM()
+  await nextTurn()
+  t.assert.strictEqual(process.exitCode, originalExitCode)
+  forks[0].emit('close', 0, null)
+  await nextTurn()
+  t.assert.strictEqual(process.exitCode, 1)
+  t.assert.strictEqual(console.error.mock.calls[0].arguments[0], error)
 })
 
 test('logWatchVerbose should print the relative path', t => {

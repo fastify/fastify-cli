@@ -77,6 +77,19 @@ test('should force the exit when the server does not close in time', testOptions
   t.assert.match(output(), /process forced end/)
 })
 
+test('should use the configured IPC shutdown deadline', testOptions, async t => {
+  const { child, message, output } = forkChild(t, [
+    '-p', '0', '--close-grace-delay', '50',
+    './test/data/hanging-close-plugin.js'
+  ])
+  await message('ready')
+  child.send(GRACEFUL_SHUT)
+  const [code] = await once(child, 'close')
+
+  t.assert.strictEqual(code, 1)
+  t.assert.match(output(), /process forced end/)
+})
+
 test('should exit immediately on graceful shutdown when the server is not up yet', testOptions, async (t) => {
   const { child } = forkChild(t, ['-p', '0', './test/data/slow-plugin.js'])
   child.send(GRACEFUL_SHUT)
