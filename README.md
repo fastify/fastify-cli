@@ -180,6 +180,8 @@ By default, `fastify-cli` loads environment variables from `.env` in your curren
 
 The default value for `--plugin-timeout` is 10 seconds.
 By default,`--ignore-watch` flag is set to ignore `node_modules build dist .git bower_components logs .swp .nyc_output` files.
+The `.git` entry matches a complete path segment, so Git metadata remains ignored
+while projects in directories such as `fastify.git/main` can reload normally.
 
 #### Containerization
 
