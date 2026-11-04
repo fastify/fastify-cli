@@ -240,6 +240,29 @@ app.listen({ port: process.env.PORT || 3000 }, (err) => {
 })
 ```
 
+### eject
+
+Run `fastify eject` inside your application directory to generate a standalone
+server. ESM is detected from `"type": "module"` in `package.json`, and TypeScript
+is detected from `src/app.ts`. Use `--esm`, `--esm=false`, or `--lang=js|ts` to
+override detection.
+
+For generated JavaScript projects, ejection creates `server.js` and changes the
+standard scripts to `node server.js` and `node --watch server.js`. TypeScript
+projects receive `src/server.ts`, run the compiled `dist/server.js`, and retain
+the TypeScript compiler watch process. Unmodified generated TypeScript test
+configurations and scripts are updated to run compiled tests.
+
+Ejection replaces unmodified generated test helpers with standalone helpers,
+adds `close-with-grace` as a runtime dependency, and removes `fastify-cli` from
+both dependency sections when no scripts or source files still reference it.
+Run your package manager's install command afterward to update the installed
+dependencies and lockfile.
+
+Custom scripts, helpers, and TypeScript configurations are preserved. If they
+still use the CLI, its dependency is retained and a message explains why.
+Ejection refuses to overwrite a customized server file.
+
 ### generate
 
 `fastify-cli` can also help with generating some project scaffolding to

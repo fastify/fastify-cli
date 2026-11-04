@@ -1,13 +1,25 @@
 Usage: fastify eject
 
-Turns your application into a standalone executable with a server.js file being added.
+Turns your application into a standalone executable with server.js (JavaScript)
+or src/server.ts (TypeScript) being added.
 
-You can set the port to listen on with the PORT environment variable (default to 3000).
+The module format is detected from package.json's type field. TypeScript is
+detected from src/app.ts. Explicit --esm and --lang options override detection.
+
+Generated start and dev scripts are updated to use Node.js. Unmodified generated
+test helpers are replaced with standalone helpers, and fastify-cli is removed
+from dependencies if no scripts or source files still reference it.
+
+Custom scripts, helpers, and TypeScript configurations are preserved. Existing
+custom server files must be moved before ejecting. Run your package manager's
+install command afterward to update dependencies and the lockfile.
+
+You can set the port with PORT (default: 3000).
 
 OPTS
 
-  --esm
-      use the ESM template
+  --esm, --esm=false
+      override the detected module format
 
-  --lang=ts, --lang=typescript
-      use the TypeScript template
+  --lang=ts, --lang=typescript, --lang=js
+      override the detected language
