@@ -173,6 +173,37 @@ test('should merge the CLI and FILE configs', async t => {
   t.assert.strictEqual(lines[0].foo, '***')
 })
 
+test('should accept a loggerInstance in the server options', async t => {
+  const argv = ['./examples/plugin.js']
+  const messages = []
+  function noop () {}
+  const loggerInstance = {
+    level: 'info',
+    info (msg) { messages.push(msg) },
+    error: noop,
+    debug: noop,
+    fatal: noop,
+    warn: noop,
+    trace: noop,
+    child () { return this }
+  }
+
+  const app = await helper.build(argv, {}, { loggerInstance })
+  t.after(() => app.close())
+  app.log.info('hello')
+  t.assert.deepStrictEqual(messages, ['hello'])
+})
+
+test('should accept a loggerInstance in the plugin options', async t => {
+  const argv = ['./test/data/plugin-with-logger-instance.js', '--options']
+  const { options } = require('./data/plugin-with-logger-instance')
+
+  const app = await helper.build(argv, {})
+  t.after(() => app.close())
+  app.log.info('hello')
+  t.assert.deepStrictEqual(options.loggerInstance.messages, ['hello'])
+})
+
 test('should ensure can access all decorators', async t => {
   const argv = ['./examples/plugin.js']
   const app = await helper.build(argv, { skipOverride: true })
