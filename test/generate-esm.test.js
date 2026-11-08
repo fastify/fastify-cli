@@ -137,7 +137,7 @@ function define (t) {
     }
   })
 
-  test('--standardlint option will add standard lint dependencies and scripts to javascript template', async (t) => {
+  test('--standardlint option will add neostandard lint dependencies and scripts to javascript template', async (t) => {
     const dir = path.join(__dirname, 'workdir-with-lint')
     const cwd = path.join(dir, '..')
     const bin = path.join('..', 'generate')
@@ -148,9 +148,10 @@ function define (t) {
 
     const data = await fsPromises.readFile(path.join(dir, 'package.json'))
     const pkg = JSON.parse(data)
-    t.assert.strictEqual(pkg.scripts.pretest, 'standard')
-    t.assert.strictEqual(pkg.scripts.lint, 'standard --fix')
-    t.assert.strictEqual(pkg.devDependencies.standard, cliPkg.devDependencies.standard)
+    t.assert.strictEqual(pkg.scripts.pretest, 'eslint')
+    t.assert.strictEqual(pkg.scripts.lint, 'eslint --fix')
+    t.assert.strictEqual(pkg.devDependencies.eslint, cliPkg.devDependencies.eslint)
+    t.assert.strictEqual(pkg.devDependencies.neostandard, cliPkg.devDependencies.neostandard)
   })
 
   function verifyPkg (t, dir = workdir, pkgName = 'workdir') {
