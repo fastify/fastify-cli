@@ -10,7 +10,14 @@ const { GRACEFUL_SHUT } = require('../lib/watch/constants')
 // so the restart logic can be driven synchronously.
 function setup (t) {
   const forks = []
+  const spawns = []
   const childProcessMock = {
+    spawn (command, options) {
+      const proc = new EventEmitter()
+      proc.kill = t.mock.fn()
+      spawns.push({ command, options, proc })
+      return proc
+    },
     fork () {
       const child = new EventEmitter()
       child.kill = t.mock.fn()
@@ -35,7 +42,7 @@ function setup (t) {
     'node:child_process': childProcessMock
   })
 
-  return { watch, forks, watcher, uncaught }
+  return { watch, forks, spawns, watcher, uncaught }
 }
 
 test('should restart the child when a watched file changes', t => {
@@ -118,6 +125,66 @@ test('should restart the child on an uncaught exception', t => {
 
   t.assert.strictEqual(forks[0].kill.mock.callCount(), 1)
   t.assert.strictEqual(forks.length, 2)
+})
+
+test('should run the on-watch command before restarting the child', t => {
+  const { watch, forks, spawns, watcher } = setup(t)
+  watch(['app.js'], 'node_modules', false, undefined, 'npm run lint')
+
+  watcher.emit('ready')
+  watcher.emit('all', 'change', 'app.js')
+
+  t.assert.strictEqual(spawns.length, 1)
+  t.assert.strictEqual(spawns[0].command, 'npm run lint')
+  t.assert.deepStrictEqual(spawns[0].options, { shell: true, stdio: 'inherit' })
+  t.assert.strictEqual(forks[0].send.mock.callCount(), 0, 'no restart while the command runs')
+
+  spawns[0].proc.emit('close', 0)
+  t.assert.strictEqual(forks[0].send.mock.calls[0].arguments[0], GRACEFUL_SHUT)
+  t.assert.strictEqual(console.log.mock.callCount(), 0)
+})
+
+test('should not start another on-watch run for changes made while one is running', t => {
+  const { watch, forks, spawns, watcher } = setup(t)
+  watch(['app.js'], 'node_modules', false, undefined, 'npm run lint')
+
+  watcher.emit('ready')
+  watcher.emit('all', 'change', 'app.js')
+  watcher.emit('all', 'change', 'lib/a.js')
+  t.assert.strictEqual(spawns.length, 1)
+
+  spawns[0].proc.emit('close', 0)
+  t.assert.strictEqual(forks[0].send.mock.callCount(), 1)
+
+  watcher.emit('all', 'change', 'app.js')
+  t.assert.strictEqual(spawns.length, 2, 'a later change runs the command again')
+})
+
+test('should log a failing on-watch command and still restart the child', t => {
+  const { watch, forks, spawns, watcher } = setup(t)
+  watch(['app.js'], 'node_modules', false, undefined, 'npm run lint')
+
+  watcher.emit('ready')
+  watcher.emit('all', 'change', 'app.js')
+  spawns[0].proc.emit('error', new Error('spawn failed'))
+  spawns[0].proc.emit('close', 1)
+
+  t.assert.match(console.log.mock.calls[0].arguments[0], /spawn failed/)
+  t.assert.match(console.log.mock.calls[1].arguments[0], /on-watch command exited with code 1/)
+  t.assert.strictEqual(forks[0].send.mock.calls[0].arguments[0], GRACEFUL_SHUT)
+})
+
+test('should kill a running on-watch command on stop and not restart', t => {
+  const { watch, forks, spawns, watcher } = setup(t)
+  const emitter = watch(['app.js'], 'node_modules', false, undefined, 'npm run lint')
+
+  watcher.emit('ready')
+  watcher.emit('all', 'change', 'app.js')
+  emitter.stop()
+  t.assert.strictEqual(spawns[0].proc.kill.mock.callCount(), 1)
+  spawns[0].proc.emit('close', null)
+
+  t.assert.strictEqual(forks.length, 1)
 })
 
 test('logWatchVerbose should print the relative path', t => {
