@@ -12,7 +12,7 @@ const rimraf = require('rimraf')
 const walker = require('walker')
 const { generate, typescriptTemplate } = require('../generate')
 const workdir = path.join(__dirname, 'workdir')
-const appTemplateDir = path.join(__dirname, '..', 'templates', 'app-ts')
+const appTemplateDir = path.join(__dirname, '..', 'templates', 'app-ts-esm')
 const cliPkg = require('../package')
 const { exec, execSync } = require('node:child_process')
 const minimatch = require('minimatch')
@@ -20,8 +20,15 @@ const strip = require('strip-ansi')
 const expected = {}
 const initVersion = execSync('npm get init-version').toString().trim()
 
-typescriptTemplate.type = 'module'
-typescriptTemplate.scripts.test = 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts'
+const typescriptEsmTemplate = {
+  ...typescriptTemplate,
+  dir: 'app-ts-esm',
+  type: 'module',
+  scripts: {
+    ...typescriptTemplate.scripts,
+    test: 'npm run build:ts && tsc -p test/tsconfig.json && node --import ./test/register-ts-esm.mjs --test --experimental-test-coverage test/**/*.ts'
+  }
+}
 
 ;(function (cb) {
   const files = []
@@ -106,9 +113,10 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(25 + Object.keys(expected).length)
+    const copiedFileCount = Object.keys(expected).filter(file => file !== '/package.json').length
+    t.plan(25 + copiedFileCount)
     try {
-      await generate(workdir, typescriptTemplate)
+      await generate(workdir, typescriptEsmTemplate)
       await verifyPkg(t)
       await verifyTSConfig(t)
       await verifyCopy(t, expected)
@@ -131,7 +139,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.assert.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.assert.strictEqual(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts')
+        t.assert.strictEqual(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && node --import ./test/register-ts-esm.mjs --test --experimental-test-coverage test/**/*.ts')
         t.assert.strictEqual(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.assert.strictEqual(pkg.scripts.clean, 'node -e "require(\'fs\').rmSync(\'dist\', {recursive: true, force: true})"')
         t.assert.strictEqual(pkg.scripts['build:ts'], 'npm run clean && tsc')
@@ -148,7 +156,7 @@ function define (t) {
         t.assert.strictEqual(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.assert.strictEqual(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
-        const testGlob = pkg.scripts.test.split(' ', 15)[14]
+        const testGlob = pkg.scripts.test.split(' ').at(-1)
 
         t.assert.strictEqual(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1)
         resolve()
@@ -163,7 +171,7 @@ function define (t) {
       t.assert.ifError(err)
       const tsConfig = JSON.parse(data)
 
-      t.assert.strictEqual(tsConfig.extends, 'fastify-tsconfig')
+      t.assert.strictEqual(tsConfig.compilerOptions.module, 'nodenext')
       t.assert.strictEqual(tsConfig.compilerOptions.outDir, 'dist')
       t.assert.deepStrictEqual(tsConfig.include, ['src/**/*.ts'])
     })
