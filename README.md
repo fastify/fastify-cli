@@ -167,6 +167,7 @@ You can pass the following options via CLI arguments. You can also use `--config
 | Ignore changes to the specified files or directories when watch is enabled. (e.g. `--ignore-watch='node_modules .git logs/error.log'` ) |               | `--ignore-watch`   | `FASTIFY_IGNORE_WATCH`   |
 | Watch changes only into the specified files or directories when watch is enabled. (e.g. `--follow-watch='plugins/'` )                   |               | `--follow-watch`   | `FASTIFY_FOLLOW_WATCH`   |
 | Prints events triggered by watch listener (useful to debug unexpected reload when using `--watch` )                                     |     `-V`          | `--verbose-watch`  | `FASTIFY_VERBOSE_WATCH`   |
+| Run a shell command on every watched change, before the process reloads (e.g. `--on-watch='npm run lint'` ). Add files the command writes to `--ignore-watch` |               | `--on-watch`       | `FASTIFY_ON_WATCH`       |
 | Use custom options                                                                                                                      | `-o`          | `--options`        | `FASTIFY_OPTIONS`        |
 | Set the prefix                                                                                                                          | `-x`          | `--prefix`         | `FASTIFY_PREFIX`         |
 | Set the plugin timeout                                                                                                                  | `-T`          | `--plugin-timeout` | `FASTIFY_PLUGIN_TIMEOUT` |

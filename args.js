@@ -42,6 +42,7 @@ const CLI_OPTIONS = {
   method: { type: 'string' },
   'trust-proxy-ips': { type: 'string' },
   'follow-watch': { type: 'string' },
+  'on-watch': { type: 'string' },
   'pretty-logs': { type: 'boolean', short: 'P' },
   options: { type: 'boolean', short: 'o' },
   watch: { type: 'boolean', short: 'w' },
@@ -116,6 +117,7 @@ module.exports = function parseCliArgs (args) {
     commonPrefix: parsedArgs.commonPrefix,
     includeHooks: parsedArgs.includeHooks,
     followWatch: followWatchArg,
+    onWatch: parsedArgs.onWatch,
     trustProxy
   }
 }
