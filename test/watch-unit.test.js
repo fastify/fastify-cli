@@ -14,6 +14,7 @@ function setup (t) {
   const childProcessMock = {
     spawn (command, options) {
       const proc = new EventEmitter()
+      proc.kill = t.mock.fn()
       spawns.push({ command, options, proc })
       return proc
     },
@@ -173,14 +174,15 @@ test('should log a failing on-watch command and still restart the child', t => {
   t.assert.strictEqual(forks[0].send.mock.calls[0].arguments[0], GRACEFUL_SHUT)
 })
 
-test('should not restart after stop when the on-watch command finishes', t => {
+test('should kill a running on-watch command on stop and not restart', t => {
   const { watch, forks, spawns, watcher } = setup(t)
   const emitter = watch(['app.js'], 'node_modules', false, undefined, 'npm run lint')
 
   watcher.emit('ready')
   watcher.emit('all', 'change', 'app.js')
   emitter.stop()
-  spawns[0].proc.emit('close', 0)
+  t.assert.strictEqual(spawns[0].proc.kill.mock.callCount(), 1)
+  spawns[0].proc.emit('close', null)
 
   t.assert.strictEqual(forks.length, 1)
 })
