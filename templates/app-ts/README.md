@@ -16,7 +16,13 @@ For production mode
 
 ### `npm run test`
 
-Run the test cases.
+Type check the application source and tests, then run the test cases directly
+against the TypeScript source without generating production files in `dist`.
+
+### `npm run build:ts`
+
+Compile the application source to `dist`. This production build runs independently
+of the tests and is also run by `npm start`.
 
 ## Learn More
 
