@@ -113,7 +113,8 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    const copiedFileCount = Object.keys(expected).filter(file => file !== '/package.json').length
+    const copiedFileCount = Object.keys(expected)
+      .filter(file => file.replace(/\\/g, '/') !== '/package.json').length
     t.plan(25 + copiedFileCount)
     try {
       await generate(workdir, typescriptEsmTemplate)
