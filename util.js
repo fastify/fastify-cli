@@ -3,7 +3,7 @@
 const fs = require('node:fs')
 const path = require('node:path')
 const url = require('node:url')
-const { pkgUp } = require('pkg-up')
+const pkg = require('empathic/package')
 const resolveFrom = require('resolve-from')
 
 function exit (message) {
@@ -68,7 +68,7 @@ function isInvalidAsyncPlugin (plugin) {
 }
 
 async function getPackageType (cwd) {
-  const nearestPackage = await pkgUp({ cwd })
+  const nearestPackage = pkg.up({ cwd })
   if (nearestPackage) {
     return require(nearestPackage).type
   }
