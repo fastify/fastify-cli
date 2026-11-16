@@ -914,6 +914,36 @@ test('should support preloading custom ES module', async t => {
   t.pass('server closed')
 })
 
+for (const modules of [['first.mjs'], ['first.mjs', 'second.mjs']]) {
+  test(`should finish ES module preloads before loading the app (${modules.length} modules)`, async t => {
+    const events = []
+    const pendingImports = []
+    const startWithAsyncImports = proxyquire('../start', {
+      './util': {
+        requireESModule (name) {
+          events.push(`start:${name}`)
+          const imported = new Promise(resolve => setImmediate(resolve)).then(() => {
+            events.push(`end:${name}`)
+          })
+          pendingImports.push(imported)
+          return imported
+        },
+        async requireServerPluginFromPath () {
+          events.push('load app')
+          return async function () {}
+        }
+      }
+    })
+    const args = modules.flatMap(name => ['--import', name])
+    args.push('./examples/plugin.js')
+    const fastify = await startWithAsyncImports.runFastify(args, { ready: true })
+    t.teardown(() => fastify.close())
+    await Promise.all(pendingImports)
+
+    t.same(events, [...modules.flatMap(name => [`start:${name}`, `end:${name}`]), 'load app'])
+  })
+}
+
 test('should support preloading multiple custom modules', async t => {
   t.plan(3)
 
