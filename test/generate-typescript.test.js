@@ -103,7 +103,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(26 + Object.keys(expected).length)
+    t.plan(27 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -128,7 +128,9 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.assert.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.assert.strictEqual(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register "test/**/*.ts"')
+        t.assert.strictEqual(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register test/**/*.ts')
+        // the glob must not be quoted, otherwise Node.js versions without glob support in `node --test` receive it literally
+        t.assert.doesNotMatch(pkg.scripts.test, /["']test\/\*\*/)
         t.assert.strictEqual(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.assert.strictEqual(pkg.scripts.clean, 'node -e "require(\'fs\').rmSync(\'dist\', {recursive: true, force: true})"')
         t.assert.strictEqual(pkg.scripts['build:ts'], 'npm run clean && tsc')
