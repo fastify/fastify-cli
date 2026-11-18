@@ -109,7 +109,7 @@ async function runFastify (args, additionalOptions, serverOptions, serverModule)
     await preloadESModules(opts)
   }
 
-  opts.port = opts.port || process.env.PORT || 3000
+  opts.port = opts.port ?? (process.env.PORT || 3000)
 
   loadModules(opts)
 
