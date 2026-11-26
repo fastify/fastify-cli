@@ -521,6 +521,22 @@ test('should start the server (using PORT-env var)', async t => {
   t.pass('server closed')
 })
 
+test('should use an ephemeral port when --port is zero', async t => {
+  const previousPort = process.env.PORT
+  process.env.PORT = '65536'
+  t.teardown(() => {
+    if (previousPort === undefined) delete process.env.PORT
+    else process.env.PORT = previousPort
+  })
+
+  const fastify = await start.start(['--port', '0', '--address', '127.0.0.1', './examples/plugin.js'])
+  t.teardown(() => fastify.close())
+  const { port } = fastify.server.address()
+  t.ok(port > 0 && port <= 65535)
+  const response = await fetch(`http://127.0.0.1:${port}`)
+  t.same(await response.json(), { hello: 'world' })
+})
+
 test('should start the server (using FASTIFY_PORT-env preceding PORT-env var)', async t => {
   t.plan(4)
 
