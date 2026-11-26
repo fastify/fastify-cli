@@ -54,6 +54,11 @@ OPTS
   [env: FASTIFY_VERBOSE_WATCH]
       Print all watch events to the console
 
+  --on-watch
+  [env: FASTIFY_ON_WATCH]
+      Run a shell command on every watched change, before the process reloads (e.g. --on-watch='npm run lint').
+      Add files the command writes to --ignore-watch, otherwise each run triggers the next one.
+
   -x, --prefix
   [env: FASTIFY_PREFIX]
       Set the prefix
