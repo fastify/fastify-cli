@@ -48,7 +48,7 @@ const typescriptTemplate = {
   main: 'app.ts',
   scripts: {
     clean: 'node -e "require(\'fs\').rmSync(\'dist\', {recursive: true, force: true})"',
-    test: 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register "test/**/*.ts"',
+    test: 'tsc -p test/tsconfig.json && c8 node --test -r ts-node/register "test/**/*.ts"',
     start: 'npm run build:ts && fastify start -l info dist/app.js',
     'build:ts': 'npm run clean && tsc',
     'watch:ts': 'tsc -w',

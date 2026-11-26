@@ -103,7 +103,7 @@ function define (t) {
   })
 
   test('should finish successfully with typescript template', async (t) => {
-    t.plan(26 + Object.keys(expected).length)
+    t.plan(28 + Object.keys(expected).length)
     try {
       await generate(workdir, typescriptTemplate)
       await verifyPkg(t)
@@ -128,7 +128,7 @@ function define (t) {
         // by default this will be ISC but since we have a MIT licensed pkg file in upper dir, npm will set the license to MIT in this case
         // so for local tests we need to accept MIT as well
         t.assert.ok(pkg.license === 'ISC' || pkg.license === 'MIT')
-        t.assert.strictEqual(pkg.scripts.test, 'npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register "test/**/*.ts"')
+        t.assert.strictEqual(pkg.scripts.test, 'tsc -p test/tsconfig.json && c8 node --test -r ts-node/register "test/**/*.ts"')
         t.assert.strictEqual(pkg.scripts.start, 'npm run build:ts && fastify start -l info dist/app.js')
         t.assert.strictEqual(pkg.scripts.clean, 'node -e "require(\'fs\').rmSync(\'dist\', {recursive: true, force: true})"')
         t.assert.strictEqual(pkg.scripts['build:ts'], 'npm run clean && tsc')
@@ -146,7 +146,7 @@ function define (t) {
         t.assert.strictEqual(pkg.devDependencies.concurrently, cliPkg.devDependencies.concurrently)
         t.assert.strictEqual(pkg.devDependencies.typescript, cliPkg.devDependencies.typescript)
 
-        const testGlob = pkg.scripts.test.split(' ', 14)[13].replaceAll('"', '')
+        const testGlob = pkg.scripts.test.split(' ').at(-1).replaceAll('"', '')
 
         t.assert.strictEqual(minimatch.match(['test/routes/plugins/more/test/here/ok.test.ts'], testGlob).length, 1, 'should match glob')
         resolve()
@@ -162,6 +162,8 @@ function define (t) {
       const tsConfig = JSON.parse(data)
 
       t.assert.strictEqual(tsConfig.extends, 'fastify-tsconfig')
+      t.assert.deepStrictEqual(tsConfig.compilerOptions.types, ['node'])
+      t.assert.strictEqual(tsConfig.compilerOptions.rootDir, 'src')
       t.assert.strictEqual(tsConfig.compilerOptions.outDir, 'dist')
       t.assert.deepStrictEqual(tsConfig.include, ['src/**/*.ts'])
     })
