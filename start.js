@@ -164,6 +164,10 @@ async function runFastify (args, additionalOptions, serverOptions, serverModule)
     options = deepmerge(options, file.options)
   }
 
+  if (options.loggerInstance) {
+    delete options.logger
+  }
+
   if (opts.trustProxy) {
     options.trustProxy = opts.trustProxy
   }
