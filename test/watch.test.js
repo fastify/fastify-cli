@@ -38,11 +38,23 @@ test('followWatch parameter should set watchDir correctly', async (t) => {
   emitter2.stop()
 })
 
-test('should equal expect RegExp', t => {
-  t.plan(1)
+test('default watch ignores match whole path segments', () => {
+  const dirs = ['node_modules', 'build', 'dist', '.git', 'bower_components', 'logs', '.nyc_output']
+  const regExp = arrayToRegExp(dirs)
+  for (const separator of ['/', '\\']) {
+    const project = ['workspace', 'any-builder'].join(separator)
+    assert.strictEqual(regExp.test(project), false)
+    assert.strictEqual(regExp.test([project, 'src', 'distribution.js'].join(separator)), false)
+    for (const dir of dirs) {
+      assert.strictEqual(regExp.test(dir), true)
+      assert.strictEqual(regExp.test([project, dir, 'app.js'].join(separator)), true)
+    }
+  }
+})
 
-  const expectRegExp = /(node_modules|build|dist|\.git|bower_components|logs)/
-  const regExp = arrayToRegExp(['node_modules', 'build', 'dist', '.git', 'bower_components', 'logs'])
-
-  t.assert.deepStrictEqual(regExp, expectRegExp)
+test('custom watch ignores still support regular expressions', () => {
+  const regExp = arrayToRegExp(['build', '.ts$', 'custom-[0-9]+'])
+  assert.strictEqual(regExp.test('src/app.ts'), true)
+  assert.strictEqual(regExp.test('src/app.ts.js'), false)
+  assert.strictEqual(regExp.test('src/custom-12/file.js'), true)
 })

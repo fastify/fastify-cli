@@ -4,7 +4,7 @@ const parseArgs = require('./lib/parse-args')
 const { requireModule } = require('./util')
 const { loadEnvQuitely } = require('./env-loader')
 
-const DEFAULT_IGNORE = 'node_modules build dist .git bower_components logs .swp .nyc_output'
+const { DEFAULT_IGNORE } = require('./lib/watch/constants')
 
 const DEFAULT_ARGUMENTS = {
   logLevel: 'fatal',
