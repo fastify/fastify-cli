@@ -21,7 +21,11 @@ test('should return the fastify instance', async t => {
 
 test('should reload the env at each build', async t => {
   const testdir = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'fastify-cli-'))
+  const cwd = process.cwd()
+
+  process.chdir(testdir)
   t.after(async () => {
+    process.chdir(cwd)
     await fs.promises.rm(testdir, { recursive: true, force: true })
   })
 
@@ -32,10 +36,6 @@ test('should reload the env at each build', async t => {
   )
 
   const argv = [path.join(testdir, 'plugin.js')]
-  const cwd = process.cwd()
-
-  process.chdir(testdir)
-  t.after(() => { process.chdir(cwd) })
 
   {
     await writeFile(path.join(testdir, '.env'), 'GREETING=one')
